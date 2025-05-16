@@ -730,7 +730,7 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 	GetLocalTime(&time);
 
 	CString strPath, strFile, strTitle, strSave, strJudge;
-	strPath.Format("%s\\LOG\\Tracking\\%04d-%02d-%02d", gsCurrentDir, time.wYear, time.wMonth, time.wDay);
+	strPath.Format("%s\\LOG\\CapTracking\\%04d-%02d-%02d", gsCurrentDir, time.wYear, time.wMonth, time.wDay);
 	Create_Folder(strPath);
 
 	if (gLot.sLotID[nPortNo-1] == "") gLot.sLotID[nPortNo-1] = "LOT_ID";
@@ -789,7 +789,7 @@ void CLogFile::Save_ECMTracking(CString sLog, int nTrayCount, int nPosX, int nPo
 	Create_Folder(strPath);
 
 	if (gLot.sLotID[nPortNo-1] == "") gLot.sLotID[nPortNo-1] = "LOT_ID";
-	strFile.Format("%s\\%s_%04d%02d%02d%02d_Tracking.csv", strPath, gLot.sLotID[nPortNo-1], time.wYear, time.wMonth, time.wDay, time.wHour);
+	strFile.Format("%s\\%s_%04d%02d%02d%02d_CapTracking.csv", strPath, gLot.sLotID[nPortNo-1], time.wYear, time.wMonth, time.wDay, time.wHour);
 
 
 	strTitle.Format("Time,Barcode,Judge,Port No,Tray No,CM No,Load Stage,Load Picker,Index Load,Index Load Jig,NG Picker,NG Stage,Good Picker,Index Good No,Index Good Jig,Transfer Picker,NG Tray,NG Y,NG X,Ship Tray,Ship Y,Ship X\r\n");
