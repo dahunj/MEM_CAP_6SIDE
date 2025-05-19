@@ -48,7 +48,7 @@ void CMESInterface::Initialize(BOOL bMESUse)
 	g_objMES.m_nMESShipSequence = 0;
 
 	Set_MESUse(bMESUse);	// On-Off Line Set
-	Set_Status(3);			// Idle Set
+	//Set_Status(3);			// Idle Set
 	Clear_Result();			// Validateion 파일 삭제
 }
 
