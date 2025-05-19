@@ -3862,7 +3862,7 @@ BOOL CSequenceMain::AssyPicker_Run()
 		}
 		break;
 	case 30:	// Tilt Check
-		if (!m_pEquipData->bChkAssyPickerTilt || (m_pDX08->iAssyPickerTiltDown && !m_pDX08->iAssyPickerTiltUp && g_objCommon.Get_AssyPickerTilt(0))) {
+		if (!m_pEquipData->bChkAssyPickerTilt || (m_pDX08->iAssyPickerTiltDown && !m_pDX08->iAssyPickerTiltUp && g_objCommon.Get_InfoAssyPickerTilt(0))) {
 			if(!m_tAssyPickLoop.Waiting_Time(150)) break;
 			m_tAssyPickLoop.Takt_Save(11, 7);
 			CString strLog;

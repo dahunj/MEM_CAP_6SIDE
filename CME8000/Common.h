@@ -160,7 +160,7 @@ public:
 	BOOL Get_AssyPickerVacOff(int nNo);
 	void Set_AssyPickerAirOff(int nNo);
 	BOOL Get_AssyPickerTilt(int nNo);
-
+	
 	// 9. Trans Stage I/O 함수
 	void Set_TransStageVacOff(int nNo);
 	BOOL Get_TransStageVacOff(int nNo);
@@ -236,6 +236,8 @@ public:
 	void Set_InfoAssyPickerGoodVacOff();
 	BOOL Get_InfoAssyPickerGoodVacOff();
 	void Set_InfoAssyPickerGoodAirOff();
+
+	BOOL Get_InfoAssyPickerTilt(int nNo);
 
 	// 5. Info Trans Stage I/O 함수
 	void Set_InfoTransStageVacOn();

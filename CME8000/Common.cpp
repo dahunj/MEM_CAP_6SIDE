@@ -1322,6 +1322,18 @@ BOOL CCommon::Get_AssyPickerTilt(int nNo)
 	return FALSE;
 }
 
+BOOL CCommon::Get_InfoAssyPickerTilt(int nNo)
+{
+	DX_DATA_09 *pDX09 = g_objAJinAXL.Get_pDX09();
+	
+	if(pDX09->iAssyPickerTilt01 && gData.InfoIndex[1][0] > 0 && gData.InfoAssyPick[0] == 9) return FALSE;
+	if(pDX09->iAssyPickerTilt02 && gData.InfoIndex[1][1] > 0 && gData.InfoAssyPick[1] == 9) return FALSE;
+	if(pDX09->iAssyPickerTilt03 && gData.InfoIndex[1][2] > 0 && gData.InfoAssyPick[2] == 9) return FALSE;
+	if(pDX09->iAssyPickerTilt04 && gData.InfoIndex[1][3] > 0 && gData.InfoAssyPick[3] == 9) return FALSE;
+
+	return TRUE;
+}
+
 // 	9. Trans Stage I/O ÇÔ¼ö
 void CCommon::Set_TransStageVacOff(int nNo)
 {
