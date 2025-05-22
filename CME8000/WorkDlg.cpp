@@ -344,8 +344,7 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(0);
-
-
+	
 	if(!g_objAviHandler.Is_Connected() && nIDEvent == 1){
 		g_objAviHandler.Set_ConnectRequest();
 	}
@@ -429,9 +428,16 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 
 	int nMode = theApp.Get_MainMode();
-	if (nMode == MODE_OPERATOR || nMode == MODE_WORK) SetTimer(0, 100, NULL);
-	else											  KillTimer(0);
-
+	if (nMode == MODE_OPERATOR || nMode == MODE_WORK)
+	{	
+		SetTimer(0, 100, NULL);
+		SetTimer(1, 2000, NULL);
+	}
+	else
+	{
+		KillTimer(0);
+		KillTimer(1);
+	}
 	CDialogEx::OnTimer(nIDEvent);
 }
 
@@ -1144,8 +1150,7 @@ void CWorkDlg::Display_Status()
 	for (int i = 0; i < PICK; i++) { strText.Format("%d-%d", gData.nTNoTransStage[i], gData.nCNoTransStage[i]); m_stcTStageNo[i].Set_Text(strText); }
 	for (int i = 0; i < PICK; i++) { strText.Format("%d-%d", gData.nTNoUnloadPick[i], gData.nCNoUnloadPick[i]); m_stcUnloadNo[i].Set_Text(strText); }
 
-	g_objAviHandler.Set_ConnectRequest();
-
+	
 	m_ledVisionStatus[0].Set_On(g_objInspector.Get_VisionStatus());
 	m_ledVisionStatus[1].Set_On(pEquipData->bUseInlineMode && g_objAviHandler.Is_Connected());
 	//m_ledVisionStatus[1].Set_On(pEquipData->bUseInlineMode && g_objAviHandler.Is_Opened());
