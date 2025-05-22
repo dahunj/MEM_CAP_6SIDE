@@ -82,8 +82,8 @@
 #define SIM_WAITTIMES	 1		//
 #define SIM_WAITTIMEM	 1		//
 
-// R43B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
-// R44B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
+// R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
+// R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
 const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 5, PICK = 4;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ typedef struct {
 	BOOL	IndexDone[3];				// 0:Load, 1:Assembly 2:Trans
 	int		InfoLoadTray[LT_Y][LT_X];	// Load Tray 정보 표시 (0:Not Use, 9:Use)
 	int		InfoCapTray[CT_Y][CT_X];	// Cap Tray 정보 표시 (0:Not Use, 9:Use)
-	int		STY;						// Ship Tray 라인수 (R43B:7, R44B:6)
+	int		STY;						// Ship Tray 라인수 (R53B:7, R54B:7)
 	int		InfoShipTray[ST_Y][ST_X];	// Ship Tray 정보 표시 (0:Not Use, 1:Exist)
 
 	int		InfoIndex[3][PICK];			// Index 정보 표시 0: 좌측	(0:Not Use, 1:Exist)

@@ -18,7 +18,7 @@ public:
 	CLabelCS	m_Label[6];
 
 	CStaticCS	m_stcEquipName;
-	CRadioCS	m_rdoModel[2];	// 0:R43B, 1:R44B
+	CRadioCS	m_rdoModel[2];	// 0:R53B, 1:R54B
 	CComboCS	m_cboLotBarcodePort;
 	CComboCS	m_cboAssyLoadCellPort;
 	CComboCS	m_cboUnloadLoadCellPort;

@@ -118,7 +118,7 @@ BOOL CDataManager::Read_EquipData()
 	CString strKey;
 	m_EquipData.sEquipName = INI.Get_String("EQUIPMENT", "NAME", "");
 	m_EquipData.sModel = INI.Get_String("EQUIPMENT", "MODEL", "");
-	gData.sRecipe = (m_EquipData.sModel == "" ? "R43B" : m_EquipData.sModel);	// Default(R43B)
+	gData.sRecipe = (m_EquipData.sModel == "" ? "R53B" : m_EquipData.sModel);	// Default(R53B)
 
 	m_EquipData.nLotBarcodePort = INI.Get_Integer("EQUIPMENT", "LOT_BARCODE", 1);
 	m_EquipData.nAssyLoadCellPort = INI.Get_Integer("EQUIPMENT", "ASSY_LOAD_CELL", 8);
@@ -175,7 +175,7 @@ BOOL CDataManager::Read_EquipData()
 	// Gloval Data
 	gData.nCmMaxCount = LT_Y * LT_X;	// Tray 배열 (3X4)
 	gData.nCapMaxCount = CT_Y * CT_X;	// Tray 배열 (4x7)
-	gData.STY = (gData.sRecipe == "R44B" ? ST_Y-1 : ST_Y);
+	gData.STY =  ST_Y;
 	gData.nShipMaxCount = gData.STY * ST_X;	// Tray 배열 (3x7 or 3x6)
 
 	//doorinterlock log

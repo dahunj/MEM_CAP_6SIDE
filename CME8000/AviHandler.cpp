@@ -194,7 +194,7 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 	gData.nCmUseCount[nPx] = atoi(sCmCnt);
 
 	if (sModel != gData.sRecipe) {
-		if (sModel != "R43B" && sModel != "R44B") { AfxMessageBox("Invalid Model Name!!!"); return; }
+		if (sModel != "R53B" && sModel != "R54B") { AfxMessageBox("Invalid Model Name!!!"); return; }
 
 		CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
 		if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
