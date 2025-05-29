@@ -144,7 +144,7 @@ BOOL CSequenceInit::Check_Mode()
 		|| theApp.Get_MainMode() == MODE_SETUP
 		|| theApp.Get_MainMode() == MODE_PARAM
 		|| theApp.Get_MainMode() == MODE_PROHIBIT
-		|| theApp.Get_MainMode() == MODE_INITIAL) return FALSE;
+		) return FALSE;
 	return TRUE;
 }
 
