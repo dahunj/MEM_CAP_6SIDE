@@ -333,7 +333,7 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		g_objCommon.Locking_MainDoor(FALSE);
 
 		SetTimer(0, 100, NULL);
-		SetTimer(1, 2000, NULL);
+		SetTimer(1, 5000, NULL);
 
 	} else {
 		KillTimer(0);
@@ -345,7 +345,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(0);
 	
-	if(!g_objAviHandler.Is_Connected() && nIDEvent == 1){
+	if( nIDEvent == 1){
 		g_objAviHandler.Set_ConnectRequest();
 	}
 
@@ -431,12 +431,12 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 	if (nMode == MODE_OPERATOR || nMode == MODE_WORK)
 	{	
 		SetTimer(0, 100, NULL);
-		SetTimer(1, 2000, NULL);
+		SetTimer(1, 5000, NULL);
 	}
 	else
 	{
 		KillTimer(0);
-		KillTimer(1);
+		//KillTimer(1);
 	}
 	CDialogEx::OnTimer(nIDEvent);
 }
