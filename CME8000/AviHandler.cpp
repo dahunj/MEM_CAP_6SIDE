@@ -278,6 +278,7 @@ void CAviHandler::Set_ConnectRequest()
 	CString	strSendCmd;
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
+	m_bConnected = FALSE;
 	strSendCmd.Format("CONNECT,REQUEST,%s,%d", pEquipData->sAviIp, UDP_AVI_LPORT);
 	Send_Command(strSendCmd);
 }

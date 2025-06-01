@@ -539,5 +539,6 @@ void CSetupEquipDlg::OnBnClickedBtnAviConnect()
 
 void CSetupEquipDlg::OnBnClickedBtnAviDisconnect()
 {
+	g_objAviHandler.Set_ConnectStatus(FALSE);
 	g_objAviHandler.Terminate();
 }
