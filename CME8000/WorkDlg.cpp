@@ -267,8 +267,11 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
-	if (bShow) {
-		Change_Model();		
+	if (bShow) 
+	{
+		Change_Model();	
+
+		g_objAviHandler.Set_ConnectRequest();
 
 		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 		CString strText;
