@@ -682,25 +682,107 @@ BOOL CCommon::Get_LoadPickerDown(int nNo)
 	return FALSE;
 }
 
-void CCommon::Set_LoadPickerOpen()
+void CCommon::Set_LoadPickerOpen(int nNo)
 {
 	DY_DATA_06 *pDY06 = g_objAJinAXL.Get_pDY06();
-	pDY06->oLoadPickerGrip01 = FALSE;
-	pDY06->oLoadPickerGrip02 = FALSE;
-	pDY06->oLoadPickerGrip03 = FALSE;
-	pDY06->oLoadPickerGrip04 = FALSE;
+	if(nNo == 0)
+	{
+		pDY06->oLoadPickerGrip01 = FALSE;
+		pDY06->oLoadPickerGrip02 = FALSE;
+		pDY06->oLoadPickerGrip03 = FALSE;
+		if (PICK > 3 ) pDY06->oLoadPickerGrip04 = FALSE;
+		//if (PICK > 4 ) pDY06->oLoadPickerGrip05 = FALSE;
+		//if (PICK > 5 ) pDY06->oLoadPickerGrip06 = FALSE;
+	}
+
+	if(nNo == 1) pDY06->oLoadPickerGrip01 = FALSE;
+	if(nNo == 2) pDY06->oLoadPickerGrip02 = FALSE;
+	if(nNo == 3) pDY06->oLoadPickerGrip03 = FALSE;
+	if(nNo == 4) if (PICK > 3 ) pDY06->oLoadPickerGrip04 = FALSE;
+	//if(nNo == 5) if (PICK > 4 ) pDY06->oLoadPickerGrip05 = FALSE;
+	//if(nNo == 6) if (PICK > 5 ) pDY06->oLoadPickerGrip06 = FALSE;
+
 	g_objAJinAXL.Write_Output(6);
 }
 
-BOOL CCommon::Get_LoadPickerOpen()
+BOOL CCommon::Get_LoadPickerOpen(int nNo)
 {
+
+#ifndef AJIN_BOARD_USE
+	return TRUE;
+#endif
+
 	DX_DATA_06 *pDX06 = g_objAJinAXL.Get_pDX06();
+	if(nNo == 0)
+	{
+		if (!pDX06->iLoadPickerOpen01) { return FALSE; }
+		if (!pDX06->iLoadPickerOpen02) { return FALSE; }
+		if (!pDX06->iLoadPickerOpen03) {  return FALSE; }
+		if (PICK > 3 && !pDX06->iLoadPickerOpen04) { return FALSE; }
+		//if (PICK > 4 && !pDX06->iLoadPickerOpen05) {  return FALSE; }
+		//if (PICK > 5 && !pDX06->iLoadPickerOpen06) {  return FALSE; }
+	}
 
-	if (pDX06->iLoadPickerOpen01 && pDX06->iLoadPickerOpen02 &&
-		pDX06->iLoadPickerOpen03 &&	pDX06->iLoadPickerOpen04) return TRUE;
-
-	return FALSE;
+	if(nNo == 1) if (!pDX06->iLoadPickerOpen01) { return FALSE; }
+	if(nNo == 2) if (!pDX06->iLoadPickerOpen02) { return FALSE; }
+	if(nNo == 3) if (!pDX06->iLoadPickerOpen03) { return FALSE; }
+	if(nNo == 4) if (PICK > 3 && !pDX06->iLoadPickerOpen04) { return FALSE; }
+	//if(nNo == 5) if (PICK > 4 && !pDX06->iLoadPickerOpen05) {  return FALSE; }
+	//if(nNo == 6) if (PICK > 5 && !pDX06->iLoadPickerOpen06) {  return FALSE; }
+	return TRUE;
 }
+
+void CCommon::Set_LoadPickerClose(int nNo)
+{
+	DY_DATA_06 *pDY06 = g_objAJinAXL.Get_pDY06();
+
+	if(nNo == 0)
+	{
+		pDY06->oLoadPickerGrip01 = TRUE;
+		pDY06->oLoadPickerGrip02 = TRUE;
+		pDY06->oLoadPickerGrip03 = TRUE;
+		if (PICK > 3 ) pDY06->oLoadPickerGrip04 = TRUE;
+		//if (PICK > 4 ) pDY06->oLoadPickerGrip05 = TRUE;
+		//if (PICK > 5 ) pDY06->oLoadPickerGrip06 = TRUE;
+	}
+
+	if(nNo == 1) pDY06->oLoadPickerGrip01 = TRUE;
+	if(nNo == 2) pDY06->oLoadPickerGrip02 = TRUE;
+	if(nNo == 3) pDY06->oLoadPickerGrip03 = TRUE;
+	if(nNo == 4) if (PICK > 3 ) pDY06->oLoadPickerGrip04 = TRUE;
+	//if(nNo == 5) if (PICK > 4 ) pDY06->oLoadPickerGrip05 = TRUE;
+	//if(nNo == 6) if (PICK > 5 ) pDY06->oLoadPickerGrip06 = TRUE;
+	g_objAJinAXL.Write_Output(6);
+}
+
+BOOL CCommon::Get_LoadPickerClose(int nNo)
+{
+
+#ifndef AJIN_BOARD_USE
+	return TRUE;
+#endif
+
+	DX_DATA_06 *pDX06 = g_objAJinAXL.Get_pDX06();
+	if(nNo == 0)
+	{
+		if (!pDX06->iLoadPickerCMCheck01) {  return FALSE; }
+		if (!pDX06->iLoadPickerCMCheck02) {  return FALSE; }
+		if (!pDX06->iLoadPickerCMCheck03) {  return FALSE; }
+		if (PICK > 3 && !pDX06->iLoadPickerCMCheck04) { return FALSE; }
+		//if (PICK > 4 && !pDX06->iLoadPickerCMCheck05) { return FALSE; }
+		//if (PICK > 5 && !pDX06->iLoadPickerCMCheck06) { return FALSE; }
+	}
+
+	if(nNo == 1) if (!pDX06->iLoadPickerCMCheck01) { return FALSE; }
+	if(nNo == 2) if (!pDX06->iLoadPickerCMCheck02) { return FALSE; }
+	if(nNo == 3) if (!pDX06->iLoadPickerCMCheck03) { return FALSE; }
+	if(nNo == 4) if (PICK > 3 && !pDX06->iLoadPickerCMCheck04) { return FALSE; }
+	//if(nNo == 5) if (PICK > 4 && !pDX06->iLoadPickerCMCheck05) { return FALSE; }
+	//if(nNo == 6) if (PICK > 5 && !pDX06->iLoadPickerCMCheck06) { return FALSE; }
+
+	return TRUE;
+}
+
 
 BOOL CCommon::Get_LoadPickerCmCheckOff()
 {

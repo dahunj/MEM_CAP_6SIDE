@@ -6,6 +6,7 @@
 #include "ManualIndexDlg.h"
 #include "ManualCapDlg.h"
 #include "ManualUnloadDlg.h"
+#include "ManualRepeatRunDlg.h"
 
 // CManualDlg 대화 상자입니다.
 
@@ -21,8 +22,9 @@ public:
 	enum { IDD = IDD_MANUAL_DLG };
 	CPictureCS	m_picManualBack;
 	CRadioCS	m_rdoManualLoad;
-	CRadioCS	m_rdoManualBtm1;
+	CRadioCS	m_rdoManualIndex;
 	CRadioCS	m_rdoManualCap;
+	CRadioCS	m_rdoManualRepeat;
 	CRadioCS	m_rdoManualUnload;
 	CRadioCS	m_rdoManualDoorLock;
 	CRadioCS	m_rdoManualDoorUnlock;
@@ -48,6 +50,7 @@ public:
 	CManualIndexDlg		*m_pManualIndexDlg;
 	CManualCapDlg		*m_pManualCapDlg;
 	CManualUnloadDlg	*m_pManualUnloadDlg;
+	CManualRepeatRunDlg *m_pManualRepeatRunDlg;
 
 private:
 	void Initial_Controls();
@@ -55,6 +58,8 @@ private:
 
 public:
 	void Set_ManualPos(int nPos);
+
+	afx_msg void OnBnClickedRdoManualRepeat();
 };
 
 extern CManualDlg g_dlgManual;

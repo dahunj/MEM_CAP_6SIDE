@@ -2311,13 +2311,13 @@ BOOL CSequenceMain::LoadPicker_Run()
 			}
 			gData.nPNoIndex[0] = gData.nPNoLoadPick; gData.nPNoLoadPick = 0;
 			
-			g_objCommon.Set_LoadPickerOpen();
+			g_objCommon.Set_LoadPickerOpen(0);
 			g_objCommon.Set_InfoIndexLoadVacuumOn();
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 18:	// Picker Up
-		if (g_objCommon.Get_LoadPickerOpen()) {
+		if (g_objCommon.Get_LoadPickerOpen(0)) {
 			if (!m_tLoadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[0])) break;
 			m_tLoadPickLoop.Takt_Save(4, 7);
 			m_tLoadPickLoop.Takt_Start();

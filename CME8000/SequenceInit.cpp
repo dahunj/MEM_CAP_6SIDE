@@ -347,12 +347,12 @@ BOOL CSequenceInit::Initial_LoadPicker()
 		break;
 	case 3:		// Load Picker Open
 		if (g_objCommon.Get_TrayPickerGripOpen() && g_objCommon.Get_LoadPickerCmCheckOff()) {
-			g_objCommon.Set_LoadPickerOpen();
+			g_objCommon.Set_LoadPickerOpen(0);
 			m_niLoadPickCase++; m_tiLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 4:		// Load Picker Up
-		if (g_objCommon.Get_LoadPickerOpen()) {
+		if (g_objCommon.Get_LoadPickerOpen(0)) {
 			g_objCommon.Set_LoadPickerUp();
 			m_niLoadPickCase++; m_tiLoadPickLoop.Set_LoopTime(5000);
 		}

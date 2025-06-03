@@ -107,8 +107,10 @@ public:
 	BOOL Get_LoadPickerUp();
 	void Set_LoadPickerDown(int nNo);
 	BOOL Get_LoadPickerDown(int nNo);
-	void Set_LoadPickerOpen();
-	BOOL Get_LoadPickerOpen();
+	void Set_LoadPickerOpen(int nNo);
+	BOOL Get_LoadPickerOpen(int nNo);
+	void Set_LoadPickerClose(int nNo);
+	BOOL Get_LoadPickerClose(int nNo);
 	BOOL Get_LoadPickerCmCheckOff();
 	void Set_LoadPickerDownMulti(int nNo, int nCnt);
 	BOOL Get_LoadPickerDownMulti(int nNo, int nCnt);
