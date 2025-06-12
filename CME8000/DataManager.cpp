@@ -30,6 +30,8 @@ void CDataManager::Reset_EquipData()
 	m_EquipData.nAssyLoadCellPort = 0;
 	m_EquipData.nUnloadLoadCellPort = 0;
 	m_EquipData.bUseDoorLock = FALSE;
+	m_EquipData.nVendorSelection = 0;
+
 
 	m_EquipData.bUseMES = FALSE;
 	m_EquipData.bUseInlineMode = FALSE;
@@ -69,6 +71,10 @@ void CDataManager::Reset_EquipData()
 
 	m_EquipData.nCappingCnt = 0;
 	m_EquipData.nLoadCellChkCnt = 0;
+
+
+	//m_EquipData.sVendor[0] = "DH";
+	//m_EquipData.sVendor[1] = "HS";
 }
 
 void CDataManager::Reset_MoveData()
@@ -128,6 +134,12 @@ BOOL CDataManager::Read_EquipData()
 
 	m_EquipData.bUseMES = INI.Get_Bool("OPTION", "MES_USE", FALSE);
 	m_EquipData.bUseInlineMode = INI.Get_Bool("OPTION", "INLINE_MODE", FALSE);
+
+	m_EquipData.nVendorSelection = INI.Get_Integer("EQUIPMENT", "VENDOR_SELECTION", 0);
+	m_EquipData.sVendor[0]=INI.Get_String("VENDOR","0", "");
+	m_EquipData.sVendor[1]=INI.Get_String("VENDOR","1", "");
+	gData.sVendor = m_EquipData.sVendor[m_EquipData.nVendorSelection];
+
 #ifdef DRY_RUN_TEST
 	m_EquipData.bUseVisionCapDir = FALSE;
 	m_EquipData.bUseVisionCmAlign = FALSE;
@@ -195,7 +207,7 @@ BOOL CDataManager::Read_EquipData()
 
 BOOL CDataManager::Read_MoveData()
 {
-	CIniFileCS INI(gsCurrentDir + "\\System\\MoveData_" + gData.sRecipe + ".ini");
+	CIniFileCS INI(gsCurrentDir + "\\System\\MoveData_" + gData.sVendor + ".ini");
 	if (!INI.Check_File()) { AfxMessageBox("MoveData.ini File Not Found!!!"); return FALSE; }
 
 	CString strKey;

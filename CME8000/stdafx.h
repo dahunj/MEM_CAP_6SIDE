@@ -94,7 +94,8 @@ typedef struct {
 	CString	sLotID[2];
 	CString	sOperID;		// Operator
 	CString	sRecipe;		// Recipe Item
-	
+	CString sVendor;		// Cap Vendor 
+
 	int		nStatus;
 
 	int		nCmMaxCount;	// 한 트레이의 최대 CM 갯수

@@ -12,6 +12,9 @@ typedef struct tag_EQUIP_DATA {
 	int		nUnloadLoadCellPort;
 	BOOL	bUseDoorLock;
 
+	int		nVendorSelection;
+	CString sVendor[2];
+
 	BOOL	bUseMES;
 	BOOL	bUseInlineMode;
 	BOOL	bUseVisionCapDir;

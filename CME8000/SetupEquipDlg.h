@@ -15,7 +15,7 @@ public:
 // 대화 상자 데이터입니다.
 	enum { IDD = IDD_SETUP_EQUIP_DLG };
 	CGroupCS	m_Group[12];
-	CLabelCS	m_Label[6];
+	CLabelCS	m_Label[7];
 
 	CStaticCS	m_stcEquipName;
 	CRadioCS	m_rdoModel[2];	// 0:R53B, 1:R54B
@@ -25,6 +25,7 @@ public:
 	CStaticCS	m_stcMotionCheck;
 	CLabelCS	m_lblDoorLock;
 	CRadioCS	m_rdoDoorLock[2];
+	CComboCS	m_cboMoveDataSelection;
 
 	CCheckCS	m_chkUseInlineMode;
 	CCheckCS	m_chkUseVisionCapDir;
