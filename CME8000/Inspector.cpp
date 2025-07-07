@@ -226,30 +226,41 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 		int nCmInfo2 = (nNo2 >= 0 ? gData.nCmInspectInfo[nPx][nTx][nNo2] : 1);
 
 		//Temp
-		if (!pEquipData->bUseVisionAlignAlarm && !pEquipData->bUseVisionAlignOffset){
+		if (!pEquipData->bUseVisionAlignAlarm && !pEquipData->bUseVisionAlignOffset)
+		{
 			m_nT12ScanCnt++;
-			if (m_nT12ScanCnt == m_nT12ScanReq) {
+			if (m_nT12ScanCnt == m_nT12ScanReq) 
+			{
 				gData.bScanDone[0] = TRUE;
 				g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
 			}
-		} else {
-			if (pEquipData->bUseVisionAlignOffset) {
+		}
+		else 
+		{
+			if (pEquipData->bUseVisionAlignOffset)
+			{
 				m_nT12ScanCnt++;
 				if (m_nT12ScanCnt == m_nT12ScanReq) {
 					gData.bScanDone[0] = TRUE;
 					g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
 				}
-			} else {
+			} 
+			else
+			{
 				m_nT12ScanCnt++;
 				if (m_nT12ScanCnt == m_nT12ScanReq &&
 					(gData.InfoIndex[0][m_nT12ScanCnt+0] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+0] > 0 && nCmInfo1 == 1)) &&
-					(gData.InfoIndex[0][m_nT12ScanCnt+3] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+3] > 0 && nCmInfo2 == 1))) {
+					(gData.InfoIndex[0][m_nT12ScanCnt+3] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+3] > 0 && nCmInfo2 == 1))) 
+				{
 					m_nT12ScanCnt = 0;
 					gData.bScanDone[0] = TRUE;
 					g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
 
-				} else {
-					if (m_nT12ScanCnt == m_nT12ScanReq) {
+				} 
+				else
+				{
+					if (m_nT12ScanCnt == m_nT12ScanReq)
+					{
 						m_nT12ScanCnt = 0;
 						g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 6);
 					}
