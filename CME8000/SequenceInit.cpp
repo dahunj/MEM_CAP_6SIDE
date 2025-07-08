@@ -805,7 +805,7 @@ BOOL CSequenceInit::Initial_CapBuffer()
 		}
 		break;
 
-	case 11:	// Buffer Y Home Search
+	case 11:	// Buffer Y Home Search		
 		if (!m_pDX09->iCapBufferStageAlignIn && m_pDX09->iCapBufferStageAlignOut) {
 			g_objAJinAXL.Home_Search(AX_CAP_BUFFER_Y);
 			m_niCapBufferCase++; m_tiCapBufferLoop.Set_LoopTime(20000);

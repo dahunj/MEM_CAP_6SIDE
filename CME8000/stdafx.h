@@ -52,6 +52,9 @@
 #include "CSUdpSocket.h"
 #include "CSClientSocket.h"
 #include "CSGrid.h"
+
+#include <math.h>
+
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
@@ -68,7 +71,7 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.0.23")
+#define MAIN_VERSION	_T("V 2.0.0.25")
 
 //#define AJIN_BOARD_USE
 //#define LOT_BARCODE_USE

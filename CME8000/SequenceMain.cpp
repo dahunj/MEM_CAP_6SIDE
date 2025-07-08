@@ -681,8 +681,10 @@ BOOL CSequenceMain::Check_IndexEmpty(int nPos)
 	int nS = (nPos == -1 ? 0 : nPos);
 	int nE = (nPos == -1 ? 2 : nPos);
 
-	for (int i = nS; i < nE + 1; i++) {
-		for (int j = 0; j < PICK; j++) {
+	for (int i = nS; i < nE + 1; i++) 
+	{
+		for (int j = 0; j < PICK; j++) 
+		{
 			if (gData.InfoIndex[i][j] > 0) return FALSE;
 		}
 	}
@@ -2164,7 +2166,10 @@ BOOL CSequenceMain::LoadPicker_Run()
 		}
 		break;
 	case 3:		// Z Axis Move to Tray Down
-		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
+		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
+		{
+			if (m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
 				if (g_objCommon.Get_InfoLoadPickerGripOpen()) {
@@ -2337,9 +2342,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 20:	// return
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
 			m_tLoadPickLoop.Takt_Save(4, 8);
-
-			if (m_nVisionCmCase == 0) m_nVisionCmCase = 1;
-
+			
 			if (bLpTrayEmpty) {
 				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) {
 					m_nLoadPickCase = 1; m_tLoadPickLoop.Set_LoopTime(5000);	// Picker와 Tray를 동시에 이동하기 위해...
@@ -2523,7 +2526,8 @@ BOOL CSequenceMain::VisionCm_Run()
 
 	case 1:		// X Move Inspect Position
 		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) {
-			if (m_pEquipData->bUseVisionCmAlign) {
+			if (m_pEquipData->bUseVisionCmAlign) 
+			{
 				m_dwVisionCm = GetTickCount();
 				m_tVisionCmLoop.Takt_Start();
 				nCmScanCnt = 0;
@@ -2532,16 +2536,20 @@ BOOL CSequenceMain::VisionCm_Run()
 				g_objAJinAXL.Move_Absolute(AX_VISION_CM_X, dCmX);
 				m_nVisionCmCase++; m_tVisionCmLoop.Set_LoopTime(5000);
 
-			} else {	// Align 검사를 안하면 종료한다.
+			} 
+			else
+			{	// Align 검사를 안하면 종료한다.
 				gData.IndexDone[0] = TRUE;
 				m_nVisionCmCase = 0; m_tVisionCmLoop.Set_LoopTime(5000);
 			}
 		}
 		break;
 	case 2:		// Load Complete Send
-		if (g_objAJinAXL.Is_MoveDone(AX_VISION_CM_X, dCmX)) {
+		if (g_objAJinAXL.Is_MoveDone(AX_VISION_CM_X, dCmX)) 
+		{
 			nCmScanCnt = Get_CmScanCnt();
-			if (gData.bCmAlignSkip) {
+			if (gData.bCmAlignSkip) 
+			{
 				gData.bCmAlignSkip = FALSE;
 				nCmScanNo++;
 				m_nVisionCmCase = 10; m_tVisionCmLoop.Set_LoopTime(30000);
@@ -2549,7 +2557,8 @@ BOOL CSequenceMain::VisionCm_Run()
 			}
 
 			m_tVisionCmLoop.Takt_Save(5, 1);
-			if (nCmScanNo <= nCmScanCnt) {
+			if (nCmScanNo <= nCmScanCnt) 
+			{
 				m_tVisionCmLoop.Takt_Start();
 				int nPNo = gData.nPNoIndex[0] - 1;
 				int nTNo1 = gData.nTNoIndex[0][nCmScanNo+0];
@@ -2560,9 +2569,12 @@ BOOL CSequenceMain::VisionCm_Run()
 				gData.nCmInspPickNo2 = nCmScanNo + 4;
 
 				gData.bCmAlignSkip = FALSE;
-				if (m_pEquipData->bUseInlineMode) {
+				if (m_pEquipData->bUseInlineMode) 
+				{
 					g_objInspector.Set_LoadComplete("T12", gLot.sLotID[nPNo], gData.nPNoIndex[0], nTNo1, nTNo2, nCNo1, nCNo2, gData.nCmInspPickNo1, gData.nCmInspPickNo2);
-				} else {
+				} 
+				else
+				{
 					g_objInspector.Set_LoadComplete("T12", gLot.sLotID[nPNo], gData.nPNoIndex[0], nTNo1, nTNo2, nCNo1, nCNo2, gData.nCmInspPickNo1, gData.nCmInspPickNo2);
 				}
 				
