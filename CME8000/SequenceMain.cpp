@@ -4682,6 +4682,12 @@ BOOL CSequenceMain::UnloadStage1_Run()
 	if (gData.bUnloadPort1Wait && m_nUnloadStage1Case >  1 && m_nUnloadStage1Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 50) return TRUE;
 
+	if((m_nUnloadStage1Case > 9 &&  m_nUnloadStage1Case <= 13) || (m_nUnloadStage1Case >= 20 &&  m_nUnloadStage1Case <= 23))
+	{
+		if(!g_objCommon.Check_UnloadTrayAlways1()) g_objCommon.Show_MsgBox(1, "Stage 1에 Unload Tray 없습니다.");
+		return FALSE;
+	}
+
 	switch (m_nUnloadStage1Case) {
 	case 0:		// Start시 1로 바꿈
 		return TRUE;
@@ -4990,6 +4996,12 @@ BOOL CSequenceMain::UnloadStage2_Run()
 {
 	if (gData.bUnloadPort1Wait && m_nUnloadStage2Case >  1 && m_nUnloadStage2Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 50) return TRUE;
+
+	if((m_nUnloadStage2Case > 9 &&  m_nUnloadStage2Case <= 13) || (m_nUnloadStage2Case >= 20 &&  m_nUnloadStage2Case <= 23))
+	{
+		if(!g_objCommon.Check_UnloadTrayAlways2()) g_objCommon.Show_MsgBox(1, "Stage 2에 Unload Tray 없습니다.");
+		return FALSE;
+	}
 
 	switch (m_nUnloadStage2Case) {
 	case 0:		// Start시 1로 바꿈

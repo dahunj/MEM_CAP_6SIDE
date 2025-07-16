@@ -390,6 +390,23 @@ BOOL CCommon::Check_TrayFull()
 	return TRUE;
 }
 
+BOOL CCommon::Check_UnloadTrayAlways1()
+{
+	DX_DATA_05 *pDX05 = g_objAJinAXL.Get_pDX05();
+
+	if(!pDX05->iUnloadStage1Exist) return FALSE;
+	else  return TRUE;
+}
+
+BOOL CCommon::Check_UnloadTrayAlways2()
+{
+	DX_DATA_05 *pDX05 = g_objAJinAXL.Get_pDX05();
+
+	if(!pDX05->iUnloadStage1Exist) return FALSE;
+	else  return TRUE;
+}
+
+
 // Servo On Error : Error (100 - 145)
 BOOL CCommon::Check_ServoOn()
 {

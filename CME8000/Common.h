@@ -67,6 +67,9 @@ public:
 	BOOL Check_PortArea(BOOL bAuto=FALSE);
 	BOOL Check_TrayFull();
 
+	BOOL Check_UnloadTrayAlways1(); //stage 1 
+	BOOL Check_UnloadTrayAlways2(); //stage 2
+
 	BOOL Check_ServoOn();
 	BOOL Check_DirveAlarm();
 	BOOL Check_EndLimit();
