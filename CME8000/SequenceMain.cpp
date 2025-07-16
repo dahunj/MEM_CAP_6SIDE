@@ -4679,13 +4679,27 @@ BOOL CSequenceMain::UnloadPicker_Run()
 // 15. (Error : 4500)
 BOOL CSequenceMain::UnloadStage1_Run()
 {
+	static int threshold;
+	
 	if (gData.bUnloadPort1Wait && m_nUnloadStage1Case >  1 && m_nUnloadStage1Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 50) return TRUE;
 
+
+
+
 	if((m_nUnloadStage1Case > 9 &&  m_nUnloadStage1Case <= 13) || (m_nUnloadStage1Case >= 20 &&  m_nUnloadStage1Case <= 23))
 	{
-		if(!g_objCommon.Check_UnloadTrayAlways1()) g_objCommon.Show_MsgBox(1, "Stage 1에 Unload Tray 없습니다.");
-		return FALSE;
+		threshold++;
+		if(threshold > 2)
+		{
+			if(!g_objCommon.Check_UnloadTrayAlways1()) g_objCommon.Show_MsgBox(1, "Unload Stage 1에 Unload Tray 없습니다.");
+			return FALSE;
+		}
+		else threshold = 0;
+	}
+	else
+	{
+		threshold = 0;
 	}
 
 	switch (m_nUnloadStage1Case) {
@@ -4994,13 +5008,25 @@ BOOL CSequenceMain::UnloadStage1_Run()
 // 16. (Error : 4600)
 BOOL CSequenceMain::UnloadStage2_Run()
 {
+	static int threshold;
+
 	if (gData.bUnloadPort1Wait && m_nUnloadStage2Case >  1 && m_nUnloadStage2Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 50) return TRUE;
 
+	//unload stage 트레이 감지 센서 체킹 인터락 
 	if((m_nUnloadStage2Case > 9 &&  m_nUnloadStage2Case <= 13) || (m_nUnloadStage2Case >= 20 &&  m_nUnloadStage2Case <= 23))
 	{
-		if(!g_objCommon.Check_UnloadTrayAlways2()) g_objCommon.Show_MsgBox(1, "Stage 2에 Unload Tray 없습니다.");
-		return FALSE;
+		threshold++;
+		if(threshold >2)
+		{
+			if(!g_objCommon.Check_UnloadTrayAlways2()) g_objCommon.Show_MsgBox(1, "Unload Stage 2에 Unload Tray 없습니다.");
+			return FALSE;
+		}
+		else threshold = 0;
+	}
+	else
+	{
+		threshold = 0;
 	}
 
 	switch (m_nUnloadStage2Case) {
