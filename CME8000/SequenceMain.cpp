@@ -747,7 +747,7 @@ BOOL CSequenceMain::Check_CapInspAllGood()
 int CSequenceMain::Get_CmScanCnt()
 {
 	int nCnt = 0;
-	for (int i = 0; i < PICK; i++) { if (gData.InfoIndex[0][i] > 0) nCnt++; }
+	for (int i = 0; i < (PICK/2); i++) { if (gData.InfoIndex[0][i] > 0) nCnt++; }
 	int nScanCnt = (nCnt > 2 ? 2 : (nCnt > 1 ? 1 : (nCnt > 0 ? 0 : -1)));
 	return nScanCnt;
 }
@@ -2343,10 +2343,14 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
 			m_tLoadPickLoop.Takt_Save(4, 8);
 			
-			if (bLpTrayEmpty) {
-				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) {
+			if (bLpTrayEmpty) 
+			{
+				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) 
+				{
 					m_nLoadPickCase = 1; m_tLoadPickLoop.Set_LoopTime(5000);	// Picker와 Tray를 동시에 이동하기 위해...
-				} else {
+				}
+				else
+				{
 					m_tLoadPickLoop.Takt_Start();
 					nLpWorkTray = (nLpWorkTray == 1 ? 2 : 1);	// 교체
 					dLpY = m_pMoveData->dLoadPickerY[nLpWorkTray-1];
@@ -2354,13 +2358,18 @@ BOOL CSequenceMain::LoadPicker_Run()
 					g_objCommon.Move_Position(AX_LOAD_PICKER_P, 0);		// Stage Pitch
 					m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(10000);
 				}
-			} else {
+			} 
+			else
+			{
 				m_nLoadPickCase = 2; m_tLoadPickLoop.Set_LoopTime(5000);
 			}
 		}
 		break;
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
+			
+			if (m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
 			m_strLog.Format("LoadPicker, %d", GetTickCount() - m_dwLoadPick);
@@ -2562,11 +2571,11 @@ BOOL CSequenceMain::VisionCm_Run()
 				m_tVisionCmLoop.Takt_Start();
 				int nPNo = gData.nPNoIndex[0] - 1;
 				int nTNo1 = gData.nTNoIndex[0][nCmScanNo+0];
-				int nTNo2 = gData.nTNoIndex[0][nCmScanNo+3];
+				int nTNo2 = gData.nTNoIndex[0][nCmScanNo+2];
 				int nCNo1 = gData.nCNoIndex[0][nCmScanNo+0];
-				int nCNo2 = gData.nCNoIndex[0][nCmScanNo+3];
+				int nCNo2 = gData.nCNoIndex[0][nCmScanNo+2];
 				gData.nCmInspPickNo1 = nCmScanNo + 1;
-				gData.nCmInspPickNo2 = nCmScanNo + 4;
+				gData.nCmInspPickNo2 = nCmScanNo + 3;
 
 				gData.bCmAlignSkip = FALSE;
 				if (m_pEquipData->bUseInlineMode) 
@@ -2576,8 +2585,7 @@ BOOL CSequenceMain::VisionCm_Run()
 				else
 				{
 					g_objInspector.Set_LoadComplete("T12", gLot.sLotID[nPNo], gData.nPNoIndex[0], nTNo1, nTNo2, nCNo1, nCNo2, gData.nCmInspPickNo1, gData.nCmInspPickNo2);
-				}
-				
+				}				
 
 				nCmScanNo++;
 				m_nVisionCmCase = 5; m_tVisionCmLoop.Set_LoopTime(30000);
