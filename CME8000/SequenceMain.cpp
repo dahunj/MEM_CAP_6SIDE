@@ -4688,28 +4688,10 @@ BOOL CSequenceMain::UnloadPicker_Run()
 BOOL CSequenceMain::UnloadStage1_Run()
 {
 	static int threshold;
-	
+		
 	if (gData.bUnloadPort1Wait && m_nUnloadStage1Case >  1 && m_nUnloadStage1Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 50) return TRUE;
-
-
-
-
-	if((m_nUnloadStage1Case > 9 &&  m_nUnloadStage1Case <= 13) || (m_nUnloadStage1Case >= 20 &&  m_nUnloadStage1Case <= 23))
-	{
-		threshold++;
-		if(threshold > 2)
-		{
-			if(!g_objCommon.Check_UnloadTrayAlways1()) g_objCommon.Show_MsgBox(1, "Unload Stage 1에 Unload Tray 없습니다.");
-			return FALSE;
-		}
-		else threshold = 0;
-	}
-	else
-	{
-		threshold = 0;
-	}
-
+	
 	switch (m_nUnloadStage1Case) {
 	case 0:		// Start시 1로 바꿈
 		return TRUE;
@@ -4823,6 +4805,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			m_tUnloadStage1Loop.Takt_Save(14, 5);
 			Init_UnloadTray();
 			gData.nShipTrayLoad++;
+			threshold = 0;
 			m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -4858,6 +4841,15 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		break;
 
 	case 20:	// Working
+		if(!m_pDX05->iUnloadStage1Exist)
+		{
+			threshold++;
+			if(threshold > 20) break;
+		}
+		else
+		{
+			threshold = 0;
+		}		
 		return TRUE;
 
 	case 21:	// 안전 확인
@@ -5020,23 +5012,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 
 	if (gData.bUnloadPort1Wait && m_nUnloadStage2Case >  1 && m_nUnloadStage2Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 50) return TRUE;
-
-	//unload stage 트레이 감지 센서 체킹 인터락 
-	if((m_nUnloadStage2Case > 9 &&  m_nUnloadStage2Case <= 13) || (m_nUnloadStage2Case >= 20 &&  m_nUnloadStage2Case <= 23))
-	{
-		threshold++;
-		if(threshold >2)
-		{
-			if(!g_objCommon.Check_UnloadTrayAlways2()) g_objCommon.Show_MsgBox(1, "Unload Stage 2에 Unload Tray 없습니다.");
-			return FALSE;
-		}
-		else threshold = 0;
-	}
-	else
-	{
-		threshold = 0;
-	}
-
+	
 	switch (m_nUnloadStage2Case) {
 	case 0:		// Start시 1로 바꿈
 		return TRUE;
@@ -5150,6 +5126,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_tUnloadStage2Loop.Takt_Save(15, 5);
 			Init_UnloadTray();
 			gData.nShipTrayLoad++;
+			threshold = 0;
 			m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5185,6 +5162,15 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;
 
 	case 20:	// Working
+		if(!m_pDX05->iUnloadStage2Exist)
+		{
+			threshold++;
+			if(threshold > 20) break;
+		}
+		else
+		{
+			threshold = 0;
+		}		
 		return TRUE;
 
 	case 21:	// 안전 확인
