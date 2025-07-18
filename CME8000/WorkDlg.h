@@ -179,6 +179,8 @@ public:
 
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
+	afx_msg void OnBnClickedBtnLotstart1();
+	afx_msg void OnBnClickedBtnLotstart2();
 };
 
 extern CWorkDlg g_dlgWork;

@@ -142,6 +142,8 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_LOAD_CELL_EDIT, &CWorkDlg::OnBnClickedLoadCellEdit)
 	ON_STN_CLICKED(IDC_LBL_CAP_LOT_0, &CWorkDlg::OnStnClickedLblCapLot0)
 	ON_STN_CLICKED(IDC_LBL_SHIP_LOT_0, &CWorkDlg::OnStnClickedLblShipLot0)
+	ON_BN_CLICKED(IDC_BTN_LOTSTART1, &CWorkDlg::OnBnClickedBtnLotstart1)
+	ON_BN_CLICKED(IDC_BTN_LOTSTART2, &CWorkDlg::OnBnClickedBtnLotstart2)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -1704,4 +1706,16 @@ void CWorkDlg::OnBnClickedButton1()
 
 void CWorkDlg::OnBnClickedButton2()
 {
+}
+
+
+void CWorkDlg::OnBnClickedBtnLotstart1()
+{
+	g_objInspector.Set_LotStart(gData.sLotID[0], 1);
+}
+
+
+void CWorkDlg::OnBnClickedBtnLotstart2()
+{
+	g_objInspector.Set_LotStart(gData.sLotID[1], 2);
 }
