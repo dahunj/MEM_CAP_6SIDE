@@ -4703,7 +4703,9 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		{
 			m_dwUnloadStage1 = GetTickCount();
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
-		} else {
+		}
+		else
+		{
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
 		break;
@@ -4806,10 +4808,23 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			Init_UnloadTray();
 			gData.nShipTrayLoad++;
 			threshold = 0;
-			m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			m_nUnloadStage1Case = 14; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
-
+	case 14:
+		if(m_pDX05->iUnloadStage1Exist)
+		{
+			threshold++;
+			if(threshold > 10) 
+			{
+				m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			}
+		}
+		else
+		{
+			threshold = 0;
+		}		
+		break;
 	case 15:	// Ship 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_ShipLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesShipReg) {	// MES Ship 자재등록 사용
@@ -4841,15 +4856,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		break;
 
 	case 20:	// Working
-		if(!m_pDX05->iUnloadStage1Exist)
-		{
-			threshold++;
-			if(threshold > 20) break;
-		}
-		else
-		{
-			threshold = 0;
-		}		
+		
 		return TRUE;
 
 	case 21:	// 안전 확인
@@ -5127,10 +5134,23 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			Init_UnloadTray();
 			gData.nShipTrayLoad++;
 			threshold = 0;
-			m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			m_nUnloadStage2Case = 14; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
-
+	case 14:
+		if(m_pDX05->iUnloadStage2Exist)
+		{
+			threshold++;
+			if(threshold > 20) 
+			{
+				m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			}
+		}
+		else
+		{
+			threshold = 0;
+		}		
+		break;
 	case 15:	// Ship 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_ShipLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesShipReg) {	// MES Ship 자재등록 사용
@@ -5162,15 +5182,6 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;
 
 	case 20:	// Working
-		if(!m_pDX05->iUnloadStage2Exist)
-		{
-			threshold++;
-			if(threshold > 20) break;
-		}
-		else
-		{
-			threshold = 0;
-		}		
 		return TRUE;
 
 	case 21:	// 안전 확인
