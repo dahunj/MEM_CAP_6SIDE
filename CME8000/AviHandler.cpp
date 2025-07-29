@@ -43,8 +43,14 @@ BOOL CAviHandler::Initialize()
 	if (m_bOpened) return TRUE;
 
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+#ifdef AJIN_BOARD_USE
 	m_bOpened = m_UdpAvi.Open_Socket(UDP_AVI_LPORT, UDP_AVI_HPORT, pEquipData->sAviIp, this);
 	if (!m_bOpened) return FALSE;
+#else
+	m_bOpened = m_UdpAvi.Open_Socket(20001, 20000, "127.0.0.1", this);
+	if (!m_bOpened) return FALSE;
+#endif
 
 	CString strLog;
 	strLog.Format("Initialize : IP(%s)", pEquipData->sAviIp);

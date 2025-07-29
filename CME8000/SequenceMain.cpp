@@ -61,6 +61,11 @@ CSequenceMain::CSequenceMain()
 	m_bThreadMainRun = FALSE;
 	m_pThreadMainRun = NULL;
 
+#ifndef AJIN_BOARD_USE
+	m_pDX00->iLoadPort1LowCheck = FALSE;
+	m_bLoadPortTrayExist = FALSE;
+#endif
+	 
 	Reset_MainRunCase();
 }
 
@@ -2118,8 +2123,10 @@ BOOL CSequenceMain::LoadPicker_Run()
 
 		if (m_pEquipData->bUseInlineMode) {	// Index에 모듈이 있을때 Tray가 안넘어오면 Index는 돌아가게 해준다.
 			if (((m_nLoadStage1Case == 0 || m_nLoadStage1Case == 1) && m_nLoadStage2Case == 50) ||
-				((m_nLoadStage2Case == 0 || m_nLoadStage2Case == 1) && m_nLoadStage1Case == 50)) {
-				if (!Check_IndexEmpty(-1) && m_nVisionCmCase == 0) {
+				((m_nLoadStage2Case == 0 || m_nLoadStage2Case == 1) && m_nLoadStage1Case == 50)) 
+			{
+				if (!Check_IndexEmpty(-1) && m_nVisionCmCase == 0) 
+				{
 					gData.IndexDone[0] = TRUE;
 					m_nLoadPickCase = 0;
 				}
@@ -2168,7 +2175,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
-			if (m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
@@ -2368,7 +2375,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
 			
-			if (m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
 
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
@@ -5346,16 +5353,34 @@ BOOL CSequenceMain::Run_Simulation()
 #ifdef AJIN_BOARD_USE
 	return TRUE;
 #endif
+	if(m_nTrayPickCase == 8)
+	{
+		Sleep(SIM_WAITTIMES);
+		m_pDX00->iTrayPickerExist = TRUE;
+		
+	}
+
+	if(m_nTrayPickCase == 24)
+	{
+		Sleep(SIM_WAITTIMES);
+		m_pDX00->iLoadPort1LowCheck = TRUE;
+		m_pDX00->iTrayPickerExist = FALSE;
+	}
+	
+
+
 	if(m_nLoadStage1Case == 8)
 	{
 		Sleep(SIM_WAITTIMES);
 		 m_pDX04->iLoadStage1Exist = TRUE;
+		 m_pDX00->iLoadPort1LowCheck = FALSE;
 	}
 
 	if(m_nLoadStage2Case == 8)
 	{
 		Sleep(SIM_WAITTIMES);
 		m_pDX04->iLoadStage2Exist = TRUE;
+		m_pDX00->iLoadPort1LowCheck = FALSE;
 	}
 
 	if(m_nLoadStage1Case == 4)
