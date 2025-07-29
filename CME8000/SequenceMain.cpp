@@ -2176,6 +2176,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+			
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
@@ -2343,13 +2344,14 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && g_objCommon.Get_LoadPickerCmCheckOff()) {
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
+			
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 20:	// return
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
 			m_tLoadPickLoop.Takt_Save(4, 8);
-			
+			gData.IndexDone[0] = TRUE;
 			if (bLpTrayEmpty) 
 			{
 				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) 
@@ -2376,7 +2378,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
 			
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
-
+			
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
 			m_strLog.Format("LoadPicker, %d", GetTickCount() - m_dwLoadPick);
@@ -2555,7 +2557,7 @@ BOOL CSequenceMain::VisionCm_Run()
 			} 
 			else
 			{	// Align 검사를 안하면 종료한다.
-				gData.IndexDone[0] = TRUE;
+				//gData.IndexDone[0] = TRUE;
 				m_nVisionCmCase = 0; m_tVisionCmLoop.Set_LoopTime(5000);
 			}
 		}
@@ -3744,6 +3746,7 @@ BOOL CSequenceMain::AssyPicker_Run()
 				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);	// Load Cell Position	
 				m_nAssyPickCase = 70; m_tAssyPickLoop.Set_LoopTime(10000);
 			} else {
+				if(m_nCapBufferCase != 10) break;
 				if (m_nCapBufferCase == 10) m_nCapBufferCase = 11;
 				g_objCommon.Move_Position(AX_ASSY_PICKER_X, 1);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 1);
@@ -5446,6 +5449,9 @@ BOOL CSequenceMain::Run_Simulation()
 		m_pDX05->iUnloadStage2Exist = FALSE;
 
 	}
+
+	if (m_nLoadStage1Case == 2) { Sleep(SIM_WAITTIMES); m_pDX00->iLoadPort1LowCheck = TRUE; m_pDX01->iLoadPort2LowCheck = TRUE; }
+	if (m_nLoadStage2Case == 2) { Sleep(SIM_WAITTIMES); m_pDX00->iLoadPort1LowCheck = TRUE; m_pDX01->iLoadPort2LowCheck = TRUE; }
 
 	if (m_nCapStage1Case == 1) { Sleep(SIM_WAITTIMES); m_pDX02->iCapPort1LowCheck = TRUE; }
 	if (m_nCapStage2Case == 1) { Sleep(SIM_WAITTIMES); m_pDX02->iCapPort1LowCheck = TRUE; }
