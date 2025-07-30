@@ -224,7 +224,7 @@ public:
 
 	void Init_NgTray(int nNo);
 
-	void Test_CSKIM();	// Run Test
+	BOOL CheckCMVisionGo(int nPNo);
 };
 
 extern CSequenceMain g_objSequenceMain;

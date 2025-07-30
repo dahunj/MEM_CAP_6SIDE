@@ -277,7 +277,7 @@ UINT CSequenceMain::Thread_MainRun(LPVOID lpVoid)
 		if (!g_objCommon.Check_DirveAlarm()) break;
 		if (!g_objCommon.Check_EndLimit()) break;
 		if (!g_objCommon.Check_HomeDone()) break;
-
+		
 		if (!g_objSequenceMain.TrayPicker_Run()) break;		//  1. (Error : 3100)
 		if (!g_objSequenceMain.LoadStage1_Run()) break;		//  2. (Error : 3200)
 		if (!g_objSequenceMain.LoadStage2_Run()) break;		//  3. (Error : 3300)
@@ -387,7 +387,8 @@ BOOL CSequenceMain::LotEnd_Run()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
+//Type 0 : 랏 엔드 되도 초기화 되면 안되는 정보들 
+//Type 1 : 랏 엔드시 초기화 되야 되는 정보들 
 void CSequenceMain::Set_ClearRunData(int nType)
 {
 	memset(gData.bScanDone, 0x00, sizeof(BOOL) * 2);
@@ -417,6 +418,12 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) memset(gData.nCapNoCapPicker, 0x00, sizeof(int) * PICK);
 	if (nType == 0) memset(gData.nCapNoCapBuffer, 0x00, sizeof(int) * PICK);
 	if (nType == 0) memset(gData.nCapNoAssyPicker, 0x00, sizeof(int) * PICK);
+
+	gData.nScanTimes = 0;
+	if (nType == 0) gData.nLotQtyInspDone = 0;
+	if (nType == 0) gData.dwRunTimeNow = 0;
+	if (nType == 0) gData.dwRunTimeAccumulated = 0;
+	
 
 	gData.nPNoLoadPick = gData.nPNoUnloadPick = 0;
 	gData.nPNoTransStage = gData.nPNoUnloadTray = 0;
@@ -1073,6 +1080,8 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 		gLot.sLotID[nLPNo], strStart, strEnd, gLot.dTackTime, nSum, (double)(gLot.dwRunTime) / 1000,
 		(double)(gLot.dwStopTime) / 1000, (double)(gLot.dwErrorTime) / 1000, gLot.nErrorCount, dRate, 3600 / gLot.dTackTime ,(double)(gLot.dwRunTime + gLot.dwErrorTime + gLot.dwStopTime) / gLot.nErrorCount);
 	g_objLogFile.Save_OperatingRatio(strMsg);
+
+	gData.dwRunTimeAccumulated += gLot.dwRunTime;
 	gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime = 0;
 
 	g_objLogFile.Save_AverageCycle(nLPNo);
@@ -2175,7 +2184,10 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
-			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
+				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
+				&& CheckCMVisionGo( gData.nPNoLoadPick)) 
+			{	m_nVisionCmCase = 1;}
 			
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
@@ -2377,7 +2389,9 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
 			
-			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !Check_IndexEmpty(0)) m_nVisionCmCase = 1;
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
+				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
+				&& CheckCMVisionGo(gData.nPNoLoadPick)) m_nVisionCmCase = 1;
 			
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
@@ -2642,8 +2656,11 @@ BOOL CSequenceMain::VisionCm_Run()
 		}
 		break;
 	case 16:	// Check Position
-		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) {
-			if (Check_CmAlignDone()) {
+		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
+		{
+			if (Check_CmAlignDone()) 
+			{
+				gData.nScanTimes++;
 				m_tVisionCmLoop.Takt_Save(5,3);
 				gData.IndexDone[0] = TRUE;
 // 				if (gData.IndexDone[0] && Check_CmAlignDone())	{ m_nVisionCmCase = 0; m_tVisionCmLoop.Set_LoopTime(30000); }
@@ -5346,10 +5363,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	return TRUE;
 }
 
-void CSequenceMain::Test_CSKIM()
-{
-	VisionCap_Run();
-}
+
 
 BOOL CSequenceMain::Run_Simulation()
 {
@@ -5462,4 +5476,25 @@ BOOL CSequenceMain::Run_Simulation()
 
 
 	return TRUE;
+}
+
+BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
+{
+	DWORD temp;
+
+	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo-1] - gLot.dwErrorTime;
+	temp = gData.dwRunTimeNow + gData.dwRunTimeAccumulated;
+	double dTimeLimit = (double)m_pEquipData->nHoursScan*3600;
+		
+	if(temp > dTimeLimit)
+	{
+		gData.nLotQtyInspDone = 0;
+		gData.dwRunTimeNow = 0;
+		gData.dwRunTimeAccumulated = 0;
+	}
+
+	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
+	else return FALSE;
+
+	
 }

@@ -75,6 +75,9 @@ public:
 	CLabelCS	m_lblPasswordSi;
 	CEditCS		m_edtPasswordSi;
 
+	CLabelCS	m_lblCMVision[2];
+	CStaticCS	m_stcCMVision[3];
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 

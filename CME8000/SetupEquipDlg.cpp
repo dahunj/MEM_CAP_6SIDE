@@ -88,6 +88,10 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STC_PASSWORD_MT, m_stcPasswordMt);
 	DDX_Control(pDX, IDC_LBL_PASSWORD_SI, m_lblPasswordSi);
 	DDX_Control(pDX, IDC_EDT_PASSWORD_SI, m_edtPasswordSi);
+
+	for(int i = 0; i < 2; i++) DDX_Control(pDX, IDC_LBL_VISION_0 +i, m_lblCMVision[i] );
+	for(int i = 0; i < 3; i++) DDX_Control(pDX, IDC_STC_CM_VISION_0 +i, m_stcCMVision[i]);
+
 }
 
 BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
@@ -200,6 +204,10 @@ void CSetupEquipDlg::Initial_Controls()
 	m_stcPasswordMt.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xC0, 0xC0, 0xC0));
 	m_lblPasswordSi.Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
 	m_edtPasswordSi.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
+
+	for (int i = 0; i < 2; i++) m_lblCMVision[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
+	for (int i = 0; i < 3; i++) m_stcCMVision[i].Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xD0, 0xD0));
+
 }
 
 BOOL CSetupEquipDlg::OnInitDialog() 
@@ -423,6 +431,10 @@ void CSetupEquipDlg::Display_EquipData()
 	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
 	m_chkUseVisionAlignOffset.SetCheck(pEquipData->bUseVisionAlignOffset);
 
+	strData.Format("%d", pEquipData->nScanTimesPerLot); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
+	strData.Format("%d", pEquipData->nLotQuantity); m_stcCMVision[1].SetWindowTextA(strData);
+	strData.Format("%d", pEquipData->nHoursScan); m_stcCMVision[2].SetWindowTextA(strData); 
+
 	m_chkUseTrayPickerTurn.SetCheck(pEquipData->bUseTrayPickerTurn);
 	m_chkUseCapPickerTurn.SetCheck(pEquipData->bUseCapPickerTurn);
 	m_chkAssyPickerTilt.SetCheck(pEquipData->bChkAssyPickerTilt);
@@ -511,6 +523,11 @@ void CSetupEquipDlg::Save_EquipData()
 	m_stcCapTrayData[3].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("CAP_TRAY", "PITCH_Y", dData, "%0.2lf");
 	m_stcShipTrayData[2].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_X_" + strModel, dData, "%0.2lf");
 	m_stcShipTrayData[3].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_Y_" + strModel, dData, "%0.2lf");
+
+	m_stcCMVision[0].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "SCAN_TIMES_PER_LOT", dData, "%d"); // Scan Times per 1 Lot 
+	m_stcCMVision[1].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "LOT_QUANTITY", dData, "%d"); // Lot Quantity 
+	m_stcCMVision[2].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "HOURS_DEN", dData, "%d"); // Hours DENOMINATOR
+
 
 	for (int i = 0; i < 3; i++) { strKey.Format("%d", i); m_stcVacOffDelay[i].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("VAC_OFF_DELAY", strKey, nData); }
 	for (int i = 0; i < 6; i++) { strKey.Format("%d", i); m_stcDelayAdd[i].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("DELAY_ADD", strKey, nData); }
