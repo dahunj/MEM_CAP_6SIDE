@@ -115,6 +115,9 @@ BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_STC_PASSWORD_MT, &CSetupEquipDlg::OnStnClickedStcPasswordMt)
 	ON_BN_CLICKED(IDC_BTN_AVI_CONNECT, &CSetupEquipDlg::OnBnClickedBtnAviConnect)
 	ON_BN_CLICKED(IDC_BTN_AVI_DISCONNECT, &CSetupEquipDlg::OnBnClickedBtnAviDisconnect)
+	ON_STN_CLICKED(IDC_STC_CM_VISION_0, &CSetupEquipDlg::OnStnClickedStcCmVision0)
+	ON_STN_CLICKED(IDC_STC_CM_VISION_1, &CSetupEquipDlg::OnStnClickedStcCmVision1)
+	ON_STN_CLICKED(IDC_STC_CM_VISION_2, &CSetupEquipDlg::OnStnClickedStcCmVision2)
 END_MESSAGE_MAP()
 
 // CSetupEquipDlg 메시지 처리기입니다.
@@ -524,9 +527,9 @@ void CSetupEquipDlg::Save_EquipData()
 	m_stcShipTrayData[2].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_X_" + strModel, dData, "%0.2lf");
 	m_stcShipTrayData[3].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_Y_" + strModel, dData, "%0.2lf");
 
-	m_stcCMVision[0].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "SCAN_TIMES_PER_LOT", dData, "%d"); // Scan Times per 1 Lot 
-	m_stcCMVision[1].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "LOT_QUANTITY", dData, "%d"); // Lot Quantity 
-	m_stcCMVision[2].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("OPTION", "HOURS_DEN", dData, "%d"); // Hours DENOMINATOR
+	m_stcCMVision[0].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("OPTION", "SCAN_TIMES_PER_LOT", nData); // Scan Times per 1 Lot 
+	m_stcCMVision[1].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "LOT_QUANTITY", nData); // Lot Quantity 
+	m_stcCMVision[2].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "HOURS_DEN", nData); // Hours DENOMINATOR
 
 
 	for (int i = 0; i < 3; i++) { strKey.Format("%d", i); m_stcVacOffDelay[i].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("VAC_OFF_DELAY", strKey, nData); }
@@ -577,4 +580,34 @@ void CSetupEquipDlg::OnBnClickedBtnAviDisconnect()
 {
 	g_objAviHandler.Set_ConnectStatus(FALSE);
 	g_objAviHandler.Terminate();
+}
+
+
+void CSetupEquipDlg::OnStnClickedStcCmVision0()
+{
+	CString strOld, strNew;
+	m_stcCMVision[0].GetWindowText(strOld);
+	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+
+	m_stcCMVision[0].SetWindowText(strNew);
+}
+
+
+void CSetupEquipDlg::OnStnClickedStcCmVision1()
+{
+	CString strOld, strNew;
+	m_stcCMVision[1].GetWindowText(strOld);
+	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+
+	m_stcCMVision[1].SetWindowText(strNew);
+}
+
+
+void CSetupEquipDlg::OnStnClickedStcCmVision2()
+{
+	CString strOld, strNew;
+	m_stcCMVision[2].GetWindowText(strOld);
+	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+
+	m_stcCMVision[2].SetWindowText(strNew);
 }

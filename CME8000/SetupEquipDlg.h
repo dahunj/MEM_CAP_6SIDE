@@ -114,6 +114,9 @@ public:
 	void Cancel_EquipData();
 	afx_msg void OnBnClickedBtnAviConnect();
 	afx_msg void OnBnClickedBtnAviDisconnect();
+	afx_msg void OnStnClickedStcCmVision0();
+	afx_msg void OnStnClickedStcCmVision1();
+	afx_msg void OnStnClickedStcCmVision2();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
