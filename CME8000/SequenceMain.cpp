@@ -2363,9 +2363,12 @@ BOOL CSequenceMain::LoadPicker_Run()
 		}
 		break;
 	case 20:	// return
-		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
-			m_tLoadPickLoop.Takt_Save(4, 8);
-			gData.IndexDone[0] = TRUE;
+		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) 
+		{
+			m_tLoadPickLoop.Takt_Save(4, 8);		
+
+			if(!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) gData.IndexDone[0] = TRUE;
+
 			if (bLpTrayEmpty) 
 			{
 				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) 
@@ -2393,7 +2396,12 @@ BOOL CSequenceMain::LoadPicker_Run()
 			
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
-				&& CheckCMVisionGo(gData.nPNoLoadPick)) m_nVisionCmCase = 1;
+				&& CheckCMVisionGo(gData.nPNoLoadPick)
+			)
+			{
+					m_nVisionCmCase = 1;
+			}
+			
 			
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
@@ -2498,7 +2506,12 @@ BOOL CSequenceMain::MainIndex_Run()
 				m_pDX11->iIndexTransAlignIn && !m_pDX11->iIndexTransAlignOut && !m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown &&
 				!m_pDX11->iIndexAssyVacUp && m_pDX11->iIndexAssyVacDown) {
 
-				if (Check_IndexEmpty(-1)) { gData.IndexDone[0] = FALSE; m_nMainIndexCase = 0; return TRUE; }
+				if (Check_IndexEmpty(-1)) 
+				{ 
+					gData.IndexDone[0] = FALSE;
+					m_nMainIndexCase = 0; 
+					return TRUE;
+				}
 
 				if ((g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y) <= 200.0 || g_objCommon.Get_LoadPickerUp()) &&
 					(g_objAJinAXL.Get_Position(AX_ASSY_PICKER_X) <= 200.0 || g_objCommon.Get_AssyPickerUp(0)) &&
