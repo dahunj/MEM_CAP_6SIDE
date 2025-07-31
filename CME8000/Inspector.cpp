@@ -250,7 +250,7 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 				m_nT12ScanCnt++;
 				if (m_nT12ScanCnt == m_nT12ScanReq &&
 					(gData.InfoIndex[0][m_nT12ScanCnt+0] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+0] > 0 && nCmInfo1 == 1)) &&
-					(gData.InfoIndex[0][m_nT12ScanCnt+3] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+3] > 0 && nCmInfo2 == 1))) 
+					(gData.InfoIndex[0][m_nT12ScanCnt+2] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+2] > 0 && nCmInfo2 == 1))) 
 				{
 					m_nT12ScanCnt = 0;
 					gData.bScanDone[0] = TRUE;

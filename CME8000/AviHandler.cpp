@@ -386,8 +386,14 @@ void CAviHandler::Send_Command(CString strSend)
 	g_csAviHandler.Unlock();	// Critical Section
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-void CAviHandler::Test_Command()
+void CAviHandler::Set_NotifyCmAlignAlarm()
 {
+	CString	strSendCmd;
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	strSendCmd.Format("NOTIFY,ALARM,%s,%d", pEquipData->sAviIp, UDP_AVI_LPORT);
+	Send_Command(strSendCmd);
 }
+
+
+/////////////////////////////////////////////////////////////////////////////

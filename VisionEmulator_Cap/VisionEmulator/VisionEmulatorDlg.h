@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "UDPManager.h"
+
 
 // CVisionEmulatorDlg 대화 상자
 class CVisionEmulatorDlg : public CDialogEx

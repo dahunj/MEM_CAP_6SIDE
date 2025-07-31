@@ -23,27 +23,15 @@ protected:
 	afx_msg LRESULT OnUdpReceive(WPARAM wLocalPort, LPARAM lParam);
 
 private:
-	CUdpSocketCS	m_UdpVisionPC1;
-	CUdpSocketCS	m_UdpVisionPC2;
-	CUdpSocketCS	m_UdpVisionPC3;
-	CUdpSocketCS	m_UdpVisionPC4;
-
+	CUdpSocketCS	m_UdpVisionPC;
+	
 	CString m_strRecvCmd;
 
-	BOOL	m_bConnectPC1;
-	BOOL	m_bConnectPC2;
-	BOOL	m_bConnectPC3;
-	BOOL	m_bConnectPC4;
-
-	int		m_nStatusPC1;		// Vision PC1 상태 (0:Not Ready, 1:Ready)
-	int		m_nStatusPC2;		// Vision PC2 상태 (0:Not Ready, 1:Ready)
-	int		m_nStatusPC3;		// Vision PC3 상태 (0:Not Ready, 1:Ready)
-	int		m_nStatusPC4;		// Vision PC4 상태 (0:Not Ready, 1:Ready)
-
-	BOOL	m_bLotReady1;
-	BOOL	m_bLotReady2;
-	BOOL	m_bLotReady3;
-	BOOL	m_bLotReady4;
+	BOOL	m_bConnectPC;
+	
+	int		m_nStatusPC;		// Vision PC1 상태 (0:Not Ready, 1:Ready)
+	
+	BOOL	m_bLotReady;
 
 	void DoEvents(int nSleep = 0);
 
@@ -56,12 +44,19 @@ private:
 	void Get_StatusReply(int nInspector, CString sStatus);
 	void Get_StatusUpdate(int nInspector, CString sStatus);
 
-	void Send_Command(int nInspector, CString strSend);
+	void Send_Command(CString strSend);
 	void Exception_Log(CString sFunc, CString sGbn, int nCase);	// Recevie Exception Log
 
 public:
 	void Initialize();
 	void Terminate();
+
+	void Set_ConnectRequest();
+	void Set_ConnectReply();
+	void Set_ConnectEnd();
+	void Set_StatusRequest();
+	void Set_StatusReply(int nStatus);
+	void Set_StatusUpdate(int nStatus); 
 
 };
 extern CUDPManager g_objUDPManager;

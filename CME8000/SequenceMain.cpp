@@ -2628,6 +2628,7 @@ BOOL CSequenceMain::VisionCm_Run()
 	case 6:	// Error
 		nCmScanNo--;
 		m_nVisionCmCase = 2; m_tVisionCmLoop.Set_LoopTime(5000);
+		g_objAviHandler.Set_NotifyCmAlignAlarm();
 		g_objCommon.Show_Error(3606);
 		return FALSE;
 

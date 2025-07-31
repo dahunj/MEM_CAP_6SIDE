@@ -56,12 +56,13 @@ public:
 
 
 	void Set_ConnectStatus(BOOL isConnected) { m_bConnected = isConnected; }
+	void Set_NotifyCmAlignAlarm();
 
 	BOOL Is_Opened() { return m_bOpened; }
 
 	BOOL Is_Connected() { return m_bConnected; } 
 
-	void Test_Command();
+	
 };
 
 extern CAviHandler g_objAviHandler;

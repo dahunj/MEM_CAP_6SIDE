@@ -43,27 +43,21 @@ void CUDPManager::DoEvents(int nSleep)
 
 void CUDPManager::Get_ConnectRequest(int nInspector)
 {
-	if (nInspector == INSPECTOR_PC1) m_bConnectPC1 = TRUE;
-	if (nInspector == INSPECTOR_PC2) m_bConnectPC2 = TRUE;
-	if (nInspector == INSPECTOR_PC3) m_bConnectPC3 = TRUE;
-	if (nInspector == INSPECTOR_PC4) m_bConnectPC4 = TRUE;
+	m_bConnectPC = TRUE;
+
 	//Set_ConnectReply(nInspector);
 }
 
 void CUDPManager::Get_ConnectReply(int nInspector)
 {
-	if (nInspector == INSPECTOR_PC1) m_bConnectPC1 = TRUE;
-	if (nInspector == INSPECTOR_PC2) m_bConnectPC2 = TRUE;
-	if (nInspector == INSPECTOR_PC3) m_bConnectPC3 = TRUE;
-	if (nInspector == INSPECTOR_PC4) m_bConnectPC4 = TRUE;
+	m_bConnectPC = TRUE;
+
 }
 
 void CUDPManager::Get_ConnectEnd(int nInspector)
 {
-	if (nInspector == INSPECTOR_PC1) m_bConnectPC1 = FALSE;
-	if (nInspector == INSPECTOR_PC2) m_bConnectPC2 = FALSE;
-	if (nInspector == INSPECTOR_PC3) m_bConnectPC3 = FALSE;
-	if (nInspector == INSPECTOR_PC4) m_bConnectPC4 = FALSE;
+	m_bConnectPC = FALSE;
+
 }
 
 
@@ -76,28 +70,24 @@ void CUDPManager::Get_StatusRequest(int nInspector)
 
 void CUDPManager::Get_StatusReply(int nInspector, CString sStatus)
 {
-	if (nInspector == INSPECTOR_PC1) m_nStatusPC1 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC2) m_nStatusPC2 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC3) m_nStatusPC3 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC4) m_nStatusPC4 = atoi(sStatus);
+	m_nStatusPC = atoi(sStatus);
+
 }
 
 void CUDPManager::Get_StatusUpdate(int nInspector, CString sStatus)
 {
 	KillTimer(nInspector);
-	if (nInspector == INSPECTOR_PC1) m_nStatusPC1 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC2) m_nStatusPC2 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC3) m_nStatusPC3 = atoi(sStatus);
-	if (nInspector == INSPECTOR_PC4) m_nStatusPC4 = atoi(sStatus);
+	m_nStatusPC = atoi(sStatus);
+
 	SetTimer(nInspector, 15000, NULL);
 }
 
 
-void CUDPManager::Send_Command(int nInspector, CString strSend)
+void CUDPManager::Send_Command(CString strSend)
 {
 	// Inspector Log //////////////////////////////////////
 	CString strLog;
-	strLog.Format("[H->V%d] : %s", nInspector, strSend);
+	strLog.Format("[H->V] : %s", strSend);
 	//g_objLogFile.Save_InspectorLog(strLog);
 	///////////////////////////////////////////////////////
 
@@ -110,29 +100,22 @@ void CUDPManager::Send_Command(int nInspector, CString strSend)
 	int nLength = strSendSocket.GetLength();
 	memcpy(chSend, (LPSTR)(LPCSTR)strSendSocket, nLength);
 
-	if (nInspector == INSPECTOR_ALL || nInspector == INSPECTOR_PC1) m_UdpVisionPC1.Write_Socket((BYTE*)chSend, nLength);
-	if (nInspector == INSPECTOR_ALL || nInspector == INSPECTOR_PC2) m_UdpVisionPC2.Write_Socket((BYTE*)chSend, nLength);
-	if (nInspector == INSPECTOR_ALL || nInspector == INSPECTOR_PC3) m_UdpVisionPC3.Write_Socket((BYTE*)chSend, nLength);
-	if (nInspector == INSPECTOR_ALL || nInspector == INSPECTOR_PC4) m_UdpVisionPC4.Write_Socket((BYTE*)chSend, nLength);
-
+	m_UdpVisionPC.Write_Socket((BYTE*)chSend, nLength);
+	
 	g_csInspector.Unlock();	// Critical Section
 }
 
 void CUDPManager::Initialize()
 {
-	BOOL bOpenedPC1 = m_UdpVisionPC1.Open_Socket(10001, 10000, "127.0.0.1", this);
-	BOOL bOpenedPC2 = m_UdpVisionPC2.Open_Socket(11001, 11000, "127.0.0.1", this);
-	BOOL bOpenedPC3 = m_UdpVisionPC3.Open_Socket(12001, 12000, "127.0.0.1", this);
-	BOOL bOpenedPC4 = m_UdpVisionPC4.Open_Socket(13001, 13000, "127.0.0.1", this);
+	BOOL bOpenedPC1 = m_UdpVisionPC.Open_Socket(8001, 8000, "127.0.0.1", this);
+	if(bOpenedPC1) Set_ConnectRequest();
 
 }
 
 void CUDPManager::Terminate()
 {
-	m_UdpVisionPC1.Close_Socket();
-	m_UdpVisionPC2.Close_Socket();
-	m_UdpVisionPC3.Close_Socket();
-	m_UdpVisionPC4.Close_Socket();
+	m_UdpVisionPC.Close_Socket();
+
 }
 
 
@@ -143,10 +126,7 @@ LRESULT CUDPManager::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 	BYTE byRecv[1024] = { 0 };
 	CString strLog;
 
-	if (nPort == 10000) { nInspector = INSPECTOR_PC1; nLen = m_UdpVisionPC1.Read_Socket(byRecv); }
-	if (nPort == 11000) { nInspector = INSPECTOR_PC2; nLen = m_UdpVisionPC2.Read_Socket(byRecv); }
-	if (nPort == 12000) { nInspector = INSPECTOR_PC3; nLen = m_UdpVisionPC3.Read_Socket(byRecv); }
-	if (nPort == 13000) { nInspector = INSPECTOR_PC4; nLen = m_UdpVisionPC4.Read_Socket(byRecv); }
+	if (nPort == 8000) { nInspector = INSPECTOR_PC1; nLen = m_UdpVisionPC.Read_Socket(byRecv); }
 
 	if (nInspector == 0 || nLen < 1) {
 		strLog.Format("[H<-V%d] : Local Port (%d) Mismatch or Receive Data Zero (%d)", nInspector, nPort, nLen);
@@ -206,14 +186,58 @@ LRESULT CUDPManager::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 }
 
 
+/////////////////////////////////////////////////////////////////////////////
+// Set Command
+
+void CUDPManager::Set_ConnectRequest()
+{
+	CString	strSendCmd;
+	strSendCmd.Format("CONNECT,REQUEST");
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_ConnectReply()
+{
+	CString	strSendCmd;
+	strSendCmd.Format("CONNECT,REPLY");
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_ConnectEnd()
+{
+	CString	strSendCmd;
+	strSendCmd.Format("CONNECT,END");
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_StatusRequest()
+{
+	CString	strSendCmd;
+	strSendCmd.Format("STATUS,REQUEST");
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_StatusReply(int nStatus)
+{
+	CString	strSendCmd;
+	strSendCmd.Format("STATUS,REPLY,%d", nStatus);
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_StatusUpdate(int nStatus)
+{
+	CString	strSendCmd;
+	strSendCmd.Format("STATUS,UPDATE,%d", nStatus);
+	Send_Command(strSendCmd);
+}
+
+
 void CUDPManager::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(nIDEvent);
 	switch (nIDEvent) {
-	case INSPECTOR_PC1:	m_nStatusPC1 = 0; break;
-	case INSPECTOR_PC2:	m_nStatusPC2 = 0; break;
-	case INSPECTOR_PC3:	m_nStatusPC3 = 0; break;
-	case INSPECTOR_PC4:	m_nStatusPC4 = 0; break;
+	case 1:	m_nStatusPC = 0; break;
+
 	}
 	CWnd::OnTimer(nIDEvent);
 }
