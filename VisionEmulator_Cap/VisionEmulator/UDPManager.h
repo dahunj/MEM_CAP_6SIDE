@@ -1,10 +1,8 @@
 #pragma once
 
-const int INSPECTOR_ALL		= 0;	// PC1, PC2, PC3, PC4
-const int INSPECTOR_PC1		= 1;	// Angle, Align, Btm1
-const int INSPECTOR_PC2		= 2;	// Top1
-const int INSPECTOR_PC3		= 3;	// Top2(Top2, Top3)
-const int INSPECTOR_PC4		= 4;	// Btm2(Btm2, Btm3)
+
+const int INSPECTOR_PC		= 1;	// Angle, Align, Btm1
+
 
 
 // CUDPManager
@@ -36,13 +34,16 @@ private:
 	void DoEvents(int nSleep = 0);
 
 
-	void Get_ConnectRequest(int nInspector);
-	void Get_ConnectReply(int nInspector);
-	void Get_ConnectEnd(int nInspector);
+	void Get_ConnectRequest();
+	void Get_ConnectReply();
+	void Get_ConnectEnd();
 
-	void Get_StatusRequest(int nInspector);
-	void Get_StatusReply(int nInspector, CString sStatus);
-	void Get_StatusUpdate(int nInspector, CString sStatus);
+	void Get_StatusRequest();
+	void Get_StatusReply(CString sStatus);
+	void Get_StatusUpdate(CString sStatus);
+
+	void Get_LotStart(CString sLotId, CString sPortNo, CString sTrayCnt, CString sCmCnt, CString sRecipe);
+	void Get_LoadComplete(CString sGbn, CString sLotID, CString sPortNo, CString sTNo1, CString sTNo2, CString sCNo1, CString sCNo2, CString sPickNo1, CString sPickNo2);
 
 	void Send_Command(CString strSend);
 	void Exception_Log(CString sFunc, CString sGbn, int nCase);	// Recevie Exception Log
@@ -57,6 +58,10 @@ public:
 	void Set_StatusRequest();
 	void Set_StatusReply(int nStatus);
 	void Set_StatusUpdate(int nStatus); 
+
+	void Set_LotReady(CString sLotId, CString sPortNo);
+	void Set_InspectComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sJudge, CString sNgCode, CString sOffsetX, CString sOffsetY, CString sSizeX, CString sSizeY);
+
 
 };
 extern CUDPManager g_objUDPManager;

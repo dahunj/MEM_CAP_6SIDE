@@ -277,6 +277,8 @@ UINT CSequenceMain::Thread_MainRun(LPVOID lpVoid)
 		if (!g_objCommon.Check_DirveAlarm()) break;
 		if (!g_objCommon.Check_EndLimit()) break;
 		if (!g_objCommon.Check_HomeDone()) break;
+
+		if(!g_objSequenceMain.Run_Simulation()) break;
 		
 		if (!g_objSequenceMain.TrayPicker_Run()) break;		//  1. (Error : 3100)
 		if (!g_objSequenceMain.LoadStage1_Run()) break;		//  2. (Error : 3200)
@@ -295,7 +297,7 @@ UINT CSequenceMain::Thread_MainRun(LPVOID lpVoid)
 		if (!g_objSequenceMain.UnloadStage1_Run()) break;	// 15. (Error : 4500)
 		if (!g_objSequenceMain.UnloadStage2_Run()) break;	// 16. (Error : 4600)
 
-		if(!g_objSequenceMain.Run_Simulation()) break;
+		
 
 		if (g_objSequenceMain.LotEnd_Run()) break;
 
@@ -2626,7 +2628,10 @@ BOOL CSequenceMain::VisionCm_Run()
 		break;
 
 	case 6:	// Error
-		nCmScanNo--;
+		nCmScanCnt = 0;
+		nCmScanNo = 0;
+		dCmX = m_pMoveData->dVisionCmX[1];	// Inspect Position
+		g_objAJinAXL.Move_Absolute(AX_VISION_CM_X, dCmX);
 		m_nVisionCmCase = 2; m_tVisionCmLoop.Set_LoopTime(5000);
 		g_objAviHandler.Set_NotifyCmAlignAlarm();
 		g_objCommon.Show_Error(3606);
@@ -5371,6 +5376,8 @@ BOOL CSequenceMain::Run_Simulation()
 #ifdef AJIN_BOARD_USE
 	return TRUE;
 #endif
+	 m_pDX02->iCapPort1LowCheck = TRUE;
+
 	if(m_nTrayPickCase == 8)
 	{
 		Sleep(SIM_WAITTIMES);
@@ -5385,8 +5392,6 @@ BOOL CSequenceMain::Run_Simulation()
 		m_pDX00->iTrayPickerExist = FALSE;
 	}
 	
-
-
 	if(m_nLoadStage1Case == 8)
 	{
 		Sleep(SIM_WAITTIMES);
@@ -5470,6 +5475,8 @@ BOOL CSequenceMain::Run_Simulation()
 
 	if (m_nCapStage1Case == 1) { Sleep(SIM_WAITTIMES); m_pDX02->iCapPort1LowCheck = TRUE; }
 	if (m_nCapStage2Case == 1) { Sleep(SIM_WAITTIMES); m_pDX02->iCapPort1LowCheck = TRUE; }
+
+	
 
 	if (m_nUnloadStage1Case == 1) { Sleep(SIM_WAITTIMES); m_pDX03->iUnlaodPort1LowCheck = TRUE; }
 	if (m_nUnloadStage2Case == 1) { Sleep(SIM_WAITTIMES); m_pDX03->iUnlaodPort1LowCheck = TRUE; }

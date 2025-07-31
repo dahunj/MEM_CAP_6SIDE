@@ -24,6 +24,8 @@ CUDPManager::~CUDPManager()
 
 
 BEGIN_MESSAGE_MAP(CUDPManager, CWnd)
+	ON_WM_TIMER()
+	ON_MESSAGE(UM_UDP_RECEIVE, OnUdpReceive)
 END_MESSAGE_MAP()
 
 
@@ -41,45 +43,58 @@ void CUDPManager::DoEvents(int nSleep)
 	if (nSleep > 0) Sleep(nSleep);
 }
 
-void CUDPManager::Get_ConnectRequest(int nInspector)
+void CUDPManager::Get_ConnectRequest()
 {
 	m_bConnectPC = TRUE;
 
 	//Set_ConnectReply(nInspector);
 }
 
-void CUDPManager::Get_ConnectReply(int nInspector)
+void CUDPManager::Get_ConnectReply()
 {
 	m_bConnectPC = TRUE;
 
 }
 
-void CUDPManager::Get_ConnectEnd(int nInspector)
+void CUDPManager::Get_ConnectEnd()
 {
 	m_bConnectPC = FALSE;
 
 }
 
 
-void CUDPManager::Get_StatusRequest(int nInspector)
+void CUDPManager::Get_StatusRequest()
 {
 	//BOOL bStatus = g_objSequenceMain.Is_MainThreadRun();
 	//if (bStatus) Set_StatusReply(nInspector, 1);
 	//else Set_StatusReply(nInspector, 0);
 }
 
-void CUDPManager::Get_StatusReply(int nInspector, CString sStatus)
+void CUDPManager::Get_StatusReply(CString sStatus)
 {
 	m_nStatusPC = atoi(sStatus);
 
 }
 
-void CUDPManager::Get_StatusUpdate(int nInspector, CString sStatus)
+void CUDPManager::Get_StatusUpdate(CString sStatus)
 {
-	KillTimer(nInspector);
+	KillTimer(1);
 	m_nStatusPC = atoi(sStatus);
 
-	SetTimer(nInspector, 15000, NULL);
+	SetTimer(1, 15000, NULL);
+}
+
+void CUDPManager::Get_LotStart(CString sLotId, CString sPortNo, CString sTrayCnt, CString sCmCnt, CString sRecipe)
+{
+	Set_LotReady(sLotId, sPortNo);
+}
+
+void CUDPManager::Get_LoadComplete(CString sGbn, CString sLotID, CString sPortNo, CString sTNo1, CString sTNo2, CString sCNo1, CString sCNo2, CString sPickNo1, CString sPickNo2)
+{
+	if(sTNo1 != "-1" && sCNo1 != "-1") Set_InspectComplete("T1", sLotID, sPortNo, sTNo1, sCNo1, "N", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
+	Sleep(10);
+	if(sTNo2 != "-1" && sCNo2 != "-1")Set_InspectComplete("T1", sLotID, sPortNo, sTNo2, sCNo2, "N", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
+	
 }
 
 
@@ -107,7 +122,7 @@ void CUDPManager::Send_Command(CString strSend)
 
 void CUDPManager::Initialize()
 {
-	BOOL bOpenedPC1 = m_UdpVisionPC.Open_Socket(8001, 8000, "127.0.0.1", this);
+	BOOL bOpenedPC1 = m_UdpVisionPC.Open_Socket(7001, 7000, "127.0.0.1", this);
 	if(bOpenedPC1) Set_ConnectRequest();
 
 }
@@ -126,9 +141,9 @@ LRESULT CUDPManager::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 	BYTE byRecv[1024] = { 0 };
 	CString strLog;
 
-	if (nPort == 8000) { nInspector = INSPECTOR_PC1; nLen = m_UdpVisionPC.Read_Socket(byRecv); }
+	if (nPort == 7000) { nLen = m_UdpVisionPC.Read_Socket(byRecv); }
 
-	if (nInspector == 0 || nLen < 1) {
+	if (nLen < 1) {
 		strLog.Format("[H<-V%d] : Local Port (%d) Mismatch or Receive Data Zero (%d)", nInspector, nPort, nLen);
 		//g_objLogFile.Save_InspectorLog(strLog);
 		return 0;
@@ -167,20 +182,31 @@ LRESULT CUDPManager::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 		}
 		/////////////////////////////////////////////////////////
 
-		CString strArg[7];
-		for (int i = 0; i < 7; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
+		CString strArg[9];
+		for (int i = 0; i < 9; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
 
-		if (strCmd == "CONNECT") {
-			if (strOp == "REQUEST")	Get_ConnectRequest(nInspector);
-			else if (strOp == "REPLY") Get_ConnectReply(nInspector);
-			else if (strOp == "END") Get_ConnectEnd(nInspector);
-
-		} else if (strCmd == "STATUS") {
-			if (strOp == "REQUEST")	Get_StatusRequest(nInspector);
-			else if (strOp == "REPLY") Get_StatusReply(nInspector, strArg[0]);
-			else if (strOp == "UPDATE") Get_StatusUpdate(nInspector, strArg[0]);
+		if (strCmd == "CONNECT") 
+		{
+			if (strOp == "REQUEST")	Get_ConnectRequest();
+			else if (strOp == "REPLY") Get_ConnectReply();
+			else if (strOp == "END") Get_ConnectEnd();
 
 		} 
+		else if (strCmd == "STATUS") 
+		{
+			if (strOp == "REQUEST")	Get_StatusRequest();
+			else if (strOp == "REPLY") Get_StatusReply(strArg[0]);
+			else if (strOp == "UPDATE") Get_StatusUpdate(strArg[0]);
+
+		} 
+		else if (strCmd == "LOT") 
+		{
+			if (strOp == "START")	Get_LotStart(strArg[0],strArg[1],strArg[2],strArg[3],strArg[4]);			
+		} 
+		else if (strCmd =="LOAD")
+		{
+			if(strOp == "COMPLETE") Get_LoadComplete(strArg[0],strArg[1],strArg[2],strArg[3],strArg[4],strArg[5],strArg[6],strArg[7],strArg[8]);
+		}
 	}
 	return 1;
 }
@@ -231,11 +257,26 @@ void CUDPManager::Set_StatusUpdate(int nStatus)
 	Send_Command(strSendCmd);
 }
 
+void CUDPManager::Set_LotReady(CString sLotId, CString sPortNo)
+{
+	CString	strSendCmd;
+	strSendCmd.Format("LOT,READY,%s,%s", sLotId, sPortNo);
+	Send_Command(strSendCmd);
+}
+
+void CUDPManager::Set_InspectComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sJudge, CString sNgCode, CString sOffsetX, CString sOffsetY, CString sSizeX, CString sSizeY)
+{
+	CString	strSendCmd;
+	strSendCmd.Format("INSPECT,COMPLETE,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s", sGbn, sLotId, sPortNo, sTrayNo, sCmNo, sJudge, sNgCode, sOffsetX, sOffsetY, sSizeX, sSizeY);
+	Send_Command(strSendCmd);
+}
+
 
 void CUDPManager::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(nIDEvent);
-	switch (nIDEvent) {
+	switch (nIDEvent) 
+	{
 	case 1:	m_nStatusPC = 0; break;
 
 	}

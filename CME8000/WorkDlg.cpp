@@ -242,6 +242,26 @@ BOOL CWorkDlg::OnInitDialog()
 	m_bCapLotIdInput = FALSE;
 	m_bShipLotIdInput = FALSE;
 
+#ifndef AJIN_BOARD_USE
+	m_stcShipTrayCountR.SetWindowText("12");
+	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/333/DDDDGGGGHHHH");
+	m_stcShipCmCountR.SetWindowText("222");
+
+	m_stcCapTrayCountR.SetWindowText("12");
+	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/333/DDDDGGGGHHHH");
+	m_stcCapCmCountR.SetWindowText("222");
+
+	m_stcShipTrayCountS.SetWindowText("12");
+	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/333/DDDDGGGGHHHH");
+	m_stcShipCmCountS.SetWindowText("222");
+
+	m_stcCapTrayCountS.SetWindowText("12");
+	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/333/DDDDGGGGHHHH");
+	m_stcCapCmCountS.SetWindowText("222");
+#endif
+	
+
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
 }
