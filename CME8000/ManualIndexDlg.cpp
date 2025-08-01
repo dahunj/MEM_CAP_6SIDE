@@ -400,12 +400,21 @@ void CManualIndexDlg::OnBtnAssyPickerZClick(UINT nID)
 	if (nIndex == 2 && !g_objCommon.Check_Position(AX_ASSY_PICKER_X, 1) && !g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 1)) {
 		AfxMessageBox("Assembly Picker X축, Y축 Inspect 위치 인지 확인 후 진행하세요."); return;
 	}
-	if ((nIndex == 3 || nIndex == 4 || nIndex == 5)) {
+	if ((nIndex == 3 || nIndex == 4 )) {
 		int nPos = g_objCommon.Get_MainIndexPos(2);
 		if (!g_objCommon.Check_Position(AX_ASSY_PICKER_X, 2+nPos) && !g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 2+nPos)) {
 			AfxMessageBox("Assembly Picker X축, Y축 Index 위치 인지 확인 후 진행하세요."); return;
 		}
 	}
+
+	if ( nIndex == 5) {
+		int nPos = g_objCommon.Get_MainIndexPos(2);
+		if (!g_objCommon.Check_Position(AX_ASSY_PICKER_X, 6) && !g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 6)) {
+			AfxMessageBox("Assembly Picker X축, Y축 Tilt Check 위치 인지 확인 후 진행하세요."); return;
+		}
+	}
+
+
 	if (nIndex == 6) {
 		if (!g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && !g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0)) {
 			AfxMessageBox("Assembly Picker X축, Y축 Cap Buffer 위치 인지 확인 후 진행하세요."); return;
