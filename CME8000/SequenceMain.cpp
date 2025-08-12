@@ -3482,7 +3482,7 @@ BOOL CSequenceMain::CapPicker_Run()
 			m_tCapPickLoop.Takt_Save(9, 4);
 			m_tCapPickLoop.Takt_Start();
 
-			if (!m_tCapPickLoop.Waiting_Time(300)) break;
+			if (!m_tCapPickLoop.Waiting_Time(50)) break;
 
 			g_objCommon.Set_InfoCapPickerDown();
 			g_objCommon.Move_Position(AX_CAP_PICKER_Z, 3);
@@ -3494,7 +3494,7 @@ BOOL CSequenceMain::CapPicker_Run()
 		break;
 	case 13:	// 정보전달, Picker Vacuum Off
 		if (g_objCommon.Get_InfoCapPickerDown() && g_objCommon.Check_Position(AX_CAP_PICKER_Z, 3) && !m_pDX09->iCapCleanerDown && m_pDX09->iCapCleanerUp) {
-			if (!m_tCapPickLoop.Waiting_Time(100)) break;
+			if (!m_tCapPickLoop.Waiting_Time(50)) break;
 
 			for (int i = 0; i < PICK; i++) {
 				if (gData.InfoCapBuffer[i] != 0) continue;
@@ -3510,7 +3510,7 @@ BOOL CSequenceMain::CapPicker_Run()
 		break;
 	case 14:	// Clean Air On
 		if (g_objCommon.Get_CapBufferAlign(TRUE) && g_objCommon.Check_Position(AX_CAP_PICKER_Z, 3)) {
-			if (!m_tCapPickLoop.Waiting_Time(200)) break;
+			if (!m_tCapPickLoop.Waiting_Time(50)) break;
 
 			g_objCommon.Set_InfoCapCleanAirOn();
 			g_objCommon.Set_InfoCapPickerAirOff();
@@ -3546,7 +3546,7 @@ BOOL CSequenceMain::CapPicker_Run()
 	case 18:
 		if(g_objCommon.Get_CapPickerNormal(0))//( g_objCommon.Get_InfoCapPickerNormal())
 		{
-			if (!m_tCapPickLoop.Waiting_Time(300)) break;
+			if (!m_tCapPickLoop.Waiting_Time(200)) break;
 			m_nCapPickCase = 20; m_tCapPickLoop.Set_LoopTime(10000);
 		}
 		break;
