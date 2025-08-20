@@ -37,7 +37,10 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CBO_LOAD_CELL_PORT_0, m_cboAssyLoadCellPort);
 	DDX_Control(pDX, IDC_CBO_LOAD_CELL_PORT_1, m_cboUnloadLoadCellPort);
 	DDX_Control(pDX, IDC_STC_MOTION_CHECK, m_stcMotionCheck);
-	DDX_Control(pDX, IDC_LBL_DOOR_LOCK, m_lblDoorLock);
+	DDX_Control(pDX, IDC_LBL_DOOR_LOCK, m_lblDoorLock);	
+	DDX_Control(pDX, IDC_LBL_DOOR_LOCK2, m_lblDoorLock2);
+	DDX_Control(pDX, IDC_STC_DOORLOCK_TIME, m_stcDoorLockTime);
+
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_RDO_DOOR_LOCK_0 + i, m_rdoDoorLock[i]);
 	DDX_Control(pDX, IDC_CBO_MOVE_DATA_SEL, m_cboMoveDataSelection);
 
@@ -118,6 +121,7 @@ BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_0, &CSetupEquipDlg::OnStnClickedStcCmVision0)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_1, &CSetupEquipDlg::OnStnClickedStcCmVision1)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_2, &CSetupEquipDlg::OnStnClickedStcCmVision2)
+	ON_STN_CLICKED(IDC_STC_DOORLOCK_TIME, &CSetupEquipDlg::OnStnClickedStcDoorlockTime)
 END_MESSAGE_MAP()
 
 // CSetupEquipDlg ¸Þ½ÃÁö Ã³¸®±âÀÔ´Ï´Ù.
@@ -152,6 +156,8 @@ void CSetupEquipDlg::Initial_Controls()
 	m_stcMotionCheck.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xF0, 0xE0, 0x00));
 	m_lblDoorLock.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
 	for (int i = 0; i < 2; i++) m_rdoDoorLock[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, COLOR_DEFAULT, RGB(0xC0, 0xC0, 0xC0), CRadioCS::emRed, 0);
+	m_lblDoorLock2.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
+	m_stcDoorLockTime.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xF0, 0xE0, 0x00));
 
 	m_chkUseInlineMode.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
 
@@ -424,9 +430,11 @@ void CSetupEquipDlg::Display_EquipData()
 
 	m_cboMoveDataSelection.SetCurSel(pEquipData->nVendorSelection);
 
-
 	strData.Format("%0.3lf", gAlm.dMotionChkPos);	 m_stcMotionCheck.SetWindowText(strData);
+
 	m_rdoDoorLock[(int)pEquipData->bUseDoorLock].SetCheck(TRUE);
+	strData.Format("%d", gData.nDoorLockTime);	m_stcDoorLockTime.SetWindowText(strData);
+
 	
 	m_chkUseInlineMode.SetCheck(pEquipData->bUseInlineMode);
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
@@ -499,6 +507,9 @@ void CSetupEquipDlg::Save_EquipData()
 
 	m_stcMotionCheck.GetWindowText(strData); dData = atof(strData); INI.Set_Double("EQUIPMENT", "MOTION_CHECK", dData, "%0.3lf");
 	INI.Set_Bool("EQUIPMENT", "DOOR_LOCK", m_rdoDoorLock[1].GetCheck());
+	m_stcDoorLockTime.GetWindowText(strData);
+	gData.nDoorLockTime = atoi(strData);
+	INI.Set_Integer("EQUIPMENT", "DOOR_LOCK_TIME", gData.nDoorLockTime);
 
 	nData = m_cboMoveDataSelection.GetCurSel(); INI.Set_Integer("EQUIPMENT", "VENDOR_SELECTION", nData);
 
@@ -610,4 +621,15 @@ void CSetupEquipDlg::OnStnClickedStcCmVision2()
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
 	m_stcCMVision[2].SetWindowText(strNew);
+}
+
+
+void CSetupEquipDlg::OnStnClickedStcDoorlockTime()
+{
+	CString strOld, strNew;
+
+	m_stcDoorLockTime.GetWindowText(strOld);
+	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+
+	m_stcDoorLockTime.SetWindowText(strNew);
 }

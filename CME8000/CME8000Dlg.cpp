@@ -165,6 +165,7 @@ BOOL CCME8000Dlg::OnInitDialog()
 	g_objLogFile.Save_HandlerLog(strLog);
 
 	SetTimer(TIMER_DATE_TIME, 500, NULL);
+	SetTimer(TIMER_DOOR_LOCK, 1000, NULL);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -233,6 +234,7 @@ void CCME8000Dlg::OnDestroy()
 	g_objLoadCell.DestroyWindow();
 	g_objAviHandler.DestroyWindow();
 	g_objCommon.DestroyWindow();
+		
 }
 
 void CCME8000Dlg::OnShowWindow(BOOL bShow, UINT nStatus)
@@ -328,6 +330,9 @@ void CCME8000Dlg::OnTimer(UINT_PTR nIDEvent)
 	case TIMER_GOOD_LAMP_FLKR:
 		if (gData.bUnloadPort1Wait) { Set_LampFlicker_Unload1(TRUE);	/*Set_BuzzerFlicker(TRUE);*/ }
 		if (gData.bUnloadPort2Wait) { Set_LampFlicker_Unload2(TRUE);	/*Set_BuzzerFlicker(TRUE);*/ }
+		break;
+	case TIMER_DOOR_LOCK:
+		Set_DoorLock();
 		break;
 	}
 
@@ -931,6 +936,7 @@ void CCME8000Dlg::Exit_System(int nExitNo)
 	KillTimer(TIMER_NG_LAMP_FLKR);
 	KillTimer(TIMER_GOOD_LAMP_FLKR);
 	KillTimer(TIMER_EMPTY_LAMP_FLKR);
+	KillTimer(TIMER_DOOR_LOCK);
 
 	Save_EquipCappingCnt();	// Capping한 수량 저장
 	g_objLogFile.Save_HandlerLog("[Main Dialog] Program Exit");
@@ -1070,4 +1076,27 @@ void CCME8000Dlg::Set_LotStateTime()
 		if (!gAlm.bBegin) gLot.dwStopTime += dwTime; break;
 	}
 	m_dwSetTimer = GetTickCount();
+}
+
+
+void CCME8000Dlg::Set_DoorLock()
+{
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if (pEquipData->bUseDoorLock) return;
+	if (gData.dwDoorStartTime <= 0) gData.dwDoorStartTime = GetTickCount();
+
+	DWORD dwCurrentTime = GetTickCount();
+	DWORD dwDoorEndTime = DWORD(gData.nDoorLockTime) * 60 * 1000;	//분
+	if (dwCurrentTime - gData.dwDoorStartTime >= dwDoorEndTime) {
+		CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+		if (!INI.Check_File()) return;
+		INI.Set_Bool("EQUIPMENT", "DOOR_LOCK", TRUE);
+
+		g_objLogFile.Save_HandlerLog("Door Lock을 Auto로 설정 하였습니다...");
+
+		gData.dwDoorStartTime = 0;
+		g_objDataManager.Read_EquipData();
+
+		g_dlgWork.PostMessage(UM_SHOW_MSG, 99, NULL);
+	}
 }

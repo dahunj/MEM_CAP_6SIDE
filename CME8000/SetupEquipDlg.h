@@ -25,6 +25,9 @@ public:
 	CStaticCS	m_stcMotionCheck;
 	CLabelCS	m_lblDoorLock;
 	CRadioCS	m_rdoDoorLock[2];
+	CLabelCS	m_lblDoorLock2;
+	CStaticCS	m_stcDoorLockTime;
+
 	CComboCS	m_cboMoveDataSelection;
 
 	CCheckCS	m_chkUseInlineMode;
@@ -117,6 +120,7 @@ public:
 	afx_msg void OnStnClickedStcCmVision0();
 	afx_msg void OnStnClickedStcCmVision1();
 	afx_msg void OnStnClickedStcCmVision2();
+	afx_msg void OnStnClickedStcDoorlockTime();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

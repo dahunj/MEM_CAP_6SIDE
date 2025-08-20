@@ -11,6 +11,7 @@
 #define TIMER_NG_LAMP_FLKR		5
 #define TIMER_GOOD_LAMP_FLKR	6
 #define TIMER_EMPTY_LAMP_FLKR	7
+#define TIMER_DOOR_LOCK			8
 
 #define EXIT_SYSTEM_NONE	0
 #define EXIT_SYSTEM_AJIN	1
@@ -139,6 +140,7 @@ public:
 	void Set_LotErrorLog(CString sEvent, int nErrCode, CString sMessage, int nPNo=0);
 
 	void Set_LotStateTime();
+	void Set_DoorLock();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
