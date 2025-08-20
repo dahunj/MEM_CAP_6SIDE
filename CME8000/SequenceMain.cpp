@@ -1179,7 +1179,7 @@ BOOL CSequenceMain::TrayPicker_Run()
 			m_dwTrayPick = GetTickCount();
 			m_nTrayPickCase++; m_tTrayPickLoop.Set_LoopTime(5000);
 		}
-		break;
+		return TRUE;
 	case 2:		// Picker X Move to AVI Position
 		if (g_objCommon.Check_Position(AX_TRAY_PICKER_Z, 0) && g_objCommon.Check_Position(AX_TRAY_PICKER_R, 0)) {
 			g_objCommon.Move_Position(AX_TRAY_PICKER_X, 0);		// AVI Position
@@ -4835,15 +4835,20 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		break;
 
 	case 10:	// 안전 확인 
+		if (!m_tUnloadStage1Loop.Waiting_Time(300)) break;
 		if(g_objCommon.Get_UnloadStageMasterSlaveOut(1))
 		{
-			m_pDY05->oUnloadStage1MasterIn = TRUE;
+			m_pDY05->oUnloadStage1MasterIn = TRUE;			
+			g_objAJinAXL.Write_Output(5);
+		}
+		if (m_pDX05->iUnloadStage1MasterIn && !m_pDX05->iUnloadStage1MasterOut)
+		{
 			m_pDY05->oUnloadStage1SlaveIn = TRUE;
 			g_objAJinAXL.Write_Output(5);
 		}
-		if (m_nUnloadStage2Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(1)) 
-		{ 
-			if (!m_tUnloadStage1Loop.Waiting_Time(500)) break;
+		if (m_nUnloadStage2Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(1) && !g_objCommon.Get_UnloadStageMasterSlaveOut(1)) 
+		{ 			
+			if (!m_tUnloadStage1Loop.Waiting_Time(300)) break;
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); 
 		}
 		return TRUE;
@@ -5176,16 +5181,20 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;
 
 	case 10:	// 안전 확인 
-		if (!m_tUnloadStage2Loop.Waiting_Time(100)) break;
+		if (!m_tUnloadStage2Loop.Waiting_Time(300)) break;
 		if(g_objCommon.Get_UnloadStageMasterSlaveOut(2))
 		{
-			m_pDY05->oUnloadStage2MasterIn = TRUE;
-			m_pDY05->oUnloadStage2SlaveIn = TRUE;
+			m_pDY05->oUnloadStage2MasterIn = TRUE;			
 			g_objAJinAXL.Write_Output(5);			
 		}
-		if (m_nUnloadStage1Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(2)) 
-		{ 
-			if (!m_tUnloadStage2Loop.Waiting_Time(500)) break;
+		if (m_pDX05->iUnloadStage2MasterIn && !m_pDX05->iUnloadStage2MasterOut)
+		{
+			m_pDY05->oUnloadStage2SlaveIn = TRUE;
+			g_objAJinAXL.Write_Output(5);
+		}
+		if (m_nUnloadStage1Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(2) && !g_objCommon.Get_UnloadStageMasterSlaveOut(2)) 
+		{ 			
+			if (!m_tUnloadStage2Loop.Waiting_Time(300)) break;
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
 		return TRUE;
