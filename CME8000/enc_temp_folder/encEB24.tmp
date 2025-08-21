@@ -2507,7 +2507,7 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 10:	// Index R Move 90 Degree
-		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0 ) 
+		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0 && (m_nLoadPickCase10 || !m_pEquipData->bUseVisionCmAlign)) 
 		{
 			
 			if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexAssyAlignIn && !m_pDX11->iIndexAssyAlignOut &&

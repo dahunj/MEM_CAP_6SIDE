@@ -2507,9 +2507,7 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 10:	// Index R Move 90 Degree
-		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0 ) 
-		{
-			
+		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2]) {
 			if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexAssyAlignIn && !m_pDX11->iIndexAssyAlignOut &&
 				m_pDX11->iIndexTransAlignIn && !m_pDX11->iIndexTransAlignOut && !m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown &&
 				!m_pDX11->iIndexAssyVacUp && m_pDX11->iIndexAssyVacDown) {
@@ -2524,7 +2522,7 @@ BOOL CSequenceMain::MainIndex_Run()
 				if ((g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y) <= 200.0 || g_objCommon.Get_LoadPickerUp()) &&
 					(g_objAJinAXL.Get_Position(AX_ASSY_PICKER_X) <= 200.0 || g_objCommon.Get_AssyPickerUp(0)) &&
 					(g_objAJinAXL.Get_Position(AX_TRANS_STAGE_X) >= 200.0 || g_objCommon.Check_Position(AX_TRANS_STAGE_Z, 0))) 
-				{
+{
 					g_objAJinAXL.Move_Relative(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0]);
 					m_nMainIndexCase = 11; m_tMainIndexLoop.Set_LoopTime(10000);
 				}

@@ -2304,7 +2304,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		break;
 
 	case 15:	// index Check
-		if ((m_nMainIndexCase == 2 || m_nMainIndexCase == 5) && !gData.IndexDone[0]) {
+		if ((m_nMainIndexCase == 2 || m_nMainIndexCase == 5) && gData.IndexDone[0]) {
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		return TRUE;
@@ -2507,9 +2507,8 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 10:	// Index R Move 90 Degree
-		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0 ) 
+		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0) 
 		{
-			
 			if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexAssyAlignIn && !m_pDX11->iIndexAssyAlignOut &&
 				m_pDX11->iIndexTransAlignIn && !m_pDX11->iIndexTransAlignOut && !m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown &&
 				!m_pDX11->iIndexAssyVacUp && m_pDX11->iIndexAssyVacDown) {
