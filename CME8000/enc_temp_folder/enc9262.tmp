@@ -2191,7 +2191,10 @@ BOOL CSequenceMain::LoadPicker_Run()
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
 				&& CheckCMVisionGo( gData.nPNoLoadPick)) 
-			{	m_nVisionCmCase = 1;}
+			{	
+				g_objLogFile.Save_HandlerLog("m_nVisionCmCase = 1 2");
+				m_nVisionCmCase = 1;
+			}
 			
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
@@ -2304,6 +2307,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		break;
 
 	case 15:	// index Check
+		
 		if ((m_nMainIndexCase == 2 || m_nMainIndexCase == 5) && !gData.IndexDone[0]) {
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
@@ -2400,11 +2404,12 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
 			
-			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0   
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
 				&& CheckCMVisionGo(gData.nPNoLoadPick)
 			)
 			{
+					g_objLogFile.Save_HandlerLog("m_nVisionCmCase = 1 1");
 					m_nVisionCmCase = 1;
 			}
 			
@@ -2464,6 +2469,7 @@ BOOL CSequenceMain::MainIndex_Run()
 
 	case 5:	// Wait for Load Picker Done
 		if (m_nLoadPickCase > 19) {	// LoadPicker Up µ¿ÀÛ ÈÄ
+			g_objLogFile.Save_HandlerLog("m_nLoadPickCase > 19");
 			nIndexVacuumRetry = 0;	// Clear
 			g_objCommon.Set_InfoIndexLoadVacuumOn();
 			m_nMainIndexCase = 6; m_tMainIndexLoop.Set_LoopTime(5000);
@@ -2507,7 +2513,14 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 10:	// Index R Move 90 Degree
-		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2] && m_nVisionCmCase ==0 ) 
+		if(1){
+			int i=0;
+			i++;
+		}
+		break;
+
+		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2]
+				&& m_nVisionCmCase ==0 && Check_CmAlignDone() ) 
 		{
 			
 			if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexAssyAlignIn && !m_pDX11->iIndexAssyAlignOut &&
@@ -2516,6 +2529,7 @@ BOOL CSequenceMain::MainIndex_Run()
 
 				if (Check_IndexEmpty(-1)) 
 				{ 
+					g_objLogFile.Save_HandlerLog("gData.IndexDone[0] = FALSE 1");
 					gData.IndexDone[0] = FALSE;
 					m_nMainIndexCase = 0; 
 					return TRUE;
@@ -2533,6 +2547,7 @@ BOOL CSequenceMain::MainIndex_Run()
 		return TRUE;
 	case 11:	// Check R Movd Done and Index End
 		if (g_objAJinAXL.Is_MoveDone(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0])) {
+			g_objLogFile.Save_HandlerLog("Set_IndexEnd");
 			Set_IndexEnd();
 			m_nMainIndexCase = 0; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
