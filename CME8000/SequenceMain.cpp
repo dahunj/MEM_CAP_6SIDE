@@ -65,7 +65,7 @@ CSequenceMain::CSequenceMain()
 	m_pDX00->iLoadPort1LowCheck = FALSE;
 	m_bLoadPortTrayExist = FALSE;
 #endif
-	 
+	 gData.bThisLotVisionSkip = FALSE;
 	Reset_MainRunCase();
 }
 
@@ -1015,6 +1015,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
 
 	gLot.bLotEndComplete[nLPNo] = TRUE;
+	
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -1574,6 +1575,7 @@ BOOL CSequenceMain::LoadStage1_Run()
 		break;
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
+			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) gData.bThisLotVisionSkip = FALSE;
 			m_nLoadStage1Case = 20; m_tLoadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -1943,7 +1945,9 @@ BOOL CSequenceMain::LoadStage2_Run()
 		}
 		break;
 	case 17:	// Check Lot Ready
-		if (g_objInspector.Check_LotReady()) {
+		if (g_objInspector.Check_LotReady()) 
+		{
+			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) gData.bThisLotVisionSkip = FALSE;
 			m_nLoadStage2Case = 20; m_tLoadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -2190,10 +2194,18 @@ BOOL CSequenceMain::LoadPicker_Run()
 		{
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
-				&& CheckCMVisionGo( gData.nPNoLoadPick)) 
+				&& CheckCMVisionGo( gData.nPNoLoadPick) && !gData.bThisLotVisionSkip) 
 			{	
+				if(gData.nScanTimes+1 == m_pEquipData->nScanTimesPerLot)
+				{	
+						gData.nLotQtyInspDone++;
+						gData.nScanTimes = 0;
+						gData.bThisLotVisionSkip = TRUE;
+				}
 				g_objLogFile.Save_HandlerLog("m_nVisionCmCase = 1 2");
 				m_nVisionCmCase = 1;
+
+
 			}
 			
 
@@ -2372,7 +2384,9 @@ BOOL CSequenceMain::LoadPicker_Run()
 		{
 			m_tLoadPickLoop.Takt_Save(4, 8);		
 
-			if(!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0)
+			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
+				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) && gData.nScanTimes >= m_pEquipData->nScanTimesPerLot) 
+				|| gData.bThisLotVisionSkip)
 			{	
 				gData.IndexDone[0] = TRUE;
 				g_objLogFile.Save_HandlerLog("gData.IndexDone[0] = TRUE 5");
@@ -2512,6 +2526,7 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 10:	// Index R Move 90 Degree
+		
 		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2]
 				&& m_nVisionCmCase ==0 && Check_CmAlignDone() ) 
 		{
@@ -5563,16 +5578,19 @@ BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 	DWORD temp;
 
 	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo-1] - gLot.dwErrorTime;
-	temp = gData.dwRunTimeNow + gData.dwRunTimeAccumulated;
-	double dTimeLimit = (double)m_pEquipData->nHoursScan*3600;
+	temp = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated)/1000;
+	double dTimeLimit = (double)m_pEquipData->nHoursScan*3600000;
 		
 	if(temp > dTimeLimit)
 	{
 		gData.nLotQtyInspDone = 0;
 		gData.dwRunTimeNow = 0;
 		gData.dwRunTimeAccumulated = 0;
+		gData.bThisLotVisionSkip = TRUE;
+		
 	}
 
+	
 	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
 	else return FALSE;
 

@@ -263,6 +263,8 @@ typedef struct {
 	CString	sComName;
 	int		nDoorLockTime;
 	DWORD	dwDoorStartTime;
+
+	BOOL	bThisLotVisionSkip;
 } GLOVAL_DATA;
 
 typedef struct {

@@ -212,7 +212,7 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 
 		if (g_dlgWork.IsWindowVisible()) g_dlgWork.Change_Model();
 	}
-
+	
 	g_dlgWork.Set_LotInfo(nPx);
 }
 
