@@ -264,7 +264,10 @@ typedef struct {
 	int		nDoorLockTime;
 	DWORD	dwDoorStartTime;
 
-	BOOL	bThisLotVisionSkip;
+	BOOL	bThisLotVisionSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
+	BOOL	bTickStarted;
+	DWORD	dwCMVisionStart;
+
 } GLOVAL_DATA;
 
 typedef struct {
