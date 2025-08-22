@@ -67,6 +67,7 @@ CSequenceMain::CSequenceMain()
 #endif
 	 gData.bThisLotVisionSkip = FALSE;
 	 gData.bTickStarted = FALSE;
+	 gData.dwCMVisionStart = 0;
 	Reset_MainRunCase();
 }
 
