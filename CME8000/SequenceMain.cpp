@@ -425,9 +425,7 @@ void CSequenceMain::Set_ClearRunData(int nType)
 
 	gData.nScanTimes = 0;
 	if (nType == 0) gData.nLotQtyInspDone = 0;
-	if (nType == 0) gData.dwRunTimeNow = 0;
-	if (nType == 0) gData.dwRunTimeAccumulated = 0;
-	
+	if (nType == 0) gData.dwRunTimeNow = 0;	
 
 	gData.nPNoLoadPick = gData.nPNoUnloadPick = 0;
 	gData.nPNoTransStage = gData.nPNoUnloadTray = 0;
@@ -5586,9 +5584,9 @@ BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 {
 	DWORD temp;
 
-	gData.dwRunTimeNow = (double)(GetTickCount() - gData.dwCMVisionStart - gLot.dwErrorTime);
-	temp = (double)(gData.dwRunTimeNow + gData.dwRunTimeAccumulated)/1000;
-	double dTimeLimit = (double)(m_pEquipData->nHoursScan*3600000);
+	gData.dwRunTimeNow = GetTickCount() - gData.dwCMVisionStart - gLot.dwErrorTime;
+	temp = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated)/1000;
+	double dTimeLimit = m_pEquipData->nHoursScan*3600*1000;
 		
 	if(temp > dTimeLimit)
 	{
