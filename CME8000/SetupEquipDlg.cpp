@@ -444,7 +444,7 @@ void CSetupEquipDlg::Display_EquipData()
 
 	strData.Format("%d", pEquipData->nScanTimesPerLot); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
 	strData.Format("%d", pEquipData->nLotQuantity); m_stcCMVision[1].SetWindowTextA(strData);
-	strData.Format("%d", pEquipData->nHoursScan); m_stcCMVision[2].SetWindowTextA(strData); 
+	strData.Format("%d", pEquipData->nMinutes); m_stcCMVision[2].SetWindowTextA(strData); 
 
 	m_chkUseTrayPickerTurn.SetCheck(pEquipData->bUseTrayPickerTurn);
 	m_chkUseCapPickerTurn.SetCheck(pEquipData->bUseCapPickerTurn);

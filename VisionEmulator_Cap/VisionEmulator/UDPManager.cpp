@@ -122,7 +122,7 @@ void CUDPManager::Send_Command(CString strSend)
 
 void CUDPManager::Initialize()
 {
-	BOOL bOpenedPC1 = m_UdpVisionPC.Open_Socket(7001, 7000, "127.0.0.1", this);
+	BOOL bOpenedPC1 = m_UdpVisionPC.Open_Socket(8001, 8000, "127.0.0.1", this);
 	if(bOpenedPC1) Set_ConnectRequest();
 
 }
@@ -141,7 +141,7 @@ LRESULT CUDPManager::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 	BYTE byRecv[1024] = { 0 };
 	CString strLog;
 
-	if (nPort == 7000) { nLen = m_UdpVisionPC.Read_Socket(byRecv); }
+	if (nPort == 8000) { nLen = m_UdpVisionPC.Read_Socket(byRecv); }
 
 	if (nLen < 1) {
 		strLog.Format("[H<-V%d] : Local Port (%d) Mismatch or Receive Data Zero (%d)", nInspector, nPort, nLen);

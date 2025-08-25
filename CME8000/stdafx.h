@@ -71,11 +71,11 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.0.40")
+#define MAIN_VERSION	_T("V 2.0.0.44")
 
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -265,6 +265,8 @@ typedef struct {
 	DWORD	dwDoorStartTime;
 
 	BOOL	bThisLotVisionSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
+	int		nCmVisionCheckTime;
+	int		nPNoVisionTimeOut;
 	
 } GLOVAL_DATA;
 

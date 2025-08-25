@@ -57,7 +57,7 @@ typedef struct tag_EQUIP_DATA {
 
 	int		nScanTimesPerLot;   // 랏 당 CM 검사 최대 횟수
 	int		nLotQuantity;		// 시간당 랏 개수 
-	int		nHoursScan;				// 몇시간으로 설정 할지 	
+	int		nMinutes;				// 몇분 간격으로 설정 할지 	
 
 } EQUIP_DATA;
 

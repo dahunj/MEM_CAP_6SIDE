@@ -66,7 +66,8 @@ CSequenceMain::CSequenceMain()
 	m_bLoadPortTrayExist = FALSE;
 #endif
 	 gData.bThisLotVisionSkip = FALSE;
-
+	 gData.nCmVisionCheckTime = 0;
+	 gData.nPNoVisionTimeOut = -1;
 	Reset_MainRunCase();
 }
 
@@ -1576,7 +1577,11 @@ BOOL CSequenceMain::LoadStage1_Run()
 		break;
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
-			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) gData.bThisLotVisionSkip = FALSE;
+			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) 
+			{
+					gData.nCmVisionCheckTime = 0;
+					gData.bThisLotVisionSkip = FALSE;
+			}
 			m_nLoadStage1Case = 20; m_tLoadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -1948,7 +1953,10 @@ BOOL CSequenceMain::LoadStage2_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) 
 		{
-			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) gData.bThisLotVisionSkip = FALSE;
+			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) {
+				gData.nCmVisionCheckTime = 0;
+				gData.bThisLotVisionSkip = FALSE;
+			}
 			m_nLoadStage2Case = 20; m_tLoadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -2128,6 +2136,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	static int nLpMultCnt = 0;		// 최종적으로 Picker가 Down되는 수
 
 	static BOOL bLpTrayEmpty = FALSE;
+	static int nPNoTemp = 1;
 
 	switch (m_nLoadPickCase) {
 	case 0:		// Wait
@@ -2143,7 +2152,6 @@ BOOL CSequenceMain::LoadPicker_Run()
 			{
 				if (!Check_IndexEmpty(-1) && m_nVisionCmCase == 0) 
 				{
-					g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE 1");
 					gData.IndexDone[0] = TRUE;
 					m_nLoadPickCase = 0;
 				}
@@ -2153,7 +2161,6 @@ BOOL CSequenceMain::LoadPicker_Run()
 				((m_nLoadStage2Case == 0 || m_nLoadStage2Case == 60) && m_nLoadStage1Case == 50)) {
 				if (!gData.IndexDone[0] && m_nVisionCmCase == 0) {
 					gData.IndexDone[0] = TRUE;
-					g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE 2");
 					m_nLoadPickCase = 0;
 				}
 			}
@@ -2193,13 +2200,14 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
+			
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
-				&& CheckCMVisionGo( gData.nPNoLoadPick) && !gData.bThisLotVisionSkip) 
+				&& CheckCMVisionGo(nPNoTemp) && !gData.bThisLotVisionSkip 
+				&& gData.nPNoVisionTimeOut != nPNoTemp )  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
 			{				
-				m_nVisionCmCase = 1;						
-			}
-			
+				m_nVisionCmCase = 1;				
+			}			
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
@@ -2236,7 +2244,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 					gData.nCmJigNo[nPNo][nTNo][nCNo][LOAD_PICK]  = nLpStart + i + 1; // Btm1 Jig No.
 				}
 			}
-			gData.nPNoLoadPick = gData.nPNoLoadTray[nLpWorkTray-1];
+			gData.nPNoLoadPick = gData.nPNoLoadTray[nLpWorkTray-1];	
+			nPNoTemp = gData.nPNoLoadPick;
 			g_dlgWork.PostMessage(UM_UPDATE_TRAY_INFO, 1, nLpWorkTray-1);
 
 			g_objCommon.Set_InfoLoadPickerGrip();
@@ -2378,11 +2387,11 @@ BOOL CSequenceMain::LoadPicker_Run()
 			m_tLoadPickLoop.Takt_Save(4, 8);		
 
 			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
-				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) && gData.nScanTimes >= m_pEquipData->nScanTimesPerLot) 
-				|| gData.bThisLotVisionSkip)
+				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) 
+				&& gData.nScanTimes >= m_pEquipData->nScanTimesPerLot) || gData.bThisLotVisionSkip)
 			{	
 				gData.IndexDone[0] = TRUE;
-				g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE 5");
+				
 			}
 
 			if (bLpTrayEmpty) 
@@ -2409,17 +2418,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		break;
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
-			
-			/*if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0   
-			&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
-			&& CheckCMVisionGo(gData.nPNoLoadPick)
-			)
-			{
-			g_objLogFile.Save_HandlerLog("m_nVisionCmCase = 1 1");
-			m_nVisionCmCase = 1;
-			}
-			*/
-			
+				
 			m_tLoadPickLoop.Takt_Save(4, 9);
 
 			m_strLog.Format("LoadPicker, %d", GetTickCount() - m_dwLoadPick);
@@ -5575,19 +5574,20 @@ BOOL CSequenceMain::Run_Simulation()
 
 BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 {
-	DWORD temp;
-
-	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo-1] - gLot.dwErrorTime;
-	temp = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated)/1000;
-	double dTimeLimit = m_pEquipData->nHoursScan*60*1000; //분단위로 변경 
+	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo - 1] - gLot.dwErrorTime;
+	if(gData.nCmVisionCheckTime >= 0) gData.nCmVisionCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
+	double dTimeLimit = m_pEquipData->nMinutes*60*1000; //분단위로 변경 
 		
-	if(temp > dTimeLimit)
+	if(gData.nCmVisionCheckTime > dTimeLimit && gData.nCmVisionCheckTime >= 0 )
 	{
+		gData.nCmVisionCheckTime = -1;
 		gData.nLotQtyInspDone = 0;
 		gData.dwRunTimeNow = 0;
 		gData.dwRunTimeAccumulated = 0;
-		gData.bThisLotVisionSkip = TRUE;	
+		gData.bThisLotVisionSkip = TRUE;
+		gData.nPNoVisionTimeOut = nPNo;
 	}
+	
 		
 	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
 	else return FALSE;	
