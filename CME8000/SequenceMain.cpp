@@ -66,8 +66,7 @@ CSequenceMain::CSequenceMain()
 	m_bLoadPortTrayExist = FALSE;
 #endif
 	 gData.bThisLotVisionSkip = FALSE;
-	 gData.bTickStarted = FALSE;
-	 gData.dwCMVisionStart = 0;
+
 	Reset_MainRunCase();
 }
 
@@ -423,9 +422,11 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) memset(gData.nCapNoCapBuffer, 0x00, sizeof(int) * PICK);
 	if (nType == 0) memset(gData.nCapNoAssyPicker, 0x00, sizeof(int) * PICK);
 
-	gData.nScanTimes = 0;
+	if (nType == 0) gData.nScanTimes = 0;
 	if (nType == 0) gData.nLotQtyInspDone = 0;
-	if (nType == 0) gData.dwRunTimeNow = 0;	
+	if (nType == 0) gData.dwRunTimeNow = 0;
+	if (nType == 0) gData.dwRunTimeAccumulated = 0;	
+
 
 	gData.nPNoLoadPick = gData.nPNoUnloadPick = 0;
 	gData.nPNoTransStage = gData.nPNoUnloadTray = 0;
@@ -2195,30 +2196,15 @@ BOOL CSequenceMain::LoadPicker_Run()
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
 				&& CheckCMVisionGo( gData.nPNoLoadPick) && !gData.bThisLotVisionSkip) 
-			{	
-				if(!gData.bTickStarted) 
-				{
-					gData.bTickStarted = TRUE;
-					gData.dwCMVisionStart = GetTickCount();
-				}
-
-				m_nVisionCmCase = 1;
-
-				if(gData.nScanTimes+1 == m_pEquipData->nScanTimesPerLot)
-				{	
-					gData.nLotQtyInspDone++;
-					gData.nScanTimes = 0;
-					gData.bThisLotVisionSkip = TRUE;
-				}				
-				
-				
-
+			{				
+				m_nVisionCmCase = 1;						
 			}
 			
 
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
-				if (g_objCommon.Get_InfoLoadPickerGripOpen()) {
+				if (g_objCommon.Get_InfoLoadPickerGripOpen()) 
+				{
 					m_tLoadPickLoop.Takt_Save(4, 1);
 					m_tLoadPickLoop.Takt_Start();
 
@@ -2719,6 +2705,13 @@ BOOL CSequenceMain::VisionCm_Run()
 			if (Check_CmAlignDone()) 
 			{
 				gData.nScanTimes++;
+				if(gData.nScanTimes+1 >= m_pEquipData->nScanTimesPerLot)
+				{	
+					gData.nLotQtyInspDone++;
+					gData.nScanTimes = 0;
+					gData.bThisLotVisionSkip = TRUE;
+				}		
+
 				m_tVisionCmLoop.Takt_Save(5,3);
 				gData.IndexDone[0] = TRUE;
 				g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE  3");
@@ -5584,24 +5577,18 @@ BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 {
 	DWORD temp;
 
-	gData.dwRunTimeNow = GetTickCount() - gData.dwCMVisionStart - gLot.dwErrorTime;
+	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo-1] - gLot.dwErrorTime;
 	temp = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated)/1000;
-	double dTimeLimit = m_pEquipData->nHoursScan*3600*1000;
+	double dTimeLimit = m_pEquipData->nHoursScan*60*1000; //분단위로 변경 
 		
 	if(temp > dTimeLimit)
 	{
 		gData.nLotQtyInspDone = 0;
 		gData.dwRunTimeNow = 0;
 		gData.dwRunTimeAccumulated = 0;
-		gData.bThisLotVisionSkip = TRUE;
-
-		//Vision Start time 갱신 
-		gData.bTickStarted = FALSE;
-		gData.dwCMVisionStart = GetTickCount();
+		gData.bThisLotVisionSkip = TRUE;	
 	}
 		
 	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
-	else return FALSE;
-
-	
+	else return FALSE;	
 }
