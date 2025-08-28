@@ -195,12 +195,7 @@ typedef struct {
 	int		nCmInspPickNo2;
 	int		nCapInspPickNo1;
 	int		nCapInspPickNo2;
-
-	int		nScanTimes;
-	int		nLotQtyInspDone;
-	DWORD	dwRunTimeNow;
-	DWORD	dwRunTimeAccumulated;
-
+	
 	BOOL	bAviTrayLoad;
 	int		nCmCntAviPort;
 	int		nCmCntTrayPick;
@@ -264,9 +259,16 @@ typedef struct {
 	int		nDoorLockTime;
 	DWORD	dwDoorStartTime;
 
-	BOOL	bThisLotVisionSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
+
+	int		nScanTimes;
+	int		nLotQtyInspDone;
 	int		nCmVisionCheckTime;
 	int		nPNoVisionTimeOut;
+	DWORD	dwRunTimeNow;
+	DWORD	dwRunTimeAccumulated;
+
+	BOOL	bThisLotVisionSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
+	
 	
 } GLOVAL_DATA;
 

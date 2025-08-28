@@ -2200,11 +2200,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
-			
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
-				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
-				&& CheckCMVisionGo(nPNoTemp) && !gData.bThisLotVisionSkip 
-				&& gData.nPNoVisionTimeOut != nPNoTemp )  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
+				&& !Check_IndexEmpty(0) &&  CheckCMVisionGo(nPNoTemp) && !gData.bThisLotVisionSkip )  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
 			{				
 				m_nVisionCmCase = 1;				
 			}			
@@ -2387,11 +2384,9 @@ BOOL CSequenceMain::LoadPicker_Run()
 			m_tLoadPickLoop.Takt_Save(4, 8);		
 
 			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
-				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) 
-				&& gData.nScanTimes >= m_pEquipData->nScanTimesPerLot) || gData.bThisLotVisionSkip)
+				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick)) || gData.bThisLotVisionSkip)
 			{	
-				gData.IndexDone[0] = TRUE;
-				
+				gData.IndexDone[0] = TRUE;				
 			}
 
 			if (bLpTrayEmpty) 
@@ -5574,21 +5569,31 @@ BOOL CSequenceMain::Run_Simulation()
 
 BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 {
+	if(gData.nPNoVisionTimeOut == nPNo) return FALSE;
+		
 	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo - 1] - gLot.dwErrorTime;
 	if(gData.nCmVisionCheckTime >= 0) gData.nCmVisionCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
-	double dTimeLimit = m_pEquipData->nMinutes*60*1000; //분단위로 변경 
+	double dTimeLimit = m_pEquipData->nMinutes * 60 * 1000; //분단위로 변경 
 		
 	if(gData.nCmVisionCheckTime > dTimeLimit && gData.nCmVisionCheckTime >= 0 )
-	{
-		gData.nCmVisionCheckTime = -1;
-		gData.nLotQtyInspDone = 0;
+	{		
 		gData.dwRunTimeNow = 0;
 		gData.dwRunTimeAccumulated = 0;
-		gData.bThisLotVisionSkip = TRUE;
+
+		gData.nLotQtyInspDone = 0;
+		gData.nCmVisionCheckTime = -1;
+
 		gData.nPNoVisionTimeOut = nPNo;
+		gData.bThisLotVisionSkip = TRUE;		
+	}
+
+	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity && gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
+	{
+		return TRUE;
+	}
+	else //if( gData.nLotQtyInspDone >= m_pEquipData->nLotQuantity || gData.nScanTimes >= m_pEquipData->nScanTimesPerLot)
+	{
+		return FALSE;
 	}
 	
-		
-	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
-	else return FALSE;	
 }
