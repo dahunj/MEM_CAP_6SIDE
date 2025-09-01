@@ -2375,6 +2375,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		break;
 	case 19:	// Align Out
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && g_objCommon.Get_LoadPickerCmCheckOff()) {
+			if (!m_tLoadPickLoop.Waiting_Time(300)) break;
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
 			
@@ -2473,8 +2474,8 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 5:	// Wait for Load Picker Done
-		if (m_nLoadPickCase > 19) {	// LoadPicker Up 동작 후
-			g_objLogFile.Save_HandlerLog("m_nLoadPickCase > 19");
+		if (m_nLoadPickCase > 19 && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {	// LoadPicker Up 동작 후
+			if (!m_tMainIndexLoop.Delay_LoopTime(100)) break;
 			nIndexVacuumRetry = 0;	// Clear
 			g_objCommon.Set_InfoIndexLoadVacuumOn();
 			m_nMainIndexCase = 6; m_tMainIndexLoop.Set_LoopTime(5000);
