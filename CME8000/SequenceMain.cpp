@@ -2358,7 +2358,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 			gData.nPNoIndex[0] = gData.nPNoLoadPick; gData.nPNoLoadPick = 0;
 			
 			g_objCommon.Set_LoadPickerOpen(0);
-			g_objCommon.Set_InfoIndexLoadVacuumOn();
+			//g_objCommon.Set_InfoIndexLoadVacuumOn();
+			g_objCommon.Set_IndexLoadVacuumOff(0);
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -2369,7 +2370,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 			m_tLoadPickLoop.Takt_Start();
 			g_objCommon.Set_LoadPickerUp();
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 0);	// Ready Up
-			g_objCommon.Set_IndexLoadVacuumOff(0);
+			
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -2385,11 +2386,12 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 20:	// return
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) 
 		{
-			m_tLoadPickLoop.Takt_Save(4, 8);		
+			m_tLoadPickLoop.Takt_Save(4, 8);
+			//g_objCommon.Set_InfoIndexLoadVacuumOn();
 
 			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
-				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) 
-				&& gData.nScanTimes >= m_pEquipData->nScanTimesPerLot) || gData.bThisLotVisionSkip)
+				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) && gData.nScanTimes >= m_pEquipData->nScanTimesPerLot)
+				|| gData.bThisLotVisionSkip)
 			{	
 				gData.IndexDone[0] = TRUE;
 				
@@ -2474,20 +2476,24 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 5:	// Wait for Load Picker Done
-		if (m_nLoadPickCase > 19 && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {	// LoadPicker Up 동작 후
+		if (m_nLoadPickCase > 19) 
+		{	// LoadPicker Up 동작 후
 			if (!m_tMainIndexLoop.Delay_LoopTime(100)) break;
 			nIndexVacuumRetry = 0;	// Clear
-			g_objCommon.Set_InfoIndexLoadVacuumOn();
+			//g_objCommon.Set_InfoIndexLoadVacuumOn();
 			m_nMainIndexCase = 6; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
 		return TRUE;
 
 	case 6:	// Retry (Align Out) or Vacuum Off
 		if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
-			if (g_objCommon.Get_InfoIndexLoadVacuumOn()) {
+			if(1)//if (g_objCommon.Get_InfoIndexLoadVacuumOn()) 
+			{
 				g_objCommon.Set_IndexLoadVacuumOff(0);
 				m_nMainIndexCase = 8; m_tMainIndexLoop.Set_LoopTime(5000);
-			} else {
+			} 
+			else
+			{
 				if (nIndexVacuumRetry < 1) {	// Retry 1회
 					if (!m_tMainIndexLoop.Delay_LoopTime(1000)) break;	// 1초 기다리고 Retry (Align1 Out)
 					m_pDY11->oIndexLoadAlignOut = TRUE;
