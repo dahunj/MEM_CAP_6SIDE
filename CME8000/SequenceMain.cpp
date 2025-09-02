@@ -2330,14 +2330,14 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Y, 2) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 1) &&
 			g_objCommon.Get_InfoLoadPickerCmCheck() && !m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut) {
 			m_tLoadPickLoop.Takt_Start();
-			g_objCommon.Set_InfoLoadPickerDown();
+			g_objCommon.Set_InfoLoadPickerDown();			
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 3);	// Index Down
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 17:	// 정보전달, Grip Open
-		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 3) && g_objCommon.Get_InfoLoadPickerDown()) {
-			if (!m_tLoadPickLoop.Waiting_Time(100)) break;
+		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 3) && g_objCommon.Get_InfoLoadPickerDown() ) {
+			//if (!m_tLoadPickLoop.Waiting_Time(100)) break;
 			m_tLoadPickLoop.Takt_Save(4, 6);
 			m_tLoadPickLoop.Takt_Start();
 
@@ -2358,25 +2358,27 @@ BOOL CSequenceMain::LoadPicker_Run()
 			gData.nPNoIndex[0] = gData.nPNoLoadPick; gData.nPNoLoadPick = 0;
 			
 			g_objCommon.Set_LoadPickerOpen(0);
-			//g_objCommon.Set_InfoIndexLoadVacuumOn();
-			g_objCommon.Set_IndexLoadVacuumOff(0);
+			g_objCommon.Set_InfoIndexLoadVacuumOn();
+			
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 18:	// Picker Up
-		if (g_objCommon.Get_LoadPickerOpen(0)) {
+		if (g_objCommon.Get_LoadPickerOpen(0) && g_objCommon.Get_InfoIndexLoadVacuumOn() ) {
 			if (!m_tLoadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[0])) break;
 			m_tLoadPickLoop.Takt_Save(4, 7);
 			m_tLoadPickLoop.Takt_Start();
 			g_objCommon.Set_LoadPickerUp();
+			g_objCommon.Set_IndexLoadVacuumOff(0);
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 0);	// Ready Up
 			
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 19:	// Align Out
-		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && g_objCommon.Get_LoadPickerCmCheckOff()) {
-			if (!m_tLoadPickLoop.Waiting_Time(300)) break;
+		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() 
+			&& g_objCommon.Get_LoadPickerCmCheckOff() && g_objCommon.Get_IndexLoadVacuumOff(0))
+		{			
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
 			
