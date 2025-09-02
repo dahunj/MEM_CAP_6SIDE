@@ -442,9 +442,9 @@ void CSetupEquipDlg::Display_EquipData()
 	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
 	m_chkUseVisionAlignOffset.SetCheck(pEquipData->bUseVisionAlignOffset);
 
-	strData.Format("%d", pEquipData->nScanTimesPerLot); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
-	strData.Format("%d", pEquipData->nLotQuantity); m_stcCMVision[1].SetWindowTextA(strData);
-	strData.Format("%d", pEquipData->nMinutes); m_stcCMVision[2].SetWindowTextA(strData); 
+	strData.Format("%d", pEquipData->nInspectCmScanTimes); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
+	strData.Format("%d", pEquipData->nInspectCmLotTimes); m_stcCMVision[1].SetWindowTextA(strData);
+	strData.Format("%d", pEquipData->nInspectCmMinutes); m_stcCMVision[2].SetWindowTextA(strData); 
 
 	m_chkUseTrayPickerTurn.SetCheck(pEquipData->bUseTrayPickerTurn);
 	m_chkUseCapPickerTurn.SetCheck(pEquipData->bUseCapPickerTurn);

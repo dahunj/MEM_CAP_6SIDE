@@ -66,8 +66,8 @@ CSequenceMain::CSequenceMain()
 	m_bLoadPortTrayExist = FALSE;
 #endif
 	 gData.bThisLotVisionSkip = FALSE;
-	 gData.nCmVisionCheckTime = 0;
-	 gData.nPNoVisionTimeOut = -1;
+	 gData.nInspectCmCheckTime = 0;
+	 gData.nInspectCmTimeOutPNo = -1;
 	Reset_MainRunCase();
 }
 
@@ -423,8 +423,8 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) memset(gData.nCapNoCapBuffer, 0x00, sizeof(int) * PICK);
 	if (nType == 0) memset(gData.nCapNoAssyPicker, 0x00, sizeof(int) * PICK);
 
-	if (nType == 0) gData.nScanTimes = 0;
-	if (nType == 0) gData.nLotQtyInspDone = 0;
+	if (nType == 0) gData.nInspectCmScanCount = 0;
+	if (nType == 0) gData.nInspectCmLotCount = 0;
 	if (nType == 0) gData.dwRunTimeNow = 0;
 	if (nType == 0) gData.dwRunTimeAccumulated = 0;	
 
@@ -1577,9 +1577,9 @@ BOOL CSequenceMain::LoadStage1_Run()
 		break;
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
-			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) 
+			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
 			{
-					gData.nCmVisionCheckTime = 0;
+					gData.nInspectCmCheckTime = 0;
 					gData.bThisLotVisionSkip = FALSE;
 			}
 			m_nLoadStage1Case = 20; m_tLoadStage1Loop.Set_LoopTime(5000);
@@ -1953,8 +1953,8 @@ BOOL CSequenceMain::LoadStage2_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) 
 		{
-			if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) {
-				gData.nCmVisionCheckTime = 0;
+			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) {
+				gData.nInspectCmCheckTime = 0;
 				gData.bThisLotVisionSkip = FALSE;
 			}
 			m_nLoadStage2Case = 20; m_tLoadStage2Loop.Set_LoopTime(5000);
@@ -2202,9 +2202,9 @@ BOOL CSequenceMain::LoadPicker_Run()
 		{
 			
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
-				&& !Check_IndexEmpty(0) && (gData.nScanTimes < m_pEquipData->nScanTimesPerLot)
+				&& !Check_IndexEmpty(0) && (gData.nInspectCmScanCount < m_pEquipData->nInspectCmScanTimes)
 				&& CheckCMVisionGo(nPNoTemp) && !gData.bThisLotVisionSkip 
-				&& gData.nPNoVisionTimeOut != nPNoTemp )  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
+				&& gData.nInspectCmTimeOutPNo != nPNoTemp )  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
 			{				
 				m_nVisionCmCase = 1;				
 			}			
@@ -2392,7 +2392,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 			//g_objCommon.Set_InfoIndexLoadVacuumOn();
 
 			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
-				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) && gData.nScanTimes >= m_pEquipData->nScanTimesPerLot)
+				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckCMVisionGo(gData.nPNoLoadPick) && gData.nInspectCmScanCount >= m_pEquipData->nInspectCmScanTimes)
 				|| gData.bThisLotVisionSkip)
 			{	
 				gData.IndexDone[0] = TRUE;
@@ -2712,11 +2712,11 @@ BOOL CSequenceMain::VisionCm_Run()
 		{
 			if (Check_CmAlignDone()) 
 			{
-				gData.nScanTimes++;
-				if(gData.nScanTimes+1 >= m_pEquipData->nScanTimesPerLot)
+				gData.nInspectCmScanCount++;
+				if(gData.nInspectCmScanCount+1 >= m_pEquipData->nInspectCmScanTimes)
 				{	
-					gData.nLotQtyInspDone++;
-					gData.nScanTimes = 0;
+					gData.nInspectCmLotCount++;
+					gData.nInspectCmScanCount = 0;
 					gData.bThisLotVisionSkip = TRUE;
 				}		
 
@@ -5584,20 +5584,20 @@ BOOL CSequenceMain::Run_Simulation()
 BOOL CSequenceMain::CheckCMVisionGo(int nPNo)
 {
 	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPNo - 1] - gLot.dwErrorTime;
-	if(gData.nCmVisionCheckTime >= 0) gData.nCmVisionCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
-	double dTimeLimit = m_pEquipData->nMinutes*60*1000; //분단위로 변경 
+	if(gData.nInspectCmCheckTime >= 0) gData.nInspectCmCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
+	double dTimeLimit = m_pEquipData->nInspectCmMinutes*60*1000; //분단위로 변경 
 		
-	if(gData.nCmVisionCheckTime > dTimeLimit && gData.nCmVisionCheckTime >= 0 )
+	if(gData.nInspectCmCheckTime > dTimeLimit && gData.nInspectCmCheckTime >= 0 )
 	{
-		gData.nCmVisionCheckTime = -1;
-		gData.nLotQtyInspDone = 0;
+		gData.nInspectCmCheckTime = -1;
+		gData.nInspectCmLotCount = 0;
 		gData.dwRunTimeNow = 0;
 		gData.dwRunTimeAccumulated = 0;
 		gData.bThisLotVisionSkip = TRUE;
-		gData.nPNoVisionTimeOut = nPNo;
+		gData.nInspectCmTimeOutPNo = nPNo;
 	}
 	
 		
-	if (gData.nLotQtyInspDone < m_pEquipData->nLotQuantity) return TRUE;
+	if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) return TRUE;
 	else return FALSE;	
 }
