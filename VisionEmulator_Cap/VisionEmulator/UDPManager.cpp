@@ -91,9 +91,9 @@ void CUDPManager::Get_LotStart(CString sLotId, CString sPortNo, CString sTrayCnt
 
 void CUDPManager::Get_LoadComplete(CString sGbn, CString sLotID, CString sPortNo, CString sTNo1, CString sTNo2, CString sCNo1, CString sCNo2, CString sPickNo1, CString sPickNo2)
 {
-	if(sTNo1 != "-1" && sCNo1 != "-1") Set_InspectComplete("T1", sLotID, sPortNo, sTNo1, sCNo1, "N", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
+	if(sTNo1 != "-1" && sCNo1 != "-1") Set_InspectComplete("T1", sLotID, sPortNo, sTNo1, sCNo1, "G", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
 	Sleep(10);
-	if(sTNo2 != "-1" && sCNo2 != "-1")Set_InspectComplete("T1", sLotID, sPortNo, sTNo2, sCNo2, "N", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
+	if(sTNo2 != "-1" && sCNo2 != "-1")Set_InspectComplete("T1", sLotID, sPortNo, sTNo2, sCNo2, "G", "88", 0, 0, 0, 0);//sOffsetX, sOffsetY, sSizeX, sSizeY
 	
 }
 

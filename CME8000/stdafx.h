@@ -72,10 +72,10 @@
 #endif
 
 #define MAIN_VERSION	_T("V 2.0.0.48")
-
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -84,6 +84,7 @@
 
 #define SIM_WAITTIMES	 1		//
 #define SIM_WAITTIMEM	 1		//
+#define	VELOCITY_WEIGHT	 8
 
 // R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
 // R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)

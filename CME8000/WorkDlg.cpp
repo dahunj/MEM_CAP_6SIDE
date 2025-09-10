@@ -105,6 +105,15 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_STC_DAY_0 + i, m_stcDay[i]);
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_LED_VISION_STATUS_0 + i, m_ledVisionStatus[i]);
 	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_STC_VISION_RESULT_0 + i, m_stcVisionResult[i]);
+	DDX_Control(pDX, IDC_BTN_CAPSW1, m_BtnCapSW1);
+	DDX_Control(pDX, IDC_BTN_CAPSW2, m_BtnCapSW2);
+	DDX_Control(pDX, IDC_BTN_CAPSW3, m_BtnCapSW3);
+	DDX_Control(pDX, IDC_BTN_CAPF1, m_BtnCapSW1F);
+	DDX_Control(pDX, IDC_BTN_CAPF2, m_BtnCapSWF2);
+	DDX_Control(pDX, IDC_BTN_UNLOAD1, m_BtnUnloadSW1);
+	DDX_Control(pDX, IDC_BTN_UNLOAD2, m_BtnUnloadSW2);
+	DDX_Control(pDX, IDC_BTN_UNLOADF1, m_BtnUnloadSWF1);
+	DDX_Control(pDX, IDC_BTN_UNLOADF2, m_BtnUnloadSWF2);
 }
 
 BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
@@ -144,6 +153,14 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_LBL_SHIP_LOT_0, &CWorkDlg::OnStnClickedLblShipLot0)
 	ON_BN_CLICKED(IDC_BTN_LOTSTART1, &CWorkDlg::OnBnClickedBtnLotstart1)
 	ON_BN_CLICKED(IDC_BTN_LOTSTART2, &CWorkDlg::OnBnClickedBtnLotstart2)
+	ON_BN_CLICKED(IDC_BTN_CAPSW1, &CWorkDlg::OnBnClickedBtnCapsw1)
+	ON_BN_CLICKED(IDC_BTN_CAPSW2, &CWorkDlg::OnBnClickedBtnCapsw2)
+	ON_BN_CLICKED(IDC_BTN_CAPSW3, &CWorkDlg::OnBnClickedBtnCapsw3)
+	ON_BN_CLICKED(IDC_BTN_CAPF1, &CWorkDlg::OnBnClickedBtnCapf1)
+	ON_BN_CLICKED(IDC_BTN_CAPF2, &CWorkDlg::OnBnClickedBtnCapf2)
+	ON_BN_CLICKED(IDC_BTN_UNLOAD1, &CWorkDlg::OnBnClickedBtnUnload1)
+	ON_BN_CLICKED(IDC_BTN_UNLOAD2, &CWorkDlg::OnBnClickedBtnUnload2)
+	ON_BN_CLICKED(IDC_BTN_UNLOADF1, &CWorkDlg::OnBnClickedBtnUnloadf1)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -244,20 +261,32 @@ BOOL CWorkDlg::OnInitDialog()
 
 #ifndef AJIN_BOARD_USE
 	m_stcShipTrayCountR.SetWindowText("12");
-	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/333/DDDDGGGGHHHH");
-	m_stcShipCmCountR.SetWindowText("222");
+	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/5555/DDDDGGGGHHHH");
+	m_stcShipCmCountR.SetWindowText("5555");
 
 	m_stcCapTrayCountR.SetWindowText("12");
-	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/333/DDDDGGGGHHHH");
-	m_stcCapCmCountR.SetWindowText("222");
+	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/5555/DDDDGGGGHHHH");
+	m_stcCapCmCountR.SetWindowText("5555");
 
 	m_stcShipTrayCountS.SetWindowText("12");
-	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/333/DDDDGGGGHHHH");
-	m_stcShipCmCountS.SetWindowText("222");
+	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/5555/DDDDGGGGHHHH");
+	m_stcShipCmCountS.SetWindowText("5555");
 
 	m_stcCapTrayCountS.SetWindowText("12");
-	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/333/DDDDGGGGHHHH");
-	m_stcCapCmCountS.SetWindowText("222");
+	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
+	m_stcCapCmCountS.SetWindowText("5555");
+	
+#else
+	m_BtnCapSW1.ShowWindow(FALSE);
+	m_BtnCapSW2.ShowWindow(FALSE);
+	m_BtnCapSW3.ShowWindow(FALSE);
+	m_BtnCapSW1F.ShowWindow(FALSE);
+	m_BtnCapSWF2.ShowWindow(FALSE);
+	m_BtnUnloadSW1.ShowWindow(FALSE);
+	m_BtnUnloadSW2.ShowWindow(FALSE);
+	m_BtnUnloadSWF1.ShowWindow(FALSE);
+	m_BtnUnloadSWF2.ShowWindow(FALSE);
+
 #endif
 	
 
@@ -1738,4 +1767,58 @@ void CWorkDlg::OnBnClickedBtnLotstart1()
 void CWorkDlg::OnBnClickedBtnLotstart2()
 {
 	g_objInspector.Set_LotStart(gData.sLotID[1], 2);
+}
+
+
+void CWorkDlg::OnBnClickedBtnCapsw1()
+{
+	gData.bCapPort1Wait = TRUE;
+	m_bCapSw1On = TRUE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnCapsw2()
+{
+	gData.bCapPort2Wait = TRUE;
+	m_bCapSw2On = TRUE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnCapsw3()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+}
+
+
+void CWorkDlg::OnBnClickedBtnCapf1()
+{
+	m_bCapSw1On = FALSE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnCapf2()
+{
+	m_bCapSw2On = FALSE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnUnload1()
+{
+	gData.bUnloadPort1Wait = TRUE;
+	m_bUnloadSw1On = TRUE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnUnload2()
+{
+	gData.nPNoUnloadPort = 0;
+	gData.bUnloadPort2Wait = FALSE;
+	gData.bUnloadTrayLotEnd[0] = FALSE;
+	gData.bUnloadTrayLotEnd[1] = FALSE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnUnloadf1()
+{
+	m_bUnloadSw1On = FALSE;
 }

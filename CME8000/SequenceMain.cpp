@@ -5535,6 +5535,20 @@ BOOL CSequenceMain::Run_Simulation()
 		m_pDX04->iCapStage2Exist =FALSE;
 	}
 
+	if(m_nUnloadStage1Case == 1)
+	{
+		Sleep(SIM_WAITTIMES);
+		m_pDX05->iUnloadStage1Exist = FALSE;
+		m_pDX05->iUnloadStage1Exist2 = FALSE;
+	}
+
+	if(m_nUnloadStage2Case == 1)
+	{
+		Sleep(SIM_WAITTIMES);
+		m_pDX05->iUnloadStage2Exist = FALSE;
+		m_pDX05->iUnloadStage2Exist2 = FALSE;
+	}
+
 	if(m_nUnloadStage1Case == 9 || m_nUnloadStage2Case == 23)
 	{
 		Sleep(SIM_WAITTIMES);
