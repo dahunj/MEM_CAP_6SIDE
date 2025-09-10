@@ -2163,6 +2163,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 					gData.IndexDone[0] = TRUE;
 					m_nLoadPickCase = 0;					
 					g_objLogFile.Save_MCC("MCC,4,LoadPicker,1-1,Index Not Empty 1");
+					g_objLogFile.Save_TestLog("index done true 1-1");
 				}
 			}
 		} else {
@@ -2172,6 +2173,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 					gData.IndexDone[0] = TRUE;
 					m_nLoadPickCase = 0;
 					g_objLogFile.Save_MCC("MCC,4,LoadPicker,1-2,Index Not Empty 2");
+					g_objLogFile.Save_TestLog("index done true 1-2");
 				}
 			}
 		}
