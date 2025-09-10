@@ -298,6 +298,18 @@ void CLoopTimer::Takt_Save(int nZone, int nCase)
 		case 16: strMsg = "Z Axis Move to Moving Up Position"; break;
 		}
 		break;
+	case 16: //Index
+		strFun = "MainIdex";
+		switch(nCase)
+		{
+			case 1: strMsg = "Check Index Align1 Out & Vacuum Pad Up"; break;
+			case 2: strMsg = "Load Picker Done"; break;
+			case 5: strMsg = "Align In Checked"; break;
+			case 6: strMsg = "Vac off Checked"; break;
+			case 8: strMsg = "Check Vacuum Pad Down"; break;
+			case 10: strMsg = "Index Rotation Start"; break;
+			case 11: strMsg = "Index Rotation Done"; break;
+		}
 	}
 
 	if (strMsg != "") {

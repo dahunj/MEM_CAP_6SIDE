@@ -14,8 +14,8 @@
 
 #define UDP_VPC_HOST_IP	"127.0.0.1"
 
-#define UDP_VPC_LPORT	8000
-#define UDP_VPC_HPORT	8001
+#define UDP_VPC_LPORT	9000
+#define UDP_VPC_HPORT	9001
 
 IMPLEMENT_DYNAMIC(CInspector, CWnd)
 

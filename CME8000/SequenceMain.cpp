@@ -2500,12 +2500,19 @@ BOOL CSequenceMain::MainIndex_Run()
 			 ((m_nLoadStage2Case == 0 || m_nLoadStage2Case == 1 || m_nLoadStage2Case == 60) && m_nLoadStage1Case == 50)))
 		{
 			m_nMainIndexCase = 10; m_tMainIndexLoop.Set_LoopTime(5000);
-		} else if (m_nLoadPickCase > 4 && m_nLoadPickCase <= 15) {	// Loading
+			g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1,move to rotation step");
+		} 
+		else if (m_nLoadPickCase > 4 && m_nLoadPickCase <= 15) // Loading
+		{	
 			m_nMainIndexCase++; m_tMainIndexLoop.Set_LoopTime(5000);
+			g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1, module loaded");
 		}
 		return TRUE;
 
 	case 1:	// Index Align1 Out & Vacuum Pad Up
+
+		m_tMainIndexLoop.Takt_Start(); g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1, Index Align1 Out & Vacuum Pad Up");
+
 		m_pDY11->oIndexLoadAlignOut = TRUE;
 		m_pDY11->oIndexLoadVacUp = TRUE;
 		g_objAJinAXL.Write_Output(11);
@@ -2513,7 +2520,10 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 
 	case 2:	// Check Index Align1 Out & Vacuum Pad Up
-		if (!m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexLoadVacUp && !m_pDX11->iIndexLoadVacDown) {
+		if (!m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut && m_pDX11->iIndexLoadVacUp && !m_pDX11->iIndexLoadVacDown) 
+		{
+			m_tMainIndexLoop.Takt_Save(16,1);
+			m_tMainIndexLoop.Takt_Start(); 
 			m_nMainIndexCase = 5; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -2524,6 +2534,8 @@ BOOL CSequenceMain::MainIndex_Run()
 			if (!m_tMainIndexLoop.Delay_LoopTime(100)) break;
 			nIndexVacuumRetry = 0;	// Clear
 			//g_objCommon.Set_InfoIndexLoadVacuumOn();
+
+			m_tMainIndexLoop.Takt_Save(16,2);; m_tMainIndexLoop.Takt_Start(); 
 			m_nMainIndexCase = 6; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
 		return TRUE;
@@ -2532,8 +2544,11 @@ BOOL CSequenceMain::MainIndex_Run()
 		if (m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) {
 			if(1)//if (g_objCommon.Get_InfoIndexLoadVacuumOn()) 
 			{
+				m_tMainIndexLoop.Takt_Save(16,5);; m_tMainIndexLoop.Takt_Start(); 
+
 				g_objCommon.Set_IndexLoadVacuumOff(0);
 				m_nMainIndexCase = 8; m_tMainIndexLoop.Set_LoopTime(5000);
+				
 			} 
 			else
 			{
@@ -2547,7 +2562,10 @@ BOOL CSequenceMain::MainIndex_Run()
 		}
 		break;
 	case 7:	// Align1 In (Retry)
-		if (!m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut) {
+		if (!m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut) 
+		{
+			m_tMainIndexLoop.Takt_Save(16,6);; m_tMainIndexLoop.Takt_Start(); 
+
 			nIndexVacuumRetry++;
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
@@ -2555,14 +2573,20 @@ BOOL CSequenceMain::MainIndex_Run()
 		}
 		break;
 	case 8:	// Vacuum Pad Down
-		if (g_objCommon.Get_IndexLoadVacuumOff(0)) {
+		if (g_objCommon.Get_IndexLoadVacuumOff(0)) 
+		{
+			m_tMainIndexLoop.Takt_Save(16,7);; m_tMainIndexLoop.Takt_Start(); 
+
 			m_pDY11->oIndexLoadVacUp = FALSE;
 			g_objAJinAXL.Write_Output(11);
 			m_nMainIndexCase = 9; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 9:	// Check Vacuum Pad Down
-		if (!m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown) {
+		if (!m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown) 
+		{
+			m_tMainIndexLoop.Takt_Save(16,8);; m_tMainIndexLoop.Takt_Start(); 
+
 			m_nMainIndexCase = 10; m_tMainIndexLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -2579,6 +2603,7 @@ BOOL CSequenceMain::MainIndex_Run()
 
 				if (Check_IndexEmpty(-1)) 
 				{ 
+					g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1, index empty");
 					g_objLogFile.Save_TestLog("gData.IndexDone[0] = FALSE 1");
 					gData.IndexDone[0] = FALSE;
 					m_nMainIndexCase = 0; 
@@ -2589,6 +2614,8 @@ BOOL CSequenceMain::MainIndex_Run()
 					(g_objAJinAXL.Get_Position(AX_ASSY_PICKER_X) <= 200.0 || g_objCommon.Get_AssyPickerUp(0)) &&
 					(g_objAJinAXL.Get_Position(AX_TRANS_STAGE_X) >= 200.0 || g_objCommon.Check_Position(AX_TRANS_STAGE_Z, 0))) 
 				{
+					m_tMainIndexLoop.Takt_Save(16,9);; m_tMainIndexLoop.Takt_Start(); 
+
 					g_objAJinAXL.Move_Relative(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0]);
 					m_nMainIndexCase = 11; m_tMainIndexLoop.Set_LoopTime(10000);
 				}
@@ -2596,7 +2623,9 @@ BOOL CSequenceMain::MainIndex_Run()
 		}
 		return TRUE;
 	case 11:	// Check R Movd Done and Index End
-		if (g_objAJinAXL.Is_MoveDone(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0])) {
+		if (g_objAJinAXL.Is_MoveDone(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0])) 
+		{
+			m_tMainIndexLoop.Takt_Save(16,10);; m_tMainIndexLoop.Takt_Start(); 
 			g_objLogFile.Save_TestLog("Set_IndexEnd");
 			Set_IndexEnd();
 			m_nMainIndexCase = 0; m_tMainIndexLoop.Set_LoopTime(5000);
@@ -2610,14 +2639,18 @@ BOOL CSequenceMain::MainIndex_Run()
 			!m_pDX11->iIndexAssyVacUp && m_pDX11->iIndexAssyVacDown) {
 			if ((g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y) <= 200.0 || g_objCommon.Get_LoadPickerUp()) &&
 				(g_objAJinAXL.Get_Position(AX_ASSY_PICKER_X) <= 200.0 || g_objCommon.Get_AssyPickerUp(0)) &&
-				(g_objAJinAXL.Get_Position(AX_TRANS_STAGE_X) >= 200.0 || g_objCommon.Check_Position(AX_TRANS_STAGE_Z, 0))) {
+				(g_objAJinAXL.Get_Position(AX_TRANS_STAGE_X) >= 200.0 || g_objCommon.Check_Position(AX_TRANS_STAGE_Z, 0))) 
+			{
+				g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1, Lot End Home");
 				g_objAJinAXL.Home_Search(AX_MAIN_INDEX_R);
 				m_nMainIndexCase = 22; m_tMainIndexLoop.Set_LoopTime(10000);
 			}
 		}
 		break;
 	case 22:		// Check R Home Done
-		if (g_objAJinAXL.Is_Home(AX_MAIN_INDEX_R)) {
+		if (g_objAJinAXL.Is_Home(AX_MAIN_INDEX_R)) 
+		{
+			g_objLogFile.Save_MCC("MCC,16,MainIdex,0-1, Home Done");
 			m_nMainIndexCase = 0;
 		}
 		break;
