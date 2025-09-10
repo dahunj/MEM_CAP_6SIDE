@@ -2140,11 +2140,19 @@ BOOL CSequenceMain::LoadPicker_Run()
 
 	switch (m_nLoadPickCase) {
 	case 0:		// Wait
-		if (m_nMainIndexCase <= 10 && !gData.IndexDone[0]) { m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000); }
+		if (m_nMainIndexCase <= 10 && !gData.IndexDone[0]) 
+		{ 
+			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000); 
+			
+		}
 		return TRUE;
 
 	case 1:		// Tray가 Work 위치에 오면 시작
-		if (m_nLoadStage1Case == 20 || m_nLoadStage2Case == 20) { m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000); }
+		if (m_nLoadStage1Case == 20 || m_nLoadStage2Case == 20) 
+		{
+			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
+			m_tLoadPickLoop.Takt_Start(); m_tLoadPickLoop.Takt_Save(4, 1);
+		}
 
 		if (m_pEquipData->bUseInlineMode) {	// Index에 모듈이 있을때 Tray가 안넘어오면 Index는 돌아가게 해준다.
 			if (((m_nLoadStage1Case == 0 || m_nLoadStage1Case == 1) && m_nLoadStage2Case == 50) ||
@@ -2153,7 +2161,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 				if (!Check_IndexEmpty(-1) && m_nVisionCmCase == 0) 
 				{
 					gData.IndexDone[0] = TRUE;
-					m_nLoadPickCase = 0;
+					m_nLoadPickCase = 0;					
+					g_objLogFile.Save_MCC("MCC,4,LoadPicker,1-1,Index Not Empty 1");
 				}
 			}
 		} else {
@@ -2162,24 +2171,28 @@ BOOL CSequenceMain::LoadPicker_Run()
 				if (!gData.IndexDone[0] && m_nVisionCmCase == 0) {
 					gData.IndexDone[0] = TRUE;
 					m_nLoadPickCase = 0;
+					g_objLogFile.Save_MCC("MCC,4,LoadPicker,1-2,Index Not Empty 2");
 				}
 			}
 		}
 		return TRUE;
 
 	case 2:		// Picker Y and P Move to Tray Position
-		if (g_objCommon.Get_LoadPickerUp() && g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0)) {
+		if (g_objCommon.Get_LoadPickerUp() && g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0)) 
+		{
 			if (m_nLoadStage1Case != 20 && m_nLoadStage2Case != 20) return TRUE;
 
 			if ((m_nLoadStage1Case == 20 && (g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX) || g_objCommon.Check_Position(AX_LOAD_STAGE1_X, 2))) ||
-				(m_nLoadStage2Case == 20 && (g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX) || g_objCommon.Check_Position(AX_LOAD_STAGE2_X, 2)))) {
+				(m_nLoadStage2Case == 20 && (g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX) || g_objCommon.Check_Position(AX_LOAD_STAGE2_X, 2)))) 
+			{
 				if (m_nLoadStage1Case == 20) nLpWorkTray = 1;
 				if (m_nLoadStage2Case == 20) nLpWorkTray = 2;
 
 				int nPickCnt = 0, nTrayCnt = 0;
-				if (Select_LoadPickerPos(nLpStart, nPickCnt) && Select_LoadTrayPos(nLpTrayPosX, nLpTrayPosY)) {
+				if (Select_LoadPickerPos(nLpStart, nPickCnt) && Select_LoadTrayPos(nLpTrayPosX, nLpTrayPosY)) 
+				{
 					m_dwLoadPick = GetTickCount();
-					m_tLoadPickLoop.Takt_Start();
+					
 					nTrayCnt = LT_X - nLpTrayPosX;
 					int nCount = (nPickCnt < nTrayCnt ? nPickCnt : nTrayCnt);
 					nLpMultCnt = g_objCommon.Get_InfoLoadPickerDownCnt(nLpTrayPosX, nLpTrayPosY, nCount);
@@ -2193,6 +2206,9 @@ BOOL CSequenceMain::LoadPicker_Run()
 					g_objAJinAXL.Move_Absolute(AX_LOAD_PICKER_Y, dLpY);
 					g_objCommon.Move_Position(AX_LOAD_PICKER_P, 0);
 					m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(10000);
+					
+					m_tLoadPickLoop.Takt_Start(); 
+					g_objLogFile.Save_MCC("MCC,4,LoadPicker,2,Back Check");
 				}
 			}
 		}
@@ -2200,7 +2216,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
-			
+			m_tLoadPickLoop.Takt_Save(4, 2);m_tLoadPickLoop.Takt_Start();
+
 			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && (gData.nInspectCmScanCount < m_pEquipData->nInspectCmScanTimes)
 				&& CheckCMVisionGo(nPNoTemp) && !gData.bThisLotVisionSkip 
@@ -2213,8 +2230,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
 				if (g_objCommon.Get_InfoLoadPickerGripOpen()) 
 				{
-					m_tLoadPickLoop.Takt_Save(4, 1);
-					m_tLoadPickLoop.Takt_Start();
+					
+					
 
 					g_objCommon.Set_LoadPickerDownMulti(nLpStart+1, nLpMultCnt);
 					g_objCommon.Move_Position(AX_LOAD_PICKER_Z, nLpWorkTray);
@@ -2227,8 +2244,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, nLpWorkTray) && g_objCommon.Get_LoadPickerDownMulti(nLpStart+1, nLpMultCnt)) {
 			if (!m_tLoadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[0])) break;
 
-			m_tLoadPickLoop.Takt_Save(4, 2);
-			m_tLoadPickLoop.Takt_Start();
+			m_tLoadPickLoop.Takt_Save(4, 3);m_tLoadPickLoop.Takt_Start();
 			
 			for (int i = 0; i < nLpMultCnt; i++) {
 				gData.InfoLoadPick[nLpStart+i] = gData.InfoLoadTray[nLpTrayPosY][nLpTrayPosX+i]; gData.InfoLoadTray[nLpTrayPosY][nLpTrayPosX+i] = 0;
@@ -2256,8 +2272,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 		if (g_objCommon.Get_InfoLoadPickerGrip()) {
 			if (!m_tLoadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[0])) break;
 
-			m_tLoadPickLoop.Takt_Save(4, 3);
-			m_tLoadPickLoop.Takt_Start();
+			m_tLoadPickLoop.Takt_Save(4, 4);m_tLoadPickLoop.Takt_Start();
+
 			g_objCommon.Set_LoadPickerUp();
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 0);
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
@@ -2265,25 +2281,43 @@ BOOL CSequenceMain::LoadPicker_Run()
 		break;
 	case 6:		// CM Check & Tray Empty Check
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && g_objCommon.Get_InfoLoadPickerCmCheck()) {
-			m_tLoadPickLoop.Takt_Save(4, 4);
+			m_tLoadPickLoop.Takt_Save(4, 5);
+			m_tLoadPickLoop.Takt_Start();
 			bLpTrayEmpty = Check_LoadTrayEmpty();
 
-			if (Check_LoadPickerFull() || bLpTrayEmpty) {
-				if (Check_LoadPickerFull()) {
+			if (Check_LoadPickerFull() || bLpTrayEmpty) 
+			{
+				if (Check_LoadPickerFull()) 
+				{
 					m_nLoadPickCase = 10; m_tLoadPickLoop.Set_LoopTime(5000);
-				} else {
+				} 
+				else
+				{
 					int nPNo = gData.nPNoLoadTray[nLpWorkTray-1];
-					if (m_pEquipData->bUseInlineMode) {	// Inline Mode : 트레이가 비어있고 마지막 트레이면 Index로 넘어간다.
-						if (bLpTrayEmpty && (gData.nTNoLoadTray[nLpWorkTray-1] == gData.nLastTrayNo[nPNo-1])) {
+					if (m_pEquipData->bUseInlineMode) 
+					{	// Inline Mode : 트레이가 비어있고 마지막 트레이면 Index로 넘어간다.
+						if (bLpTrayEmpty && (gData.nTNoLoadTray[nLpWorkTray-1] == gData.nLastTrayNo[nPNo-1])) 
+						{
 							m_nLoadPickCase = 10; m_tLoadPickLoop.Set_LoopTime(5000);
-						} else {
+							g_objLogFile.Save_MCC("MCC,4,LoadPicker,6-1,Tray Empty");
+						} 
+						else
+						{
 							m_nLoadPickCase = 2; m_tLoadPickLoop.Set_LoopTime(5000);
+							g_objLogFile.Save_MCC("MCC,4,LoadPicker,6-2,Tray Not Empty");
 						}
-					} else {	// 단독 모드 : 트레이가 비어있고 마지막 트레이면 Index로 넘어간다.
-						if (bLpTrayEmpty && (gData.nLoadTrayCount[nPNo-1] >= gData.nTrayUseCount[nPNo-1])) {
+					} 
+					else 
+					{	// 단독 모드 : 트레이가 비어있고 마지막 트레이면 Index로 넘어간다.
+						if (bLpTrayEmpty && (gData.nLoadTrayCount[nPNo-1] >= gData.nTrayUseCount[nPNo-1]))
+						{
 							m_nLoadPickCase = 10; m_tLoadPickLoop.Set_LoopTime(5000);
-						} else {
+							g_objLogFile.Save_MCC("MCC,4,LoadPicker,6-3,Tray Empty");
+						} 
+						else
+						{
 							m_nLoadPickCase = 2; m_tLoadPickLoop.Set_LoopTime(5000);
+							g_objLogFile.Save_MCC("MCC,4,LoadPicker,6-4,Tray Not Empty");
 						}
 					}
 				}
@@ -2294,34 +2328,39 @@ BOOL CSequenceMain::LoadPicker_Run()
 
 					gData.nPNoLoadTray[nLpWorkTray-1] = 0;
 				}
-			} else {
+			} else 
+			{
+				g_objLogFile.Save_MCC("MCC,4,LoadPicker,6-5,Tray Not Empty");
 				m_nLoadPickCase = 2; m_tLoadPickLoop.Set_LoopTime(5000);
 			}
 		}
 		break;
 
 	case 10:	// Interlock Vision CM
-		if (m_nVisionCmCase == 0 && g_objCommon.Check_Position(AX_VISION_CM_X, 0)) {
+		if (m_nVisionCmCase == 0 && g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
+		{	m_tLoadPickLoop.Takt_Save(4, 10);m_tLoadPickLoop.Takt_Start();
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		return TRUE;
 
 	case 11:	// Y/P Move to Index Position
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_InfoLoadPickerCmCheck()) {
-			m_tLoadPickLoop.Takt_Start();
+
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Y, 2);	// Index Position
 			g_objCommon.Move_Position(AX_LOAD_PICKER_P, 1);	// Index Pitch
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 	case 12:	// Position Check
 		if (g_objCommon.Get_InfoLoadPickerCmCheck() && g_objCommon.Check_Position(AX_LOAD_PICKER_Y, 2) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 1)) {
-			m_tLoadPickLoop.Takt_Save(4, 5);
+			m_tLoadPickLoop.Takt_Save(4, 11);m_tLoadPickLoop.Takt_Start();
 			m_nLoadPickCase = 15; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 
 	case 15:	// index Check		
-		if ((m_nMainIndexCase == 2 || m_nMainIndexCase == 5) && !gData.IndexDone[0]) {
+		if ((m_nMainIndexCase == 2 || m_nMainIndexCase == 5) && !gData.IndexDone[0]) 
+		{
+			m_tLoadPickLoop.Takt_Save(4, 15);m_tLoadPickLoop.Takt_Start();
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		return TRUE;
@@ -2329,7 +2368,6 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 16:	// Index Down
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Y, 2) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 1) &&
 			g_objCommon.Get_InfoLoadPickerCmCheck() && !m_pDX11->iIndexLoadAlignIn && m_pDX11->iIndexLoadAlignOut) {
-			m_tLoadPickLoop.Takt_Start();
 			g_objCommon.Set_InfoLoadPickerDown();			
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 3);	// Index Down
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(10000);
@@ -2338,8 +2376,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 17:	// 정보전달, Grip Open
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 3) && g_objCommon.Get_InfoLoadPickerDown() ) {
 			//if (!m_tLoadPickLoop.Waiting_Time(100)) break;
-			m_tLoadPickLoop.Takt_Save(4, 6);
-			m_tLoadPickLoop.Takt_Start();
+			m_tLoadPickLoop.Takt_Save(4, 16); m_tLoadPickLoop.Takt_Start();
 
 			for (int i = 0; i < PICK; i++) {
 				gData.InfoIndex[0][i] = gData.InfoLoadPick[i]; gData.InfoLoadPick[i] = 0;
@@ -2366,8 +2403,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 18:	// Picker Up
 		if (g_objCommon.Get_LoadPickerOpen(0) && g_objCommon.Get_InfoIndexLoadVacuumOn() ) {
 			if (!m_tLoadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[0])) break;
-			m_tLoadPickLoop.Takt_Save(4, 7);
-			m_tLoadPickLoop.Takt_Start();
+			m_tLoadPickLoop.Takt_Save(4, 17);m_tLoadPickLoop.Takt_Start();
+			
 			g_objCommon.Set_LoadPickerUp();
 			g_objCommon.Set_IndexLoadVacuumOff(0);
 			g_objCommon.Move_Position(AX_LOAD_PICKER_Z, 0);	// Ready Up
@@ -2375,10 +2412,11 @@ BOOL CSequenceMain::LoadPicker_Run()
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
 		break;
-	case 19:	// Align Out
+	case 19:	
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() 
 			&& g_objCommon.Get_LoadPickerCmCheckOff() && g_objCommon.Get_IndexLoadVacuumOff(0))
 		{			
+			m_tLoadPickLoop.Takt_Save(4, 18);m_tLoadPickLoop.Takt_Start();
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
 			
@@ -2388,7 +2426,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 20:	// return
 		if (g_objCommon.Check_Position(AX_LOAD_PICKER_Z, 0) && g_objCommon.Get_LoadPickerUp() && m_pDX11->iIndexLoadAlignIn && !m_pDX11->iIndexLoadAlignOut) 
 		{
-			m_tLoadPickLoop.Takt_Save(4, 8);
+			m_tLoadPickLoop.Takt_Save(4, 19);m_tLoadPickLoop.Takt_Start();
 			//g_objCommon.Set_InfoIndexLoadVacuumOn();
 
 			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
@@ -2396,18 +2434,18 @@ BOOL CSequenceMain::LoadPicker_Run()
 				|| gData.bThisLotVisionSkip)
 			{	
 				gData.IndexDone[0] = TRUE;
-				
+				g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE 20");
 			}
 
 			if (bLpTrayEmpty) 
 			{
 				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) 
 				{
+					g_objLogFile.Save_MCC("MCC,4,LoadPicker,20-1,Picker and Tray Move simultaneously");
 					m_nLoadPickCase = 1; m_tLoadPickLoop.Set_LoopTime(5000);	// Picker와 Tray를 동시에 이동하기 위해...
 				}
 				else
-				{
-					m_tLoadPickLoop.Takt_Start();
+				{					
 					nLpWorkTray = (nLpWorkTray == 1 ? 2 : 1);	// 교체
 					dLpY = m_pMoveData->dLoadPickerY[nLpWorkTray-1];
 					g_objAJinAXL.Move_Absolute(AX_LOAD_PICKER_Y, dLpY);	// Stage Position
@@ -2417,6 +2455,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 			} 
 			else
 			{
+				g_objLogFile.Save_MCC("MCC,4,LoadPicker,20-2,Back to Load Picker to Pick Up Pos");
 				m_nLoadPickCase = 2; m_tLoadPickLoop.Set_LoopTime(5000);
 			}
 		}
@@ -2424,7 +2463,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 21:	//Position Check & Vision Start
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) {
 				
-			m_tLoadPickLoop.Takt_Save(4, 9);
+			m_tLoadPickLoop.Takt_Save(4, 20);
 
 			m_strLog.Format("LoadPicker, %d", GetTickCount() - m_dwLoadPick);
 			g_objLogFile.Save_TestLog(m_strLog);

@@ -65,13 +65,13 @@ void CLoopTimer::Takt_Start()
 	m_dwTakt = GetTickCount();
 }
 
-void CLoopTimer::Takt_Save(int nFun, int nId)
+void CLoopTimer::Takt_Save(int nZone, int nCase)
 {
 	CString strFun, strLog, strMsg;
-	switch (nFun) {
+	switch (nZone) {
 	case 1:		// Tray Picker
 		strFun = "TrayPicker";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Avi Down Position"; break;
 		case  2: strMsg = "Tray Picker Grip Close"; break;
 		case  3: strMsg = "Z Axis Move to Ready Up Position"; break;
@@ -84,7 +84,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 2:		// Load Stage1
 		strFun = "LoadStage1";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -101,7 +101,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 3:		// Load Stage2
 		strFun = "LoadStage2";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -118,21 +118,26 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 4:		// Load Picker
 		strFun = "LoadPicker";
-		switch (nId) {
-		case 1: strMsg = "Y Axis Move to Pickup position"; break; 
-		case 2: strMsg = "Z Axis Move to Tray Down. Cylinder Down"; break;
-		case 3: strMsg = "Load Picker Grip Close"; break;
-		case 4: strMsg = "Z Axis Move to Tray Up. Cylinder Up"; break;
-		case 5: strMsg = "Y/P Axis Move to Index Position"; break;
-		case 6: strMsg = "Z Axis Move to Index Down. Cylinder Down"; break;
-		case 7: strMsg = "Load Picker Grip Open"; break;
-		case 8: strMsg = "Z Axis Move to Index Up. Cylinder Up"; break;
-		case 9: strMsg = "Y/P Axis Move to Tray position"; break;
+		switch (nCase) {
+		case 1: strMsg = "Load Stage 1 or 2 Arrive Checked"; break;
+		case 2: strMsg = "Load Picker Y Move to Grip and Load Stage X Move to Ready"; break;
+		case 3: strMsg = "Z Axis Move to Tray Down. Cylinder Down"; break;
+		case 4: strMsg = "Load Picker Grip Close"; break;
+		case 5: strMsg = "Z Axis Move to Tray Up. Cylinder Up"; break;
+		case 6: strMsg = "CM Checked, Tray Empty Check"; break;
+		case 10: strMsg = "CM Vision Complete Checked"; break;
+		case 11: strMsg = "Y/P Axis Move to Index Position"; break;
+		case 15: strMsg = "Index Jobs Done Checked"; break;
+		case 16: strMsg = "Z Axis Move to Index Down. Cylinder Down"; break;
+		case 17: strMsg = "Load Picker Grip Open"; break;
+		case 18: strMsg = "Z Axis Move to Index Up. Cylinder Up"; break;
+		case 19: strMsg = "Index Align Out"; break;		
+		case 20: strMsg = "Y/P Axis Move to Tray position"; break;
 		}
 		break;
 	case 5:		// Vision Cm Align
 		strFun = "CmAlign";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "X Axis Move to Inspect Position(LoadComplete)"; break;
 		case  2: strMsg = "CM Scan Complete"; break;
 		case  3: strMsg = "X Axis Move to Ready Position"; break;
@@ -140,7 +145,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 6:		// Vision Cap Align
 		strFun = "CapAlign";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Y Axis Move to Inspect Position(LoadComplete)"; break;
 		case  2: strMsg = "Cap Scan Complete"; break;
 		case  3: strMsg = "Y Axis Move to Ready Position"; break;
@@ -148,7 +153,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 7:		// Cap Stage1
 		strFun = "CapStage1";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -169,7 +174,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 8:		// Cap Stage2
 		strFun = "CapStage2";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -190,7 +195,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 9:		// Cap Picker
 		strFun = "CapPicker";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "X/Y Axis Move to Cap Pickup Position"; break;
 		case  2: strMsg = "Cap Pickup (Down + VacOn + Up) In Cap Tray"; break;
 		case  3: strMsg = "X/Y Axis Move to Cap Buffer Position"; break;
@@ -201,7 +206,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 10:	// Cap Buffer
 		strFun = "CapBuffer";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Move to Cleaning Position"; break;
 		case  2: strMsg = "Cap Cover In"; break;
 		case  3: strMsg = "Cap Cover Down/Cap Clean Up + Cap Clean Air On/Off + Cap Cover Up/Cap Clean Down"; break;
@@ -212,7 +217,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 11:	// Assy Picker
 		strFun = "Assy Picker";
-		switch (nId) {
+		switch (nCase) {
 		case 1: strMsg = "Cap Pickup (Down + VacOn + Up) In Cap Buffer"; break;
 		case 2: strMsg = "X/Y/Z Axis Move to Inspect Position"; break;
 		case 3: strMsg = "X/Y Axis Move to Index Position"; break;
@@ -226,7 +231,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 12:	// Trans Stage
 		strFun = "TransStage";
-		switch (nId) {
+		switch (nCase) {
 		case 1: strMsg = "Z Axis Move to Index Down"; break;
 		case 2: strMsg = "Index Trans Align Out"; break;
 		case 3: strMsg = "Clamp On"; break;
@@ -240,7 +245,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 13:	// UnloadPicker
 		strFun = "UnloadPicker";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Trans Down"; break;
 		case  2: strMsg = "Trans Stage Clamp Off"; break;
 		case  3: strMsg = "Z Axis Move to Ready Up"; break;
@@ -253,7 +258,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 14:	// UnloadStage1
 		strFun = "UnloadStage1";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -274,7 +279,7 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 		break;
 	case 15:	// UnloadStage2
 		strFun = "UnloadStage2";
-		switch (nId) {
+		switch (nCase) {
 		case  1: strMsg = "Z Axis Move to Support Up Position"; break;
 		case  2: strMsg = "Port Support Out"; break;
 		case  3: strMsg = "Z Axis Move to Support Down Position"; break;
@@ -296,14 +301,14 @@ void CLoopTimer::Takt_Save(int nFun, int nId)
 	}
 
 	if (strMsg != "") {
-		gLot.dAverageCycle[nFun-1][0][nId-1]++;
-		gLot.dAverageCycle[nFun-1][1][nId-1] += (GetTickCount() - m_dwTakt) / 1000.0;
+		gLot.dAverageCycle[nZone-1][0][nCase-1]++;
+		gLot.dAverageCycle[nZone-1][1][nCase-1] += (GetTickCount() - m_dwTakt) / 1000.0;
 	}
 
-	strLog.Format("MCC,(%02d) %s,(%02d) %s,%0.3lf", nFun, strFun, nId, strMsg, (GetTickCount() - m_dwTakt) / 1000.0);
-	g_objLogFile.Save_HandlerLog(strLog);
+	strLog.Format("MCC,(%02d) %s,(%02d) %s,%0.3lf", nZone, strFun, nCase, strMsg, (GetTickCount() - m_dwTakt) / 1000.0);
+	g_objLogFile.Save_MCC(strLog);
 
-	strLog.Format("%s,%d,%s,%0.3lf", strFun, nId, strMsg,(GetTickCount() - m_dwTakt) / 1000.0);
+	strLog.Format("%s,%d,%s,%0.3lf", strFun, nCase, strMsg,(GetTickCount() - m_dwTakt) / 1000.0);
 	g_objLogFile.Save_JobListExcel(strLog);
 }
 
