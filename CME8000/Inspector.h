@@ -37,6 +37,7 @@ private:
 
 	void Get_LotReady(CString sLotId, CString sPortNo);
 	void Get_InspectComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sJudge, CString sNgCode, CString sOffsetX, CString sOffsetY, CString sSizeX, CString sSizeY);
+	void Get_ScanComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo);
 	void Get_ErrorRequest(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sErrNo);
 	void Get_HeartBeat();
 

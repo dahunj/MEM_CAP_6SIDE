@@ -225,48 +225,7 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 		int nCmInfo1 = (nNo1 >= 0 ? gData.nCmInspectInfo[nPx][nTx][nNo1] : 1);
 		int nCmInfo2 = (nNo2 >= 0 ? gData.nCmInspectInfo[nPx][nTx][nNo2] : 1);
 
-		//Temp
-		if (!pEquipData->bUseVisionAlignAlarm && !pEquipData->bUseVisionAlignOffset)
-		{
-			m_nT12ScanCnt++;
-			if (m_nT12ScanCnt == m_nT12ScanReq) 
-			{
-				gData.bScanDone[0] = TRUE;
-				g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
-			}
-		}
-		else 
-		{
-			if (pEquipData->bUseVisionAlignOffset)
-			{
-				m_nT12ScanCnt++;
-				if (m_nT12ScanCnt == m_nT12ScanReq) {
-					gData.bScanDone[0] = TRUE;
-					g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
-				}
-			} 
-			else
-			{
-				m_nT12ScanCnt++;
-				if (m_nT12ScanCnt == m_nT12ScanReq &&
-					(gData.InfoIndex[0][m_nT12ScanCnt+0] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+0] > 0 && nCmInfo1 == 1)) &&
-					(gData.InfoIndex[0][m_nT12ScanCnt+2] == 0 || (gData.InfoIndex[0][m_nT12ScanCnt+2] > 0 && nCmInfo2 == 1))) 
-				{
-					m_nT12ScanCnt = 0;
-					gData.bScanDone[0] = TRUE;
-					g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
-
-				} 
-				else
-				{
-					if (m_nT12ScanCnt == m_nT12ScanReq)
-					{
-						m_nT12ScanCnt = 0;
-						g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 6);
-					}
-				}
-			}
-		}
+		
 
 	} else if (sGbn == "B1" || sGbn == "B2") {
 		int nNo1 = gData.nInspCmNo[1][0] - 1;
@@ -295,6 +254,32 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 			g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CAP, 10);
 		}
 	}
+}
+
+void CInspector::Get_ScanComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo)
+{
+	int nPx = atoi(sPortNo) - 1;
+	int	nTx = atoi(sTrayNo) - 1;
+	int	nCx = atoi(sCmNo) - 1;
+	if (nTx < 0 || nTx > 99 || nCx < 0 || nCx > 200) { g_objCommon.Show_Error(6101); return; }
+
+	int nV = ((sGbn == "T1" || sGbn == "T2") ? 0 : ((sGbn == "B1"|| sGbn == "B2") ? 1 : -1));
+	if (nV == -1) { g_objCommon.Show_Error(6102); return; }
+	
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	if(nV == 0)
+	{
+		int nCase = g_objSequenceMain.Get_MainRunCase(AUTO_VISION_CM);
+		if (nCase != 5) { Exception_Log("Scan Complete", sGbn, nCase); return; }
+
+		m_nT12ScanCnt++;
+		if (m_nT12ScanCnt < m_nT12ScanReq) return; 
+
+		gData.bScanDone[0] = TRUE;
+		g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CM, 10);
+
+	}	
 }
 
 void CInspector::Get_ErrorRequest(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sErrNo)
