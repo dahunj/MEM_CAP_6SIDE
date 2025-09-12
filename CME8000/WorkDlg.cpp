@@ -260,19 +260,19 @@ BOOL CWorkDlg::OnInitDialog()
 	m_bShipLotIdInput = FALSE;
 
 #ifndef AJIN_BOARD_USE
-	m_stcShipTrayCountR.SetWindowText("12");
+	m_stcShipTrayCountR.SetWindowText("99");
 	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/5555/DDDDGGGGHHHH");
 	m_stcShipCmCountR.SetWindowText("5555");
 
-	m_stcCapTrayCountR.SetWindowText("12");
+	m_stcCapTrayCountR.SetWindowText("99");
 	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/5555/DDDDGGGGHHHH");
 	m_stcCapCmCountR.SetWindowText("5555");
 
-	m_stcShipTrayCountS.SetWindowText("12");
+	m_stcShipTrayCountS.SetWindowText("99");
 	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/5555/DDDDGGGGHHHH");
 	m_stcShipCmCountS.SetWindowText("5555");
 
-	m_stcCapTrayCountS.SetWindowText("12");
+	m_stcCapTrayCountS.SetWindowText("99");
 	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
 	m_stcCapCmCountS.SetWindowText("5555");
 	

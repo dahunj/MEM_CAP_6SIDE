@@ -224,7 +224,7 @@ public:
 
 	void Init_NgTray(int nNo);
 
-	BOOL CheckCMVisionGo(int nPNo);
+	BOOL CheckInspectCmGoOrNot(int nPortNo);
 };
 
 extern CSequenceMain g_objSequenceMain;

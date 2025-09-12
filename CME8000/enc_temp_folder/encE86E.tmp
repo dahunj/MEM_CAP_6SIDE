@@ -4583,7 +4583,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 		if (g_objCommon.Get_InfoUnloadPickerVacOn() && g_objCommon.Get_UnloadPickerUp(0) &&
 			(g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0) || g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1))) 
 		{
-			 
+
 			if (gData.nPNoUnloadPick != gData.nPNoUnloadTray && gData.nPNoUnloadTray > 0)
 			{
 				if (m_pEquipData->bUseInlineMode) 
