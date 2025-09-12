@@ -114,6 +114,7 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BTN_UNLOAD2, m_BtnUnloadSW2);
 	DDX_Control(pDX, IDC_BTN_UNLOADF1, m_BtnUnloadSWF1);
 	DDX_Control(pDX, IDC_BTN_UNLOADF2, m_BtnUnloadSWF2);
+	DDX_Control(pDX, IDC_BTN_CAPF3, m_BtnCapSWF3);
 }
 
 BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
@@ -260,32 +261,45 @@ BOOL CWorkDlg::OnInitDialog()
 	m_bShipLotIdInput = FALSE;
 
 #ifndef AJIN_BOARD_USE
-	m_stcShipTrayCountR.SetWindowText("200");
-	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/5555/DDDDGGGGHHHH");
-	m_stcShipCmCountR.SetWindowText("5555");
+	m_stcShipTrayCountR.SetWindowText("99");
+	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/555/DDDDGGGGHHHH");
+	m_stcShipCmCountR.SetWindowText("555");
 
-	m_stcCapTrayCountR.SetWindowText("200");
-	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/5555/DDDDGGGGHHHH");
-	m_stcCapCmCountR.SetWindowText("5555");
+	m_stcCapTrayCountR.SetWindowText("99");
+	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/555/DDDDGGGGHHHH");
+	m_stcCapCmCountR.SetWindowText("555");
 
-	m_stcShipTrayCountS.SetWindowText("200");
-	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/5555/DDDDGGGGHHHH");
-	m_stcShipCmCountS.SetWindowText("5555");
+	m_stcShipTrayCountS.SetWindowText("99");
+	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/555/DDDDGGGGHHHH");
+	m_stcShipCmCountS.SetWindowText("555");
 
-	m_stcCapTrayCountS.SetWindowText("200");
-	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
-	m_stcCapCmCountS.SetWindowText("5555");
+	m_stcCapTrayCountS.SetWindowText("99");
+	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/555/DDDDGGGGHHHH");
+	m_stcCapCmCountS.SetWindowText("555");
 	
+	m_BtnCapSW1.ShowWindow(SW_SHOW);
+	m_BtnCapSW2.ShowWindow(SW_SHOW);
+	m_BtnCapSW3.ShowWindow(SW_SHOW);
+	m_BtnCapSW1F.ShowWindow(SW_SHOW);
+	m_BtnCapSWF2.ShowWindow(SW_SHOW);
+	m_BtnCapSWF3.ShowWindow(SW_SHOW);
+	m_BtnUnloadSW1.ShowWindow(SW_SHOW);
+	m_BtnUnloadSW2.ShowWindow(SW_SHOW);
+	m_BtnUnloadSWF1.ShowWindow(SW_SHOW);
+	m_BtnUnloadSWF2.ShowWindow(SW_SHOW);
+
+
 #else
-	m_BtnCapSW1.ShowWindow(FALSE);
-	m_BtnCapSW2.ShowWindow(FALSE);
-	m_BtnCapSW3.ShowWindow(FALSE);
-	m_BtnCapSW1F.ShowWindow(FALSE);
-	m_BtnCapSWF2.ShowWindow(FALSE);
-	m_BtnUnloadSW1.ShowWindow(FALSE);
-	m_BtnUnloadSW2.ShowWindow(FALSE);
-	m_BtnUnloadSWF1.ShowWindow(FALSE);
-	m_BtnUnloadSWF2.ShowWindow(FALSE);
+	m_BtnCapSW1.ShowWindow(SW_HIDE);
+	m_BtnCapSW2.ShowWindow(SW_HIDE);
+	m_BtnCapSW3.ShowWindow(SW_HIDE);
+	m_BtnCapSW1F.ShowWindow(SW_HIDE);
+	m_BtnCapSWF2.ShowWindow(SW_HIDE);
+	m_BtnCapSWF3.ShowWindow(SW_HIDE);
+	m_BtnUnloadSW1.ShowWindow(SW_HIDE);
+	m_BtnUnloadSW2.ShowWindow(SW_HIDE);
+	m_BtnUnloadSWF1.ShowWindow(SW_HIDE);
+	m_BtnUnloadSWF2.ShowWindow(SW_HIDE);
 
 #endif
 	

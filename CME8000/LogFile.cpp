@@ -25,6 +25,8 @@ CCriticalSection g_csMesAgentLog;
 CCriticalSection g_csCmTrackingLog;
 CCriticalSection g_csBarcodeLog;
 
+CCriticalSection g_csMCCLog;
+
 CLogFile::CLogFile()
 {
 }
@@ -1502,7 +1504,7 @@ void CLogFile::Save_PCLog(int nPNo, CString sLog)
 
 void CLogFile::Save_MCC(CString sLog)
 {
-	g_csHandlerLog.Lock();
+	g_csMCCLog.Lock();
 
 	CString strPath = gsCurrentDir + "\\LOG\\MCC";
 
@@ -1528,6 +1530,6 @@ void CLogFile::Save_MCC(CString sLog)
 			pEx->Delete();
 		}
 	}
-	g_csHandlerLog.Unlock();
+	g_csMCCLog.Unlock();
 
 }

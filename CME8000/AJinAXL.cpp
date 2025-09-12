@@ -79,12 +79,11 @@ BOOL CAJinAXL::Initialize()
 	m_bThreadAJin = TRUE;
 	m_pThreadAJin = AfxBeginThread(Thread_AJin, NULL);
 
-#ifndef AJIN_BOARD_USE
 	if (!proc.Start())
 	{		
 		return FALSE;
 	}
-#endif
+
 
 
 	return TRUE;
@@ -228,6 +227,8 @@ void CAJinAXL::Home_Search(int nAxis)
 #ifdef AJIN_BOARD_USE
 	AxmHomeSetStart(nAxis);
 	m_Status[nAxis].bHom = FALSE; m_Status[nAxis].bRun = TRUE;
+#else
+	m_Status[nAxis].bHom = TRUE;
 #endif
 }
 

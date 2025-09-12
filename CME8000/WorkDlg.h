@@ -190,15 +190,19 @@ public:
 	afx_msg void OnBnClickedBtnUnload1();
 	afx_msg void OnBnClickedBtnUnload2();
 	afx_msg void OnBnClickedBtnUnloadf1();
+
+
 	CButton m_BtnCapSW1;
 	CButton m_BtnCapSW2;
 	CButton m_BtnCapSW3;
 	CButton m_BtnCapSW1F;
 	CButton m_BtnCapSWF2;
+	CButton m_BtnCapSWF3;
 	CButton m_BtnUnloadSW1;
 	CButton m_BtnUnloadSW2;
 	CButton m_BtnUnloadSWF1;
 	CButton m_BtnUnloadSWF2;
+
 };
 
 extern CWorkDlg g_dlgWork;
