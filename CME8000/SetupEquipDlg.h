@@ -78,7 +78,7 @@ public:
 	CLabelCS	m_lblPasswordSi;
 	CEditCS		m_edtPasswordSi;
 
-	CLabelCS	m_lblCMVision[2];
+	CLabelCS	m_lblCMVision[3];
 	CStaticCS	m_stcCMVision[3];
 
 protected:
