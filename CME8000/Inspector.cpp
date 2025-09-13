@@ -205,7 +205,8 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 
 	if (sJudge != "G" && sNgCode.GetLength() < 2) sNgCode = "NON";	// Good ÀÏ¶§ NG Code´Â Space(" ")
 
-	if (sGbn == "T1" || sGbn == "T2") {
+	if (sGbn == "T1" || sGbn == "T2") 
+	{
 		int nMode = theApp.Get_MainMode();
 		int nPreInfo = gData.nCmInspectInfo[nPx][nTx][nCx];
 		int nNo1 = gData.nInspCmNo[0][0] - 1;
