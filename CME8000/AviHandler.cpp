@@ -218,6 +218,7 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 
 void CAviHandler::Get_LotEnd(CString sLotID, CString sPortNo)
 {
+	
 }
 
 void CAviHandler::Get_TrayLoad(CString sLotID, CString sTrayNo, CString sCmCnt, CString sPortNo)

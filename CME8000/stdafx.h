@@ -71,7 +71,7 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.1.0")
+#define MAIN_VERSION	_T("V 2.0.1.2")
 //
 #define AJIN_BOARD_USE
 #define LOT_BARCODE_USE
@@ -268,9 +268,10 @@ typedef struct {
 	DWORD	dwRunTimeAccumulated;
 
 
-	BOOL	bInspectCmThisLotVSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
-	int		nInspectCmCheckTime;
-	int		nInspectCmPNoCompare;
+	BOOL		bInspectCmThisLotVSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
+	int			nInspectCmCheckTime;
+	CString		sInspectCmLotIDPrevious;
+	CString		sInspectCmLotIDLater;
 	
 } GLOVAL_DATA;
 

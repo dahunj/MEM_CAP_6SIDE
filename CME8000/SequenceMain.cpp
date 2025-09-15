@@ -67,7 +67,8 @@ CSequenceMain::CSequenceMain()
 #endif
 	 gData.bInspectCmThisLotVSkip = FALSE;
 	 gData.nInspectCmCheckTime = 0;
-	 gData.nInspectCmPNoCompare = 0;
+	 gData.sInspectCmLotIDLater = "";
+	 gData.sInspectCmLotIDPrevious = "";
 	
 	Reset_MainRunCase();
 }
@@ -1017,7 +1018,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	g_objLogFile.Save_BarcodeChkLog(gData.sCapLotID);
 	g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
 
-	gLot.bLotEndComplete[nLPNo] = TRUE;
+	gLot.bLotEndComplete[nLPNo] = TRUE;	
 	
 
 	SYSTEMTIME time;
@@ -1566,8 +1567,10 @@ BOOL CSequenceMain::LoadStage1_Run()
 	case 16:	// Position Check
 		if (g_objCommon.Check_Position(AX_LOAD_STAGE1_X, 2)) {
 			m_tLoadStage1Loop.Takt_Save(2, 7);
-			if(gData.nLoadTrayCount[nLs1AviPort-1] == 1) {
+			if(gData.nLoadTrayCount[nLs1AviPort-1] == 1) 
+			{
 				g_dlgWork.Enable_UserInput(nLs1WorkPort, FALSE);
+				
 				Job_LotStart(nLs1AviPort);
 				m_nLoadStage1Case++; m_tLoadStage1Loop.Set_LoopTime(30000);
 
@@ -1580,8 +1583,8 @@ BOOL CSequenceMain::LoadStage1_Run()
 		if (g_objInspector.Check_LotReady()) {
 			
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes ) 
-			{
-				gData.nInspectCmPNoCompare = gData.nPNoLoadTray[0];
+			{				
+				gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
 				gData.nInspectCmCheckTime = 0;
 				gData.bInspectCmThisLotVSkip = FALSE;
 			}
@@ -1944,7 +1947,7 @@ BOOL CSequenceMain::LoadStage2_Run()
 		if (g_objCommon.Check_Position(AX_LOAD_STAGE2_X, 2)) {
 			m_tLoadStage2Loop.Takt_Save(3, 7);
 			if(gData.nLoadTrayCount[nLs2AviPort-1] == 1) {
-				g_dlgWork.Enable_UserInput(nLs2WorkPort, FALSE);
+				g_dlgWork.Enable_UserInput(nLs2WorkPort, FALSE);				
 				Job_LotStart(nLs2AviPort);
 				m_nLoadStage2Case++; m_tLoadStage2Loop.Set_LoopTime(30000);
 
@@ -1959,7 +1962,7 @@ BOOL CSequenceMain::LoadStage2_Run()
 			
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
 			{
-				gData.nInspectCmPNoCompare = gData.nPNoLoadTray[1];
+				gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
 				gData.nInspectCmCheckTime = 0;
 				gData.bInspectCmThisLotVSkip = FALSE;
 			}
@@ -5475,7 +5478,12 @@ BOOL CSequenceMain::UnloadStage2_Run()
 
 BOOL CSequenceMain::CheckInspectCmGoOrNot(int nPortNo)
 {
-	if(gData.nInspectCmPNoCompare != nPortNo) return FALSE;
+	for(int i = 0;  i < 4; i++)
+	{
+		if(gData.nTNoIndex[0][i] == 1)  gData.sInspectCmLotIDPrevious = gData.sLotID[nPortNo-1];
+	}
+	
+	if(gData.sInspectCmLotIDLater != gData.sInspectCmLotIDPrevious) return FALSE;
 
 	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPortNo - 1] - gLot.dwErrorTime;
 	double dTimeLimit = m_pEquipData->nInspectCmMinutes*60*1000; //분단위로 변경 
