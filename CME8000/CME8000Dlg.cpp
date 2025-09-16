@@ -167,6 +167,9 @@ BOOL CCME8000Dlg::OnInitDialog()
 	SetTimer(TIMER_DATE_TIME, 500, NULL);
 	SetTimer(TIMER_DOOR_LOCK, 1000, NULL);
 
+	gData.sInspectCmLotIDLater = "";
+	gData.sInspectCmLotIDPrevious = "";
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 

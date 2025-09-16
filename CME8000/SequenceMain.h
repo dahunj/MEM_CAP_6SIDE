@@ -125,6 +125,7 @@ private:
 
 	BOOL	m_bLoadPortTrayExist;	// Load Port에 Tray가 있는지 없는지 변수로도 확인할수 있게 해준다.
 
+	BOOL	m_bCapBufferReturned;
 private:
 	BOOL TrayPicker_Run();		//  1. (Error : 3100)
 	BOOL LoadStage1_Run();		//  2. (Error : 3200)
