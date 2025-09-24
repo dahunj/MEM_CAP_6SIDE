@@ -272,6 +272,9 @@ typedef struct {
 	int			nInspectCmCheckTime;
 	CString		sInspectCmLotIDPrevious;
 	CString		sInspectCmLotIDLater;
+
+	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
+
 	
 } GLOVAL_DATA;
 

@@ -430,6 +430,7 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) gData.dwRunTimeAccumulated = 0;	
 
 	if (nType == 0) m_bCapBufferReturned = FALSE;
+	if (nType == 0) gData.bReload[0] = FALSE;
 
 
 	gData.nPNoLoadPick = gData.nPNoUnloadPick = 0;
@@ -2673,6 +2674,16 @@ BOOL CSequenceMain::VisionCm_Run()
 				m_nVisionCmCase = 15; m_tVisionCmLoop.Set_LoopTime(5000);
 			}
 		}
+		break;
+	case 3:
+		{
+			if (gData.bReload[0]) {
+				gData.bReload[0] = FALSE;
+			}
+			g_objCommon.Move_Position(AX_VISION_CM_X, 0);
+			m_nVisionCmCase = 1; m_tVisionCmLoop.Set_LoopTime(5000);
+		}
+		
 		break;
 
 	case 5:	// Wait for CM inspection(30sec)

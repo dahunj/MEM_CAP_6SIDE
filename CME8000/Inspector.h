@@ -40,6 +40,8 @@ private:
 	void Get_ScanComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo);
 	void Get_ErrorRequest(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo, CString sErrNo);
 	void Get_HeartBeat();
+	void Get_ReloadRequest();
+
 
 	void Send_Command(CString strSend);
 	void Exception_Log(CString sFunc, CString sGbn, int nCase);	// Recevie Exception Log
@@ -60,6 +62,8 @@ public:
 	void Set_LoadComplete(CString sGbn, CString sLotId, int nPortNo, int nTNo1, int nTNo2, int nCNo1, int nCNo2, int nPickNo1, int nPickNo2);
 	void Set_InitialRequest();
 	void Set_LightOff();
+
+	void Set_ReloadComplete();
 
 	int  Get_VisionStatus();
 	BOOL Check_LotReady();
