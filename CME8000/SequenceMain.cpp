@@ -67,8 +67,7 @@ CSequenceMain::CSequenceMain()
 #endif
 	 gData.bInspectCmThisLotVSkip = FALSE;
 	 gData.nInspectCmCheckTime = 0;
-	 gData.sInspectCmLotIDLater = "";
-	 gData.sInspectCmLotIDPrevious = "";
+	
 	
 	Reset_MainRunCase();
 }
@@ -1560,6 +1559,7 @@ BOOL CSequenceMain::LoadStage1_Run()
 				gData.nLoadTrayCount[nLs1WorkPort-1]++;
 				gData.nTNoLoadTray[0] = gData.nLoadTrayCount[nLs1WorkPort-1];
 			}
+			
 			Init_LoadTray(nLs1AviPort, 1);
 			m_nLoadStage1Case++; m_tLoadStage1Loop.Set_LoopTime(20000);
 		}
@@ -1938,6 +1938,7 @@ BOOL CSequenceMain::LoadStage2_Run()
 			if (!m_pEquipData->bUseInlineMode) {
 				gData.nLoadTrayCount[nLs2WorkPort-1]++;
 				gData.nTNoLoadTray[1] = gData.nLoadTrayCount[nLs2WorkPort-1];
+				
 			}
 			Init_LoadTray(nLs2AviPort, 2);
 			m_nLoadStage2Case++; m_tLoadStage2Loop.Set_LoopTime(20000);

@@ -599,6 +599,12 @@ void CSetupEquipDlg::OnStnClickedStcCmVision0()
 	CString strOld, strNew;
 	m_stcCMVision[0].GetWindowText(strOld);
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+	int nCnt = atoi(strNew);
+	if(nCnt > 15)
+	{
+		AfxMessageBox("Scan Times 15 초과 설정 안됩니다.");
+		return;
+	}
 
 	m_stcCMVision[0].SetWindowText(strNew);
 }
@@ -609,6 +615,12 @@ void CSetupEquipDlg::OnStnClickedStcCmVision1()
 	CString strOld, strNew;
 	m_stcCMVision[1].GetWindowText(strOld);
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+	int nCnt = atoi(strNew);
+	if(nCnt > 3)
+	{	
+		AfxMessageBox("Lot Times 3 초과 설정 안됩니다.");
+		return;
+	}
 
 	m_stcCMVision[1].SetWindowText(strNew);
 }
