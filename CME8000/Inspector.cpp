@@ -45,7 +45,12 @@ END_MESSAGE_MAP()
 
 void CInspector::Initialize()
 {
-	BOOL bOpened = m_UdpVisionPC.Open_Socket(UDP_VPC_LPORT, UDP_VPC_HPORT, UDP_VPC_HOST_IP, this);
+	BOOL bOpened;
+#ifndef AJIN_BOARD_USE
+	bOpened = m_UdpVisionPC.Open_Socket(7000, 7001, "127.0.0.1", this);
+#else
+	bOpened = m_UdpVisionPC.Open_Socket(UDP_VPC_LPORT, UDP_VPC_HPORT, UDP_VPC_HOST_IP, this);
+#endif
 	if (bOpened) Set_ConnectRequest();
 }
 
