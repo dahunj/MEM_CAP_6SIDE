@@ -1580,9 +1580,9 @@ BOOL CSequenceMain::LoadStage1_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
 			
+			gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes ) 
-			{				
-				gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
+			{					
 				gData.nInspectCmCheckTime = 0;
 				gData.bInspectCmThisLotVSkip = FALSE;
 			}
@@ -1957,10 +1957,10 @@ BOOL CSequenceMain::LoadStage2_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) 
 		{
-			
+			gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
 			{
-				gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
+				
 				gData.nInspectCmCheckTime = 0;
 				gData.bInspectCmThisLotVSkip = FALSE;
 			}
