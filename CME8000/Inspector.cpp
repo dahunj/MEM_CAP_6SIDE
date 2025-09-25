@@ -124,41 +124,29 @@ LRESULT CInspector::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 		CString strArg[11];
 		for (int i = 0; i < 11; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
 
-		if (strCmd == "CONNECT") 
-		{
+		if (strCmd == "CONNECT") {
 			if (strOp == "REQUEST")	Get_ConnectRequest();
 			else if (strOp == "REPLY") Get_ConnectReply();
 			else if (strOp == "END") Get_ConnectEnd();
 
-		} else if (strCmd == "STATUS")
-		{
+		} else if (strCmd == "STATUS") {
 			if (strOp == "REQUEST")	Get_StatusRequest();
 			else if (strOp == "REPLY") Get_StatusReply(strArg[0]);
 			else if (strOp == "UPDATE") Get_StatusUpdate(strArg[0]);
 
-		} 
-		else if (strCmd == "LOT") 
-		{
+		} else if (strCmd == "LOT") {
 			if (strOp == "READY") Get_LotReady(strArg[0], strArg[1]);
 
-		} 
-		else if (strCmd == "INSPECT")
-		{
+		} else if (strCmd == "INSPECT") {
 			if (strOp == "COMPLETE") Get_InspectComplete(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4], strArg[5], strArg[6], strArg[7], strArg[8], strArg[9], strArg[10]);
 
-		} 
-		else if (strCmd == "SCAN") 
-		{
+		} else if (strCmd == "SCAN") {
 			if (strOp == "COMPLETE") Get_ScanComplete(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4]);
 
-		}
-		else if (strCmd == "ERROR") 
-		{
+		}else if (strCmd == "ERROR") {
 			if (strOp == "REQUEST") Get_ErrorRequest(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4], strArg[5]);
 
-		} 
-		else if (strCmd == "HEART") 
-		{
+		} else if (strCmd == "HEART") {
 			if (strOp == "BEAT") Get_HeartBeat();
 		}
 		else if (strCmd == "RELOAD")
@@ -345,7 +333,6 @@ void CInspector::Get_ReloadRequest()
 	}
 
 }
-
 void CInspector::Exception_Log(CString sFunc, CString sGbn, int nCase)
 {
 	CString strLog;
@@ -471,15 +458,12 @@ void CInspector::Set_LightOff()
 	strSendCmd.Format("LIGHT,OFF");
 	Send_Command(strSendCmd);
 }
-
-
 void CInspector::Set_ReloadComplete()
 {
 	CString	strSendCmd;
 	strSendCmd.Format("RELOAD,COMPLETE");
 	Send_Command(strSendCmd);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
