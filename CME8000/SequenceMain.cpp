@@ -67,8 +67,7 @@ CSequenceMain::CSequenceMain()
 #endif
 	 gData.bInspectCmThisLotVSkip = FALSE;
 	 gData.nInspectCmCheckTime = 0;
-	
-	
+		
 	Reset_MainRunCase();
 }
 
@@ -3590,7 +3589,7 @@ BOOL CSequenceMain::CapPicker_Run()
 	case 11:	// Buffer Align Out
 		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 0)) {
 			m_tCapPickLoop.Takt_Start();
-			if(!g_objCommon.Get_CapBufferAlign(FALSE)) g_objCommon.Set_CapBufferAlign(FALSE);
+			g_objCommon.Set_CapBufferAlign(FALSE);
 			m_nCapPickCase++; m_tCapPickLoop.Set_LoopTime(10000);
 		}
 		break;

@@ -405,8 +405,6 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		g_objAviHandler.Set_ConnectRequest();
 		if (pEquipData->bUseVisionCmAlign) g_objInspector.Set_StatusRequest();
 	}
-
-
 	DX_DATA_12 *pDX12 = g_objAJinAXL.Get_pDX12();
 	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) {
 		g_objLogFile.Save_HandlerLog("[Work Mode] START S/W push");
@@ -1205,7 +1203,6 @@ void CWorkDlg::Display_Status()
 	for (int i = 0; i < PICK; i++) { strText.Format("%d-%d", gData.nTNoIndex[2][i], gData.nCNoIndex[2][i]); m_stcTransNo[i].Set_Text(strText); }
 	for (int i = 0; i < PICK; i++) { strText.Format("%d-%d", gData.nTNoTransStage[i], gData.nCNoTransStage[i]); m_stcTStageNo[i].Set_Text(strText); }
 	for (int i = 0; i < PICK; i++) { strText.Format("%d-%d", gData.nTNoUnloadPick[i], gData.nCNoUnloadPick[i]); m_stcUnloadNo[i].Set_Text(strText); }
-		
 	m_ledVisionStatus[0].Set_On(g_objInspector.Get_VisionStatus());
 	m_ledVisionStatus[1].Set_On(pEquipData->bUseInlineMode && g_objAviHandler.Is_Connected());
 	//m_ledVisionStatus[1].Set_On(pEquipData->bUseInlineMode && g_objAviHandler.Is_Opened());
