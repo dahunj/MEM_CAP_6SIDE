@@ -71,11 +71,11 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.1.7")
+#define MAIN_VERSION	_T("V 2.0.1.8")
 //
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -263,6 +263,8 @@ typedef struct {
 	DWORD	dwDoorStartTime;
 
 	int		nInspectCmScanLineCnt;
+	int		nInspectCmScanLineCntVolatile;
+
 	int		nInspectCmLotCount;
 	DWORD	dwRunTimeNow;
 	DWORD	dwRunTimeAccumulated;

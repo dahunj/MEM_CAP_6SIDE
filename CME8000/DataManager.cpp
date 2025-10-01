@@ -152,6 +152,7 @@ BOOL CDataManager::Read_EquipData()
 	m_EquipData.bUseVisionAlignOffset = INI.Get_Bool("OPTION", "VISION_ALIGN_OFFSET", FALSE);
 
 	m_EquipData.nInspectCmScanTimes = INI.Get_Integer("OPTION", "SCAN_TIMES_PER_LOT", 10000);
+	//gData.nInspectCmScanLineCntVolatile = m_EquipData.nInspectCmScanTimes;
 	m_EquipData.nInspectCmLotTimes = INI.Get_Integer("OPTION", "LOT_QUANTITY", 10000);
 	m_EquipData.nInspectCmMinutes = INI.Get_Integer("OPTION", "HOURS_DEN", 10000);
 		

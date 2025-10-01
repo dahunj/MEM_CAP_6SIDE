@@ -197,7 +197,7 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 
 	gData.sLotID[nPx] = sLotID;
 	gData.nTrayUseCount[nPx] = atoi(sTrayCnt);
-	gData.nCmUseCount[nPx] = atoi(sCmCnt);
+	gData.nCmUseCount[nPx] = atoi(sCmCnt);	
 
 	if (sModel != gData.sRecipe) {
 		if (sModel != "R53B" && sModel != "R54B") { AfxMessageBox("Invalid Model Name!!!"); return; }
@@ -230,8 +230,7 @@ void CAviHandler::Get_TrayLoad(CString sLotID, CString sTrayNo, CString sCmCnt, 
 	gData.nTNoAviPort = atoi(sTrayNo);
 	gData.nCmCntAviPort = atoi(sCmCnt);
 
-	EQUIP_DATA	*m_pEquipData = g_objDataManager.Get_pEquipData();
-	m_pEquipData->nInspectCmScanTimes = (gData.nCmCntAviPort/4)-1;
+	
 
 	gData.bAviTrayLoad = TRUE;
 }

@@ -424,6 +424,7 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) memset(gData.nCapNoAssyPicker, 0x00, sizeof(int) * PICK);
 
 	if (nType == 0) gData.nInspectCmScanLineCnt = 0;
+	if (nType == 0) gData.nInspectCmScanLineCntVolatile = m_pEquipData->nInspectCmScanTimes;
 	if (nType == 0) gData.nInspectCmLotCount = 0;
 	if (nType == 0) gData.dwRunTimeNow = 0;
 	if (nType == 0) gData.dwRunTimeAccumulated = 0;	
@@ -1580,6 +1581,16 @@ BOOL CSequenceMain::LoadStage1_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
 			
+			EQUIP_DATA	*m_pEquipData = g_objDataManager.Get_pEquipData();
+
+			if((gData.nCmUseCount[nLs1AviPort-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
+			{
+				m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[nLs1AviPort-1]/4)-1;
+			}
+			else{
+				m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
+			}
+
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes ) 
 			{					
@@ -1957,6 +1968,15 @@ BOOL CSequenceMain::LoadStage2_Run()
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) 
 		{
+			if((gData.nCmUseCount[nLs2AviPort-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
+			{
+				m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[nLs2AviPort-1]/4)-1;
+			}
+			else
+			{
+				m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
+			}
+
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
 			{
