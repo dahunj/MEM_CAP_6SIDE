@@ -230,6 +230,9 @@ void CAviHandler::Get_TrayLoad(CString sLotID, CString sTrayNo, CString sCmCnt, 
 	gData.nTNoAviPort = atoi(sTrayNo);
 	gData.nCmCntAviPort = atoi(sCmCnt);
 
+	EQUIP_DATA	*m_pEquipData = g_objDataManager.Get_pEquipData();
+	m_pEquipData->nInspectCmScanTimes = (gData.nCmCntAviPort/4)-1;
+
 	gData.bAviTrayLoad = TRUE;
 }
 
