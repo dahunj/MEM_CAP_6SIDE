@@ -1564,10 +1564,12 @@ BOOL CSequenceMain::LoadStage1_Run()
 		}
 		break;
 	case 16:	// Position Check
-		if (g_objCommon.Check_Position(AX_LOAD_STAGE1_X, 2)) {
-			m_tLoadStage1Loop.Takt_Save(2, 7);
+		if (g_objCommon.Check_Position(AX_LOAD_STAGE1_X, 2)) 
+		{			
 			if(gData.nLoadTrayCount[nLs1AviPort-1] == 1) 
 			{
+				//if((m_nLoadPickCase > 6 || m_nLoadPickCase < 4) && !Check_IndexEmpty(-1)) return TRUE;
+
 				g_dlgWork.Enable_UserInput(nLs1WorkPort, FALSE);
 				
 				Job_LotStart(nLs1AviPort);
@@ -1576,21 +1578,13 @@ BOOL CSequenceMain::LoadStage1_Run()
 			} else {
 				m_nLoadStage1Case = 20; m_tLoadStage1Loop.Set_LoopTime(10000);
 			}
+			m_tLoadStage1Loop.Takt_Save(2, 7);
 		}
 		break;
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) {
 			
-			EQUIP_DATA	*m_pEquipData = g_objDataManager.Get_pEquipData();
-
-			if((gData.nCmUseCount[nLs1AviPort-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
-			{
-				m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[nLs1AviPort-1]/4)-1;
-			}
-			else{
-				m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
-			}
-
+			
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes ) 
 			{					
@@ -1954,29 +1948,24 @@ BOOL CSequenceMain::LoadStage2_Run()
 		break;
 	case 16:	// Position Check
 		if (g_objCommon.Check_Position(AX_LOAD_STAGE2_X, 2)) {
-			m_tLoadStage2Loop.Takt_Save(3, 7);
-			if(gData.nLoadTrayCount[nLs2AviPort-1] == 1) {
+			
+			if(gData.nLoadTrayCount[nLs2AviPort-1] == 1) 
+			{
 				g_dlgWork.Enable_UserInput(nLs2WorkPort, FALSE);				
 				Job_LotStart(nLs2AviPort);
 				m_nLoadStage2Case++; m_tLoadStage2Loop.Set_LoopTime(30000);
 
-			} else {
+			} 
+			else
+			{
 				m_nLoadStage2Case = 20; m_tLoadStage2Loop.Set_LoopTime(10000);
 			}
+			m_tLoadStage2Loop.Takt_Save(3, 7);
 		}
 		break;
 	case 17:	// Check Lot Ready
 		if (g_objInspector.Check_LotReady()) 
 		{
-			if((gData.nCmUseCount[nLs2AviPort-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
-			{
-				m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[nLs2AviPort-1]/4)-1;
-			}
-			else
-			{
-				m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
-			}
-
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
 			{
@@ -2227,13 +2216,6 @@ BOOL CSequenceMain::LoadPicker_Run()
 	case 3:		// Z Axis Move to Tray Down
 		if (g_objAJinAXL.Is_MoveDone(AX_LOAD_PICKER_Y, dLpY) && g_objCommon.Check_Position(AX_LOAD_PICKER_P, 0)) 
 		{
-			
-			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
-				&& !Check_IndexEmpty(0) && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) && !gData.bInspectCmThisLotVSkip)  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
-			{				
-				m_nVisionCmCase = 1;				
-			}			
-
 			if ((nLpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE1_X, dLpX)) ||
 				(nLpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_LOAD_STAGE2_X, dLpX))) {
 				if (g_objCommon.Get_InfoLoadPickerGripOpen()) 
@@ -2423,6 +2405,12 @@ BOOL CSequenceMain::LoadPicker_Run()
 				gData.IndexDone[0] = TRUE;
 				
 			}
+			else if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
+				&& !Check_IndexEmpty(0) && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) 
+				&& !gData.bInspectCmThisLotVSkip)  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
+			{				
+				m_nVisionCmCase = 1;				
+			}		
 
 			if (bLpTrayEmpty) 
 			{
@@ -2630,9 +2618,26 @@ BOOL CSequenceMain::VisionCm_Run()
 		return TRUE;
 
 	case 1:		// X Move Inspect Position
-		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) {
+		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
+		{
 			if (m_pEquipData->bUseVisionCmAlign) 
-			{
+			{				
+				double dPickPosY = g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y);
+				double dStagePos = max(m_pMoveData->dLoadPickerY[0], m_pMoveData->dLoadPickerY[1]);
+				if (dPickPosY > dStagePos + 1.0) return TRUE;	// 충돌 방지
+
+				if(gData.nTNoIndex[0][0] == 1)
+				{						
+					if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
+					{
+						m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4)-1;
+					}
+					else{
+						m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
+					}
+
+				}
+				
 				m_dwVisionCm = GetTickCount();
 				m_tVisionCmLoop.Takt_Start();
 				nCmScanCnt = 0;
@@ -4511,7 +4516,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				Check_LoadTrayLoading(gData.nPNoUnloadTray))
 			{
 				Job_LotEnd(gData.nPNoUnloadTray);
-				gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
+				//gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
 				if (m_pThreadBeep == NULL) {
 					m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 				}
@@ -4632,7 +4637,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 && Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
 						Job_LotEnd(gData.nPNoUnloadTray);
-						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
+						//gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
 						if (m_pThreadBeep == NULL) {
 							m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 						}
@@ -4753,7 +4758,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
 						Job_LotEnd(gData.nPNoUnloadTray);
-						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
+						//gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
 						if (m_pThreadBeep == NULL) {
 							m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 						}
