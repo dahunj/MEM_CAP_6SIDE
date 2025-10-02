@@ -1954,7 +1954,6 @@ BOOL CSequenceMain::LoadStage2_Run()
 				g_dlgWork.Enable_UserInput(nLs2WorkPort, FALSE);				
 				Job_LotStart(nLs2AviPort);
 				m_nLoadStage2Case++; m_tLoadStage2Loop.Set_LoopTime(30000);
-
 			} 
 			else
 			{
@@ -1968,8 +1967,7 @@ BOOL CSequenceMain::LoadStage2_Run()
 		{
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs2AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes) 
-			{
-				
+			{				
 				gData.nInspectCmCheckTime = 0;
 				gData.bInspectCmThisLotVSkip = FALSE;
 			}
@@ -1982,7 +1980,8 @@ BOOL CSequenceMain::LoadStage2_Run()
 
 
 	case 21:	// 안전 확인 
-		if (m_nLoadStage1Case > 51 || m_nLoadStage1Case <= 20) {
+		if (m_nLoadStage1Case > 51 || m_nLoadStage1Case <= 20) 
+		{
 			m_nLoadStage2Case++; m_tLoadStage2Loop.Set_LoopTime(5000);
 		}
 		return TRUE;
