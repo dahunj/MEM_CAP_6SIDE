@@ -12,7 +12,7 @@
 #include "MESInterface.h"
 #include "AviHandler.h"
 
-#define UDP_VPC_HOST_IP	"192.168.1.12"
+#define UDP_VPC_HOST_IP	"192.168.25.23"
 
 #define UDP_VPC_LPORT	21000
 #define UDP_VPC_HPORT	21001
