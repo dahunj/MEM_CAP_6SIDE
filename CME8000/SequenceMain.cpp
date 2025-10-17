@@ -2397,19 +2397,16 @@ BOOL CSequenceMain::LoadPicker_Run()
 			m_tLoadPickLoop.Takt_Save(4, 8);
 			//g_objCommon.Set_InfoIndexLoadVacuumOn();
 
-			if((!m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0) 
-				|| (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 && !CheckInspectCmGoOrNot(gData.nPNoIndex[0]))
-				|| gData.bInspectCmThisLotVSkip)
-			{	
-				gData.IndexDone[0] = TRUE;
-				
-			}
-			else if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
+			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
 				&& !Check_IndexEmpty(0) && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) 
 				&& !gData.bInspectCmThisLotVSkip)  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
 			{				
 				m_nVisionCmCase = 1;				
-			}		
+			}
+			else
+			{
+				gData.IndexDone[0] = TRUE;
+			}
 
 			if (bLpTrayEmpty) 
 			{
@@ -2627,11 +2624,16 @@ BOOL CSequenceMain::VisionCm_Run()
 
 				if(gData.nTNoIndex[0][0] == 1)
 				{						
-					if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) -1 < m_pEquipData->nInspectCmScanTimes)
+					if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) < m_pEquipData->nInspectCmScanTimes)
 					{
-						m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4)-1;
+						m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4);
 					}
-					else{
+					else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) >= m_pEquipData->nInspectCmScanTimes)
+					{
+						//Pass
+					}
+					else
+					{
 						m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
 					}
 
