@@ -1018,6 +1018,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
 
 	gLot.bLotEndComplete[nLPNo] = TRUE;	
+	//if(gData.nInspectCmLotCount != 0) gData.nInspectCmLotCount++;
 	
 
 	SYSTEMTIME time;
@@ -2387,6 +2388,8 @@ BOOL CSequenceMain::LoadPicker_Run()
 		{			
 			m_pDY11->oIndexLoadAlignOut = FALSE;
 			g_objAJinAXL.Write_Output(11);
+			if (m_nVisionCmCase == 0) { m_nVisionCmCase = 1; m_tVisionCmLoop.Set_LoopTime(5000); }
+
 			
 			m_nLoadPickCase++; m_tLoadPickLoop.Set_LoopTime(5000);
 		}
@@ -2396,18 +2399,7 @@ BOOL CSequenceMain::LoadPicker_Run()
 		{
 			m_tLoadPickLoop.Takt_Save(4, 8);
 			//g_objCommon.Set_InfoIndexLoadVacuumOn();
-
-			if (m_pEquipData->bUseVisionCmAlign && m_nVisionCmCase == 0 
-				&& !Check_IndexEmpty(0) && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) 
-				&& !gData.bInspectCmThisLotVSkip)  // 새로운 랏이 시작될때 진행하던 랏의 마지막 라인이 촬상되는 현상 수정 
-			{				
-				m_nVisionCmCase = 1;				
-			}
-			else
-			{
-				gData.IndexDone[0] = TRUE;
-			}
-
+			
 			if (bLpTrayEmpty) 
 			{
 				if ((m_nLoadStage1Case == 20 && m_nLoadStage2Case >= 50) || (m_nLoadStage2Case == 20 && m_nLoadStage1Case >= 50)) 
@@ -2616,29 +2608,22 @@ BOOL CSequenceMain::VisionCm_Run()
 	case 1:		// X Move Inspect Position
 		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
 		{
-			if (m_pEquipData->bUseVisionCmAlign) 
-			{				
+			if (m_pEquipData->bUseVisionCmAlign && !gData.bInspectCmThisLotVSkip && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) ) 
+			{	
 				double dPickPosY = g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y);
 				double dStagePos = max(m_pMoveData->dLoadPickerY[0], m_pMoveData->dLoadPickerY[1]);
 				if (dPickPosY > dStagePos + 1.0) return TRUE;	// 충돌 방지
 
-				if(gData.nTNoIndex[0][0] == 1)
-				{						
-					if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) < m_pEquipData->nInspectCmScanTimes)
-					{
-						m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4);
-					}
-					else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) >= m_pEquipData->nInspectCmScanTimes)
-					{
-						//Pass
-					}
-					else
-					{
-						m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
-					}
-
+				if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) < m_pEquipData->nInspectCmScanTimes)
+				{
+					m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) - 1;
 				}
-				
+				else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) >= m_pEquipData->nInspectCmScanTimes)
+				{
+					//Pass
+					m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
+				}
+						
 				m_dwVisionCm = GetTickCount();
 				m_tVisionCmLoop.Takt_Start();
 				nCmScanCnt = 0;
@@ -2650,7 +2635,7 @@ BOOL CSequenceMain::VisionCm_Run()
 			} 
 			else
 			{	// Align 검사를 안하면 종료한다.
-				//gData.IndexDone[0] = TRUE;
+				gData.IndexDone[0] = TRUE;
 				m_nVisionCmCase = 0; m_tVisionCmLoop.Set_LoopTime(5000);
 			}
 		}
@@ -5530,14 +5515,14 @@ BOOL CSequenceMain::CheckInspectCmGoOrNot(int nPortNo)
 	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPortNo - 1] - gLot.dwErrorTime;
 	double dTimeLimit = m_pEquipData->nInspectCmMinutes*60*1000; //분단위로 변경 
 		
-	if(gData.dwRunTimeNow + gData.dwRunTimeAccumulated > dTimeLimit && gData.nInspectCmLotCount >= m_pEquipData->nInspectCmLotTimes)
+	if(gData.dwRunTimeNow + gData.dwRunTimeAccumulated > dTimeLimit 
+		&& gData.nInspectCmLotCount >= m_pEquipData->nInspectCmLotTimes)
 	{
 		gData.nInspectCmLotCount = 0;
 	}
 	
 	if(gData.nInspectCmCheckTime >= 0) gData.nInspectCmCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
 	
-
 	if(gData.nInspectCmCheckTime > dTimeLimit && gData.nInspectCmCheckTime >= 0 )
 	{
 		gData.nInspectCmCheckTime = -1;
