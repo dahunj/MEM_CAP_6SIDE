@@ -2523,12 +2523,11 @@ BOOL CSequenceMain::MainIndex_Run()
 		break;
 	case 9:	// Check Vacuum Pad Down
 		if (!m_pDX11->iIndexLoadVacUp && m_pDX11->iIndexLoadVacDown) {
-			m_nMainIndexCase = 10; m_tMainIndexLoop.Set_LoopTime(5000);
+			m_nMainIndexCase = 10; m_tMainIndexLoop.Set_LoopTime(30000);
 		}
 		break;
 
-	case 10:	// Index R Move 90 Degree
-		
+	case 10:	// Index R Move 90 Degree		
 		if (gData.IndexDone[0] && gData.IndexDone[1] && gData.IndexDone[2]
 				&& m_nVisionCmCase ==0 && Check_CmAlignDone() ) 
 		{
@@ -2554,7 +2553,7 @@ BOOL CSequenceMain::MainIndex_Run()
 				}
 			}
 		}
-		return TRUE;
+		break;
 	case 11:	// Check R Movd Done and Index End
 		if (g_objAJinAXL.Is_MoveDone(AX_MAIN_INDEX_R, m_pMoveData->dMainIndexR[0])) {
 			g_objLogFile.Save_TestLog("Set_IndexEnd");
