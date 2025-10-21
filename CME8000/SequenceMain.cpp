@@ -4627,7 +4627,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 && Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
 						Job_LotEnd(gData.nPNoUnloadTray);
-						//gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
+						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
 						if (m_pThreadBeep == NULL) {
 							m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 						}
@@ -4748,7 +4748,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
 						Job_LotEnd(gData.nPNoUnloadTray);
-						//gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
+						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
 						if (m_pThreadBeep == NULL) {
 							m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 						}
@@ -4757,7 +4757,9 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						if (m_nUnloadStage1Case == 20) { gData.bUnloadTrayLotEnd[0] = TRUE; m_nUnloadStage1Case = 21; }
 						if (m_nUnloadStage2Case == 20) { gData.bUnloadTrayLotEnd[1] = TRUE; m_nUnloadStage2Case = 21; }
 					}
-				} else {
+				} 
+				else 
+				{
 					if (Check_LoadTrayLoading(gData.nPNoUnloadTray)) {
 						Job_LotEnd(gData.nPNoUnloadTray);
 						if (m_pThreadBeep == NULL) {
@@ -4779,10 +4781,14 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				if (Check_UnloadPickerEmpty()) {
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 					m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
-				} else {
+				} 
+				else
+				{
 					m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(30000);
 				}
-			} else {
+			} 
+			else
+			{
 				m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(30000);
 			}
 		}
