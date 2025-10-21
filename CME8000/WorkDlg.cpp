@@ -1222,7 +1222,7 @@ void CWorkDlg::Display_Status()
 	strText.Format("%d-%d", gData.nPNoIndex[2], gData.nTNoIndex[2][0]);		m_stcPortNo[ 8].Set_Text(strText);
 	strText.Format("%d-%d", gData.nPNoTransStage, gData.nTNoTransStage[0]);	m_stcPortNo[ 9].Set_Text(strText);
 	strText.Format("%d-%d", gData.nPNoUnloadPick, gData.nTNoUnloadPick[0]);	m_stcPortNo[10].Set_Text(strText);
-	strText.Format("%d", gData.nPNoUnloadTray);								m_stcPortNo[11].Set_Text(strText);
+	strText.Format("%d,%d", gData.nPNoUnloadTray[0],gData.nPNoUnloadTray[1]);m_stcPortNo[11].Set_Text(strText);
 }
 
 void CWorkDlg::Reset_AlarmLog()
