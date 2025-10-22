@@ -5036,6 +5036,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			if (gData.bUnloadTrayLotEnd[0] && m_bUnloadLotEnd) 
 			{	// 도어락 오픈 후처리 확인.			
 				Job_LotEnd(gData.nPNoUnloadTray[0]);
+				gData.nLastTrayNo[gData.nPNoUnloadTray[0]-1] = 0;
 				if (m_pThreadBeep == NULL) {
 					m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 				}
@@ -5055,6 +5056,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 				//if (gData.nPNoUnloadTray[1] != gData.nPNoUnloadTray[0]) 
 				//{
 					Job_LotEnd(gData.nPNoUnloadTray[0]);
+					gData.nLastTrayNo[gData.nPNoUnloadTray[0]-1] = 0;
 					if (m_pThreadBeep == NULL) {
 						m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 					}
@@ -5402,6 +5404,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			if (gData.bUnloadTrayLotEnd[1] && m_bUnloadLotEnd) 
 			{	// 도어락 오픈 후처리 확인.			
 				Job_LotEnd(gData.nPNoUnloadTray[1]);
+				gData.nLastTrayNo[gData.nPNoUnloadTray[1]-1] = 0;
 				if (m_pThreadBeep == NULL) {
 					m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 				}
@@ -5421,6 +5424,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 				//if (gData.nPNoUnloadTray[1] != gData.nPNoUnloadTray[0]) 
 				//{
 					Job_LotEnd(gData.nPNoUnloadTray[1]);
+					gData.nLastTrayNo[gData.nPNoUnloadTray[1]-1] = 0;
 					if (m_pThreadBeep == NULL) {
 						m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
 					}
