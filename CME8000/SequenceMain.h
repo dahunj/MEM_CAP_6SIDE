@@ -193,9 +193,7 @@ private:
 	BOOL Check_CapAlignDone();
 
 	BOOL Check_LoadLotEnd(int nPNo, int nMode=0);
-	BOOL Check_UnloadLotEnd(int nPNo);
-	BOOL Check_UnloadLotEndAll();
-
+	BOOL Check_UnloadLotEnd(int nMode=0);
 
 	BOOL Get_VisionInspectUse();
 	void Set_TaktLog(int nNo);

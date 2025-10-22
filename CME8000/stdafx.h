@@ -71,11 +71,11 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.1.13")
+#define MAIN_VERSION	_T("V 2.0.1.15")
 //
-//#define AJIN_BOARD_USE
-//#define LOT_BARCODE_USE
-//#define LOAD_CELL_USE
+#define AJIN_BOARD_USE
+#define LOT_BARCODE_USE
+#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -84,7 +84,7 @@
 
 #define SIM_WAITTIMES	 1		//
 #define SIM_WAITTIMEM	 1		//
-#define	VELOCITY_WEIGHT	 12
+#define	VELOCITY_WEIGHT	 8
 
 // R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
 // R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
@@ -154,7 +154,7 @@ typedef struct {
 	int		nPNoIndex[3];			// Index Port No (1, 2)
 	int		nPNoTransStage;			// Trans Stage Port No (1, 2)
 	int		nPNoUnloadPick;			// Unload Picker Port No (1, 2)
-	int		nPNoUnloadTray[2];			// Unload Tray Port No (1, 2)
+	int		nPNoUnloadTray;			// Unload Tray Port No (1, 2)
 	int		nPNoUnloadPort;			// Unload Port Port No (1, 2)
 
 	int		nTNoTrayPick;			// Tray Picker Tray No (1 ~ 25)
@@ -164,7 +164,7 @@ typedef struct {
 	int		nTNoIndex[3][PICK];		// Index Tray No (1 ~ 25)
 	int		nTNoTransStage[PICK];	// Trans Stage Tray No (1 ~ 25)
 	int		nTNoUnloadPick[PICK];	// Unload Picker Tray No (1 ~ 25)
-	int		nTNoUnloadTray[2];			// Unload Stage Tray No(1 ~ 25)
+	int		nTNoUnloadTray;			// Unload Stage Tray No(1 ~ 25)
 
 	int		nCNoLoadPick[PICK];		// Load Picker CM No
 	int		nCNoIndex[3][PICK];		// Index CM No
