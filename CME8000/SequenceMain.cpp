@@ -1583,9 +1583,8 @@ BOOL CSequenceMain::LoadStage1_Run()
 		}
 		break;
 	case 17:	// Check Lot Ready
-		if (g_objInspector.Check_LotReady()) {
-			
-			
+		if (g_objInspector.Check_LotReady()) 
+		{			
 			gData.sInspectCmLotIDLater = gData.sLotID[nLs1AviPort-1];
 			if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes ) 
 			{					
@@ -2611,9 +2610,9 @@ BOOL CSequenceMain::VisionCm_Run()
 	case 1:		// X Move Inspect Position
 		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
 		{
-			if (m_pEquipData->bUseVisionCmAlign && 
-				((!gData.bInspectCmThisLotVSkip && CheckInspectCmGoOrNot(gData.nPNoIndex[0])) 
-				|| gData.nInspectCmScanLineCntVolatile > 100) ) 
+			if ((m_pEquipData->bUseVisionCmAlign && gData.nInspectCmScanLineCntVolatile > 100) 
+				|| (m_pEquipData->bUseVisionCmAlign && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) && !gData.bInspectCmThisLotVSkip) )
+				
 			{	
 				double dPickPosY = g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y);
 				double dStagePos = max(m_pMoveData->dLoadPickerY[0], m_pMoveData->dLoadPickerY[1]);
@@ -2754,7 +2753,6 @@ BOOL CSequenceMain::VisionCm_Run()
 				{					
 					gData.bInspectCmThisLotVSkip = TRUE;
 				}
-
 				m_tVisionCmLoop.Takt_Save(5,3);
 				gData.IndexDone[0] = TRUE;
 				g_objLogFile.Save_TestLog("gData.IndexDone[0] = TRUE  3");
@@ -5515,30 +5513,33 @@ BOOL CSequenceMain::CheckInspectCmGoOrNot(int nPortNo)
 		if(gData.nTNoIndex[0][i] == 1)  gData.sInspectCmLotIDPrevious = gData.sLotID[nPortNo-1];
 	}
 	
-	if(gData.sInspectCmLotIDLater != gData.sInspectCmLotIDPrevious) return FALSE;
+	/*if(gData.sInspectCmLotIDLater != gData.sInspectCmLotIDPrevious) 
+	{
+		gData.bInspectCmThisLotVSkip = FALSE;
+	}*/
 
-	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPortNo - 1] - gLot.dwErrorTime;
+	gData.dwRunTimeNow = GetTickCount() - gLot.dwLotStart[nPortNo - 1];
 	double dTimeLimit = m_pEquipData->nInspectCmMinutes*60*1000; //분단위로 변경 
 		
+	//조건이 안맞아서 비전 촬영을 하지 않는 중에도 시간이 지나면 초기화 
 	if(gData.dwRunTimeNow + gData.dwRunTimeAccumulated > dTimeLimit 
 		&& gData.nInspectCmLotCount >= m_pEquipData->nInspectCmLotTimes)
 	{
-		gData.nInspectCmLotCount = 0;
-	}
-	
+		gData.nInspectCmLotCount = 0;	
+		gData.bInspectCmThisLotVSkip = TRUE;
+	}	
+
 	if(gData.nInspectCmCheckTime >= 0) gData.nInspectCmCheckTime = (gData.dwRunTimeNow + gData.dwRunTimeAccumulated);
 	
-	if(gData.nInspectCmCheckTime > dTimeLimit && gData.nInspectCmCheckTime >= 0 )
+	//비전 촬영 중에 시간이 지나면 초기화, 찍던거는 마저 다 찍고 "-1"로 만든다 
+	if(gData.nInspectCmCheckTime > dTimeLimit && gData.nInspectCmCheckTime >= 0 && gData.nInspectCmLotCount >= m_pEquipData->nInspectCmLotTimes )
 	{
 		gData.nInspectCmCheckTime = -1;
 
 		gData.dwRunTimeNow = 0;
-		gData.dwRunTimeAccumulated = 0;
-		//gData.bInspectCmThisLotVSkip = TRUE;
-		//gData.nInspectCmLotCount = 0;
+		gData.dwRunTimeAccumulated = 0;		
 	}
-
-	
+		
 	if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes 
 		&& gData.nInspectCmScanLineCnt < m_pEquipData->nInspectCmScanTimes)
 	{
