@@ -55,9 +55,9 @@ typedef struct tag_EQUIP_DATA {
 	int		nCappingCnt;		// Load Cell 측정을 위해 Capping한 Cap 수량 저장
 	int		nLoadCellChkCnt;	// Assy Picker Load Cell 측정 주기
 
-	int		nInspectCmScanTimes; // 랏 당 CM 검사 최대 횟수
+	int		nInspectCmScanTimes;	// 랏 당 CM 검사 최대 횟수
 	int		nInspectCmLotTimes; 	// 시간당 랏 개수 
-	int		nInspectCmMinutes;				// 몇분 간격으로 설정 할지 	
+	int		nInspectCmMinutes;		// 몇분 간격으로 설정 할지 	
 
 } EQUIP_DATA;
 

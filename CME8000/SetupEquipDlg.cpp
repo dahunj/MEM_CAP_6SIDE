@@ -538,10 +538,10 @@ void CSetupEquipDlg::Save_EquipData()
 	m_stcShipTrayData[2].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_X_" + strModel, dData, "%0.2lf");
 	m_stcShipTrayData[3].GetWindowText(strData); dData = atof(strData); INI.Set_Double ("SHIP_TRAY", "PITCH_Y_" + strModel, dData, "%0.2lf");
 
-	m_stcCMVision[0].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("OPTION", "SCAN_TIMES_PER_LOT", nData); // Scan Times per 1 Lot 
+	m_stcCMVision[0].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("OPTION", "SCAN_TIMES", nData); // Scan Times per 1 Lot 
 	gData.nInspectCmScanLineCntVolatile = nData;
-	m_stcCMVision[1].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "LOT_QUANTITY", nData); // Lot Quantity 
-	m_stcCMVision[2].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "HOURS_DEN", nData); // Hours DENOMINATOR
+	m_stcCMVision[1].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "LOT_TIMES", nData); // Lot Quantity 
+	m_stcCMVision[2].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer ("OPTION", "MINUTES", nData); // Hours DENOMINATOR
 
 
 	for (int i = 0; i < 3; i++) { strKey.Format("%d", i); m_stcVacOffDelay[i].GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("VAC_OFF_DELAY", strKey, nData); }
