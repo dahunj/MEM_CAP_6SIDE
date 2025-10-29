@@ -1017,9 +1017,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	g_objLogFile.Save_BarcodeChkLog(gData.sCapLotID);
 	g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
 
-	gLot.bLotEndComplete[nLPNo] = TRUE;	
-	//if(gData.nInspectCmLotCount != 0) gData.nInspectCmLotCount++;
-	
+	gLot.bLotEndComplete[nLPNo] = TRUE;		
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
