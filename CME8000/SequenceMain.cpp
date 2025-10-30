@@ -423,8 +423,8 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	if (nType == 0) memset(gData.nCapNoCapBuffer, 0x00, sizeof(int) * PICK);
 	if (nType == 0) memset(gData.nCapNoAssyPicker, 0x00, sizeof(int) * PICK);
 
-	if (nType == 0) gData.nInspectCmScanLineCnt = 0;
-	if (nType == 0) gData.nInspectCmScanLineCntVolatile = m_pEquipData->nInspectCmScanTimes;
+	if (nType == 0) gData.nInsCmScanLineCnt = 0;
+	if (nType == 0) gData.nInsCmScanCntVolatile = m_pEquipData->nInspectCmScanTimes;
 	if (nType == 0) gData.nInspectCmLotCount = 0;
 	if (nType == 0) gData.dwRunTimeNow = 0;
 	if (nType == 0) gData.dwRunTimeAccumulated = 0;	
@@ -2608,23 +2608,24 @@ BOOL CSequenceMain::VisionCm_Run()
 	case 1:		// X Move Inspect Position
 		if (g_objCommon.Check_Position(AX_VISION_CM_X, 0)) 
 		{
-			if ((m_pEquipData->bUseVisionCmAlign && gData.nInspectCmScanLineCntVolatile > 100) 
+			if ((m_pEquipData->bUseVisionCmAlign && (gData.nInsCmScanCntVolatile == 0 || m_pEquipData->nInspectCmScanTimes == 0)) 
 				|| (m_pEquipData->bUseVisionCmAlign && CheckInspectCmGoOrNot(gData.nPNoIndex[0]) && !gData.bInspectCmThisLotVSkip) )
 				
 			{	
 				double dPickPosY = g_objAJinAXL.Get_Position(AX_LOAD_PICKER_Y);
 				double dStagePos = max(m_pMoveData->dLoadPickerY[0], m_pMoveData->dLoadPickerY[1]);
 				if (dPickPosY > dStagePos + 1.0) return TRUE;	// 충돌 방지
-												
-				if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) < m_pEquipData->nInspectCmScanTimes)
+					
+				
+				if(gData.nInsCmScanCntVolatile == 0 || m_pEquipData->nInspectCmScanTimes == 0)
 				{
-					m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) - 1;
+					//pass
 				}
-				else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) >= m_pEquipData->nInspectCmScanTimes)
+				else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) != m_pEquipData->nInspectCmScanTimes)
 				{
-					//Pass
-					m_pEquipData->nInspectCmScanTimes = gData.nInspectCmScanLineCntVolatile;
+					m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4);
 				}
+				
 						
 				m_dwVisionCm = GetTickCount();
 				m_tVisionCmLoop.Takt_Start();
@@ -2740,11 +2741,11 @@ BOOL CSequenceMain::VisionCm_Run()
 		{
 			if (Check_CmAlignDone()) 
 			{
-				gData.nInspectCmScanLineCnt++;
-				if(gData.nInspectCmScanLineCnt >= m_pEquipData->nInspectCmScanTimes)
+				gData.nInsCmScanLineCnt++;
+				if(gData.nInsCmScanLineCnt >= m_pEquipData->nInspectCmScanTimes)
 				{	
 					gData.nInspectCmLotCount++;
-					gData.nInspectCmScanLineCnt = 0;					
+					gData.nInsCmScanLineCnt = 0;					
 				}		
 
 				if( gData.nInspectCmLotCount >= m_pEquipData->nInspectCmLotTimes)
@@ -5539,7 +5540,7 @@ BOOL CSequenceMain::CheckInspectCmGoOrNot(int nPortNo)
 	}
 		
 	if (gData.nInspectCmLotCount < m_pEquipData->nInspectCmLotTimes 
-		&& gData.nInspectCmScanLineCnt < m_pEquipData->nInspectCmScanTimes)
+		&& gData.nInsCmScanLineCnt < m_pEquipData->nInspectCmScanTimes)
 	{
 		return TRUE;
 	}

@@ -262,8 +262,8 @@ typedef struct {
 	int		nDoorLockTime;
 	DWORD	dwDoorStartTime;
 
-	int		nInspectCmScanLineCnt;
-	int		nInspectCmScanLineCntVolatile;
+	int		nInsCmScanLineCnt;
+	int		nInsCmScanCntVolatile;
 
 	int		nInspectCmLotCount;
 	DWORD	dwRunTimeNow;
