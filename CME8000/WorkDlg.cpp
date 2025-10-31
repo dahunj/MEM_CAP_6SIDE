@@ -275,7 +275,7 @@ BOOL CWorkDlg::OnInitDialog()
 	m_stcCapTrayCountS.SetWindowText("99");
 	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
 	m_stcCapCmCountS.SetWindowText("5555");
-	
+
 #else
 	m_BtnCapSW1.ShowWindow(FALSE);
 	m_BtnCapSW2.ShowWindow(FALSE);
