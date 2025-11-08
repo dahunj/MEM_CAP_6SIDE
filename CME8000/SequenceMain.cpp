@@ -2621,7 +2621,7 @@ BOOL CSequenceMain::VisionCm_Run()
 				{
 					//pass
 				}
-				else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) != m_pEquipData->nInspectCmScanTimes)
+				else if((gData.nCmUseCount[gData.nPNoIndex[0]-1]/4) < m_pEquipData->nInspectCmScanTimes)
 				{
 					m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4);
 				}
