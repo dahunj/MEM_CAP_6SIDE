@@ -739,7 +739,7 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 	CFile file;
 	if (!file.Open(strFile, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) return;
 
-	strTitle.Format("Time,Barcode,Judge,Port No,Tray No,CM No,Load Stage,Load Picker,Index Load,Index Load Jig,Unload Picker,NG Tray,NG Y,NG X,Ship Tray,Ship Y,Ship X\r\n");
+	strTitle.Format("Time,Barcode,Judge,Port No,Tray No,CM No,Load Stage,Load Picker,Index Rotational Pos(Load),Index Pocket No(Load) ,Unload Picker,NG Tray,NG Y,NG X,Ship Tray,Ship Y,Ship X\r\n");
 
 	try {
 		file.SeekToEnd();
@@ -752,7 +752,7 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 
 		int nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick;
 		nLdStageNo	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][LOAD_STAGE];
-		nLdPick		= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][LOAD_PICK];
+		nLdPick		= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][LOAD_PICK];		
 		nIdxLdNo	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][INDEX_LOAD_NO];
 		nIdxLdJig	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][INDEX_LOAD_JIG];
 		nUlPick		= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][UNLOAD_PICK];
