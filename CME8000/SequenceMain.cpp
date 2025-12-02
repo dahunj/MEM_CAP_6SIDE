@@ -3808,11 +3808,14 @@ BOOL CSequenceMain::AssyPicker_Run()
 
 	case 1:		// 안전확인 및 인덱스에 모듈이 있는지 확인
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) &&
-			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) {
+			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) 
+		{
 			if (Check_IndexModule()) {
 				m_dwAssyPick = GetTickCount();
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-			} else {
+			}
+			else 
+			{
 				if (Check_IndexEmpty(1) && !gData.IndexDone[1]) gData.IndexDone[1] = TRUE;
 				return TRUE;
 			}
