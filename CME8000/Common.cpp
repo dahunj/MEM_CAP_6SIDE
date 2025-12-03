@@ -1998,19 +1998,25 @@ int CCommon::Get_MainIndexPos(int nPos)
 	int nIndexPos = pDX11->iIndexPosition0 + (pDX11->iIndexPosition1 << 1);
 	int nNo = 0;
 
-	if (nPos == 1) {	// Load
+	// Load
+	if (nPos == 1) 
+	{	
 		if (nIndexPos == 0) nNo = 0;
 		if (nIndexPos == 1) nNo = 1;
 		if (nIndexPos == 2) nNo = 2;
 		if (nIndexPos == 3) nNo = 3;
 
-	} else if (nPos == 2) {	// Assy
+	} 
+	else if (nPos == 2) // Assy
+	{	
 		if (nIndexPos == 0) nNo = 3;
 		if (nIndexPos == 1) nNo = 0;
 		if (nIndexPos == 2) nNo = 1;
 		if (nIndexPos == 3) nNo = 2;
 
-	} else if (nPos == 3) {	// Trans
+	}
+	else if (nPos == 3) // Trans 
+	{	
 		if (nIndexPos == 0) nNo = 2;
 		if (nIndexPos == 1) nNo = 3;
 		if (nIndexPos == 2) nNo = 0;
