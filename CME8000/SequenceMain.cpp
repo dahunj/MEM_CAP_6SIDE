@@ -2625,6 +2625,10 @@ BOOL CSequenceMain::VisionCm_Run()
 				{
 					m_pEquipData->nInspectCmScanTimes = (gData.nCmUseCount[gData.nPNoIndex[0]-1]/4);
 				}
+				else
+				{
+					m_pEquipData->nInspectCmScanTimes = gData.nInsCmScanCntVolatile;
+				}
 				
 						
 				m_dwVisionCm = GetTickCount();
