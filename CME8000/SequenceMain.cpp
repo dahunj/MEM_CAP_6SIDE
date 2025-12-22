@@ -4646,7 +4646,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						if (gData.bUnloadTrayLotEnd[1] == FALSE && m_nUnloadStage2Case > 20 && m_nUnloadStage2Case < 30) { gData.bUnloadTrayLotEnd[1] = TRUE; } 
 
 						// 마지막 Tray 배출 이후 다른 스테이지 Empty Tray가 대기위치에 없을때는 여기에서 초기화 해준다.
-						if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) || (m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20)) {
+						if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) || (m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20)) 
+						{
 							m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;
 							g_objAJinAXL.Write_Output(3);
 							gData.bUnloadPort2Wait = TRUE;
@@ -4829,7 +4830,12 @@ BOOL CSequenceMain::UnloadStage1_Run()
 	if (gData.bUnloadPort1Wait && m_nUnloadStage1Case >  1 && m_nUnloadStage1Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 50) return TRUE;
 	
-	switch (m_nUnloadStage1Case) {
+	if (gData.bUnloadPort1Wait && (m_nUnloadStage1Case == -1 || m_nUnloadStage1Case == -2 || m_nUnloadStage1Case == -3 )) return TRUE;
+
+
+
+	switch (m_nUnloadStage1Case) 
+	{
 	case 0:		// Start시 1로 바꿈
 		return TRUE;
 
@@ -4921,23 +4927,33 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			g_objAJinAXL.Write_Output(5);
 		
 			m_tUnloadStage1Loop.Takt_Save(14, 14);
-			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			m_nUnloadStage1Case = -3; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
-
-	case 10:	// 안전 확인 
-		if (!m_tUnloadStage1Loop.Waiting_Time(300)) return TRUE;;
+	case -3:
 		if(g_objCommon.Get_UnloadStageMasterSlaveOut(1))
 		{
 			m_pDY05->oUnloadStage1MasterIn = TRUE;			
 			g_objAJinAXL.Write_Output(5);
+			m_nUnloadStage1Case = -2; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
-		if (m_pDX05->iUnloadStage1MasterIn && !m_pDX05->iUnloadStage1MasterOut)
+		break;
+	case -2:
+		if (m_pDX05->iUnloadStage1MasterIn && !m_pDX05->iUnloadStage1MasterOut && !m_pDX05->iUnloadStage1SlaveIn && m_pDX05->iUnloadStage1SlaveOut)
 		{
 			m_pDY05->oUnloadStage1SlaveIn = TRUE;
 			g_objAJinAXL.Write_Output(5);
+			m_nUnloadStage1Case = -1; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
-		if (m_nUnloadStage2Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(1) ) 
+		break;
+	case -1:
+		if(g_objCommon.Get_UnloadStageMasterSlaveIn(1))
+		{
+			m_nUnloadStage1Case = 10; m_tUnloadStage1Loop.Set_LoopTime(5000);
+		}
+		break;
+	case 10:	// 안전 확인 
+		if (m_nUnloadStage2Case > 22 ) 
 		{ 			
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); 
 		}
@@ -5177,6 +5193,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	if (gData.bUnloadPort1Wait && m_nUnloadStage2Case >  1 && m_nUnloadStage2Case < 10) return TRUE;
 	if (gData.bUnloadPort2Wait && m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 50) return TRUE;
 	
+	if (gData.bUnloadPort1Wait && (m_nUnloadStage2Case == -1 || m_nUnloadStage2Case == -2 || m_nUnloadStage2Case == -3 )) return TRUE;
+	
+
 	switch (m_nUnloadStage2Case) {
 	case 0:		// Start시 1로 바꿈
 		return TRUE;
@@ -5266,23 +5285,33 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_pDY05->oUnloadStage2SlaveIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
 			m_tUnloadStage2Loop.Takt_Save(15, 14);
-			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			m_nUnloadStage2Case = -3; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
-
-	case 10:	// 안전 확인 
-		if (!m_tUnloadStage2Loop.Waiting_Time(300)) return TRUE;;
+	case -3:
 		if(g_objCommon.Get_UnloadStageMasterSlaveOut(2))
 		{
 			m_pDY05->oUnloadStage2MasterIn = TRUE;			
-			g_objAJinAXL.Write_Output(5);			
+			g_objAJinAXL.Write_Output(5);
+			m_nUnloadStage2Case = -2; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
+		break;
+	case -2:
 		if (m_pDX05->iUnloadStage2MasterIn && !m_pDX05->iUnloadStage2MasterOut)
 		{
 			m_pDY05->oUnloadStage2SlaveIn = TRUE;
 			g_objAJinAXL.Write_Output(5);
+			m_nUnloadStage2Case = -1; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
-		if (m_nUnloadStage1Case > 22 && g_objCommon.Get_UnloadStageMasterSlaveIn(2) ) 
+		break;
+	case -1:
+		if (g_objCommon.Get_UnloadStageMasterSlaveIn(2) ) 
+		{ 				
+			m_nUnloadStage2Case = 10; m_tUnloadStage2Loop.Set_LoopTime(5000); 
+		}
+		break;
+	case 10:	// 안전 확인 
+		if (m_nUnloadStage1Case > 22 ) 
 		{ 				
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
