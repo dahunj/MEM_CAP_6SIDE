@@ -18,9 +18,8 @@ typedef struct tag_EQUIP_DATA {
 	BOOL	bUseMES;
 	BOOL	bUseInlineMode;
 	BOOL	bUseVisionCapDir;
-	BOOL	bUseVisionCmAlign;
-	BOOL	bUseVisionAlignAlarm;
-	BOOL	bUseVisionAlignOffset;
+
+	
 
 	BOOL	bUseTrayPickerTurn;
 	BOOL	bUseCapPickerTurn;
@@ -54,6 +53,11 @@ typedef struct tag_EQUIP_DATA {
 
 	int		nCappingCnt;		// Load Cell 측정을 위해 Capping한 Cap 수량 저장
 	int		nLoadCellChkCnt;	// Assy Picker Load Cell 측정 주기
+
+
+	BOOL	bUseVisionCmAlign;
+	BOOL	bUseVisionAlignAlarm;
+	BOOL	bUseVisionAlignOffset;
 
 	int		nInspectCmScanTimes;	// 랏 당 CM 검사 최대 횟수
 	int		nInspectCmLotTimes; 	// 시간당 랏 개수 

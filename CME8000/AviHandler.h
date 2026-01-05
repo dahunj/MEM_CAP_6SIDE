@@ -39,6 +39,9 @@ private:
 	void Get_BarcodeUpdate(CString sPortNo, CString sTrayNo, CString sCmNo, CString sBarcode);
 	void Get_ApdRequest();
 
+	void Get_VisionAlarmOn();
+	void Get_VIsionAlarmOff();
+
 	void Send_Command(CString strSend);
 
 public:

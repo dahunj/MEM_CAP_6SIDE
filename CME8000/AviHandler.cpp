@@ -106,14 +106,16 @@ LRESULT CAviHandler::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 		CString strRecv = m_strRecvCmd.Mid(nStart + 1, nEnd - nStart - 1);
 		m_strRecvCmd.Delete(0, nEnd + 1);
 
-		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-		if (!pEquipData->bUseInlineMode) return 0;
+		
 
 		char chSep = ',';
 		CString strCmd, strOp;
 
 		AfxExtractSubString(strCmd, strRecv, 0, chSep);
 		AfxExtractSubString(strOp, strRecv, 1, chSep);
+
+		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+		if (!pEquipData->bUseInlineMode && strCmd !="ALARM") return 0;
 
 		// AviHandler Log /////////////////////////////////////////////////////
 		strLog.Format("[C<-H] : %s", strRecv);
@@ -147,8 +149,15 @@ LRESULT CAviHandler::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 		} else if (strCmd == "BARCODE") {
 			if (strOp == "UPDATE")	Get_BarcodeUpdate(strArg[0], strArg[1], strArg[2], strArg[3]);
 
-		} else if (strCmd == "APD") {
+		} 
+		else if (strCmd == "APD") 
+		{
 			if (strOp == "REQUEST")	Get_ApdRequest();
+		} 
+		else if (strCmd == "ALARM") 
+		{
+			if (strOp == "ON")	Get_VisionAlarmOn();
+			if (strOp == "OFF")	Get_VIsionAlarmOff();
 		} 
 	}
 
@@ -260,6 +269,41 @@ void CAviHandler::Get_BarcodeUpdate(CString sPortNo, CString sTrayNo, CString sC
 void CAviHandler::Get_ApdRequest()
 {
 	Set_ApdReply();
+}
+
+void CAviHandler::Get_VisionAlarmOn()
+{
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return ; }
+	
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	pEquipData->bUseInlineMode = TRUE;
+	INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
+
+	pEquipData->bUseVisionCmAlign = TRUE;
+	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
+
+	pEquipData->bUseVisionAlignAlarm = TRUE;
+	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
+
+}
+
+void CAviHandler::Get_VIsionAlarmOff()
+{
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return ; }
+
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	pEquipData->bUseInlineMode = TRUE;
+	INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
+
+	pEquipData->bUseVisionCmAlign = TRUE;
+	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
+
+	pEquipData->bUseVisionAlignAlarm = FALSE;
+	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
 }
 
 void CAviHandler::Get_TimeUpdate(CString sTime)
