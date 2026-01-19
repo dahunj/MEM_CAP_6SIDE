@@ -2948,7 +2948,9 @@ BOOL CSequenceMain::CapStage1_Run()
 				g_objMES.Set_CapLotChangeRequest(gData.sCapLotID, gData.sOperID);	// 자재 등록 요청
 			}
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(30000);
-		} else {
+		} 
+		else
+		{
 			g_objCommon.Show_Alarm("Cap Tray 자재 정보를 입력해 주십시오.");
 			return FALSE;
 		}
@@ -3470,14 +3472,17 @@ BOOL CSequenceMain::CapPicker_Run()
 			if (m_nCapStage1Case != 20 && m_nCapStage2Case != 20) return TRUE;	// 인터락
 
 			int nPickCnt = 0, nMoveIdx = 0;
-			if (Select_CapPickerPos(nCpPickPos, nPickCnt) && Select_CapTrayPos(nCpTrayPosX, nCpTrayPosY)) {
+			if (Select_CapPickerPos(nCpPickPos, nPickCnt) && Select_CapTrayPos(nCpTrayPosX, nCpTrayPosY)) 
+			{
 				m_tCapPickLoop.Takt_Start();
-
-				if (m_pEquipData->bCapPickUpMulti) {
+				if (m_pEquipData->bCapPickUpMulti) 
+				{
 					int nTrayCnt = CT_X - nCpTrayPosX;
 					nCpMultiCnt = (nPickCnt < nTrayCnt ? nPickCnt : nTrayCnt);
 					nMoveIdx = (nCpWorkTray-1) * 6;		// Cap Picker Y축 MoveData Index, Stage1 Picker1 = 0, Stage2 Picker1 = 6
-				} else {
+				} 
+				else 
+				{
 					nCpMultiCnt = 1;
 					nMoveIdx = nCpPickPos + (nCpWorkTray-1) * 6;	// Cap Picker Y축 MoveData Index
 				}
