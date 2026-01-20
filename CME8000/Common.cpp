@@ -383,9 +383,36 @@ BOOL CCommon::Check_TrayFull()
 	DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
 	DX_DATA_03 *pDX03 = g_objAJinAXL.Get_pDX03();
 
-	if (pDX01->iLoadPort3HighCheck)		{ Show_Alarm("Load Port3 Full Sensor Checked."); return FALSE; }
-	if (pDX02->iCapPort1HighCheck)		{ Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY); return FALSE; }
-	if (pDX03->iUnloadPort2HighCheck)	{ Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); return FALSE; }
+	if (pDX01->iLoadPort3HighCheck)		
+	{ 
+		Show_MsgBox("Load Port3 Full Sensor Checked.");
+		//Show_Alarm("Load Port3 Full Sensor Checked.");
+		return FALSE; 
+	}
+	if (pDX02->iCapPort1HighCheck)		
+	{ 
+		Show_MsgBox("Cap Port1 Full Sensor Checked.");
+		//Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY);
+		return FALSE;
+	}
+	if (pDX02->iCapPort2HighCheck)		
+	{ 
+		Show_MsgBox("Cap Port2 Full Sensor Checked.");
+		//Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY);
+		return FALSE;
+	}
+	if (pDX03->iUnloadPort1HighCheck)	
+	{ 
+		Show_MsgBox("Unload Port1 Full Sensor Checked.");
+		//Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
+		return FALSE;
+	}
+	if (pDX03->iUnloadPort2HighCheck)	
+	{ 
+		Show_MsgBox("Unload Port2 Full Sensor Checked.");
+		//Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
+		return FALSE;
+	}
 #endif
 	return TRUE;
 }

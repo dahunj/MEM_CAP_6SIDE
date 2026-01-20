@@ -197,13 +197,13 @@ typedef union tag_DX_DATA_02 {
 		DWORD iCapPort1SlideOpen : 1;		// X0203
 		DWORD iCapPort1LowCheck : 1;		// X0204
 		DWORD i0205 : 1;					// X0205
-		DWORD iCapPort1HighCheck : 1;		// X0206
+		DWORD i0206 : 1;		// X0206
 		DWORD i0207 : 1;					// X0207
 		DWORD iCapPort1Support1In : 1;		// X0208
 		DWORD iCapPort1Support1Out : 1;		// X0209
 		DWORD iCapPort1Support2In : 1;		// X0210
 		DWORD iCapPort1Support2Out : 1;		// X0211
-		DWORD i0212 : 1;					// X0212
+		DWORD iCapPort1HighCheck : 1;		// X0212
 		DWORD i0213 : 1;					// X0213
 		DWORD i0214 : 1;					// X0214
 		DWORD i0215 : 1;					// X0215
@@ -219,7 +219,7 @@ typedef union tag_DX_DATA_02 {
 		DWORD iCapPort2Support1Out : 1;		// X0225
 		DWORD iCapPort2Support2In : 1;		// X0226
 		DWORD iCapPort2Support2Out : 1;		// X0227
-		DWORD i0228 : 1;					// X0228
+		DWORD iCapPort2HighCheck : 1;					// X0228
 		DWORD i0229 : 1;					// X0229
 		DWORD i0230 : 1;					// X0230
 		DWORD iCapPortAreaCheck : 1;		// X0231
@@ -241,7 +241,7 @@ typedef union tag_DX_DATA_03 {
 		DWORD iUnloadPort1Support1Out : 1;	// X0309
 		DWORD iUnloadPort1Support2In : 1;	// X0310
 		DWORD iUnloadPort1Support2Out : 1;	// X0311
-		DWORD i0312 : 1;					// X0312
+		DWORD iUnloadPort1HighCheck : 1;					// X0312
 		DWORD i0313 : 1;					// X0313
 		DWORD i0314 : 1;					// X0314
 		DWORD iUnloadPort1AreaCheck : 1;	// X0315
