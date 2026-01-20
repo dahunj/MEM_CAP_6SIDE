@@ -124,7 +124,7 @@ BOOL CDataManager::Read_EquipData()
 	CString strKey;
 	m_EquipData.sEquipName = INI.Get_String("EQUIPMENT", "NAME", "");
 	m_EquipData.sModel = INI.Get_String("EQUIPMENT", "MODEL", "");
-	gData.sRecipe = (m_EquipData.sModel == "" ? "R53B" : m_EquipData.sModel);	// Default(R53B)
+	gData.sRecipe = (m_EquipData.sModel == "" ? "R63B" : m_EquipData.sModel);	// Default(R53B)
 
 	m_EquipData.nLotBarcodePort = INI.Get_Integer("EQUIPMENT", "LOT_BARCODE", 1);
 	m_EquipData.nAssyLoadCellPort = INI.Get_Integer("EQUIPMENT", "ASSY_LOAD_CELL", 8);
