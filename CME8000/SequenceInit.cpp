@@ -972,7 +972,7 @@ BOOL CSequenceInit::Initial_TransStage()
 		}
 		break;
 	case 4:		// Stage Z Home Search
-		if (g_objCommon.Get_TransStageClampOff()) {
+		if (g_objCommon.Get_TransStageClampOff() && m_niUnloadPickCase > 6) {
 			g_objAJinAXL.Home_Search(AX_TRANS_STAGE_Z);
 			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(30000);
 		}
