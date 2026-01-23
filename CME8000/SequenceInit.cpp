@@ -972,7 +972,7 @@ BOOL CSequenceInit::Initial_TransStage()
 		}
 		break;
 	case 4:		// Stage Z Home Search
-		if (g_objCommon.Get_TransStageClampOff() && m_niUnloadPickCase > 6) {
+		if (g_objCommon.Get_TransStageClampOff() && m_niUnloadPickCase  == 15) {
 			g_objAJinAXL.Home_Search(AX_TRANS_STAGE_Z);
 			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(30000);
 		}
@@ -1004,7 +1004,9 @@ BOOL CSequenceInit::Initial_TransStage()
 		}
 		break;
 	case 14:
-		if (g_objCommon.Check_Position(AX_TRANS_STAGE_X, 0) && g_objCommon.Check_Position(AX_TRANS_STAGE_T, 0)) {
+		if (g_objCommon.Check_Position(AX_TRANS_STAGE_X, 0) && g_objCommon.Check_Position(AX_TRANS_STAGE_T, 0)) 
+		{
+			m_niUnloadPickCase = 19;
 			g_objLogFile.Save_HandlerLog("[Initial Sequence] - Inspect Stage Complete");
 			m_niTransStageCase = 90; m_tiTransStageLoop.Set_LoopTime(5000);
 		}
@@ -1076,14 +1078,29 @@ BOOL CSequenceInit::Initial_UnloadPicker()
 			m_niUnloadPickCase++; m_tiUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
-	case 13:	// Picker X, P Move to Ready Position
+	case 13:
+		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0)) {
+			g_objCommon.Move_Position(AX_UNLOAD_PICKER_X, 1);	// Unload 1			
+			m_niUnloadPickCase++; m_tiUnloadPickLoop.Set_LoopTime(10000);
+		}
+		break;
+	case 14:
+		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 1))
+		{
+			m_niUnloadPickCase++; m_tiUnloadPickLoop.Set_LoopTime(10000);
+		}
+		break;
+	case 15:
+		return TRUE;
+
+	case 19:	// Picker X, P Move to Ready Position
 		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0)) {
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_X, 0);	// Trans Stage
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_P, 0);	// Trans Stage
 			m_niUnloadPickCase++; m_tiUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
-	case 14:	// Picker Normal
+	case 20:	// Picker Normal
 		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 0) && g_objCommon.Check_Position(AX_UNLOAD_PICKER_P, 0)) {
 			g_objLogFile.Save_HandlerLog("[Initial Sequence] - Unload Picker Complete");
 			m_niUnloadPickCase = 90; m_tiUnloadPickLoop.Set_LoopTime(5000);
