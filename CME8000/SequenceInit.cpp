@@ -968,7 +968,7 @@ BOOL CSequenceInit::Initial_TransStage()
 			if (!m_tiTransStageLoop.Waiting_Time(500)) break;
 			g_objCommon.Set_TransStageAirOff(0);
 			g_objCommon.Set_TransStageClampOff();
-			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(10000);
+			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(30000);
 		}
 		break;
 	case 4:		// Stage Z Home Search
