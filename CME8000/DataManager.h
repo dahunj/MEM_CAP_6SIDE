@@ -63,6 +63,9 @@ typedef struct tag_EQUIP_DATA {
 	int		nInspectCmLotTimes; 	// 시간당 랏 개수 
 	int		nInspectCmMinutes;		// 몇분 간격으로 설정 할지 	
 
+	BOOL	bResultTestUse;		// Result Test Use
+	int		nResultTestNg;		// Result Test Ng Ratio (0~100)
+
 } EQUIP_DATA;
 
 ///////////////////////////////////////////////////////////////////////////////

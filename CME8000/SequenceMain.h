@@ -125,6 +125,9 @@ private:
 
 	BOOL	m_bLoadPortTrayExist;	// Load Port에 Tray가 있는지 없는지 변수로도 확인할수 있게 해준다.
 
+	BOOL	m_bShipStg1Ng;		// Ship Stage1 NG Tray로 사용 여부
+	BOOL	m_bShipStg2Ng;		// Ship Stage2 NG Tray로 사용 여부
+
 private:
 	BOOL TrayPicker_Run();		//  1. (Error : 3100)
 	BOOL LoadStage1_Run();		//  2. (Error : 3200)
@@ -154,6 +157,7 @@ private:
 	void Init_LoadTray(int nPNo, int nSNo);
 	void Init_CapTray();
 	void Init_UnloadTray();
+	void Init_NgTray();
 
 	BOOL Check_LoadTrayEmpty(int nNo=0);
 	BOOL Check_LoadTrayLineEmpty(int nLine);
@@ -171,6 +175,7 @@ private:
 	BOOL Check_CapPickerFull();
 	BOOL Check_CapBufferFull();
 	BOOL Check_UnloadTrayFull();
+	BOOL Check_NgTrayFull();
 
 	BOOL Check_IndexModule();
 	BOOL Check_IndexEmpty(int nPos);
@@ -198,6 +203,12 @@ private:
 	BOOL Get_VisionInspectUse();
 	void Set_TaktLog(int nNo);
 	void Set_IndexEnd();
+
+	BOOL Exist_ShipPickerOk();
+	BOOL Exist_ShipPickerNg();
+
+	BOOL Select_NgTrayMult(int &nPick, int &nTrayX, int &nTrayY, int &nMove, int &nCount);
+	BOOL Check_InspectDone(int nPNo, int nTNo, int nCNo, int &nInfo);
 
 public:
 	void Begin_MainRunThread();

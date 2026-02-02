@@ -94,7 +94,8 @@ const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 6, PICK = 4;
 
 extern CString gsCurrentDir;	// 현재 프로젝트 폴더
 
-typedef struct {
+typedef struct
+{
 	CString	sLotID[2];
 	CString	sOperID;		// Operator
 	CString	sRecipe;		// Recipe Item
@@ -127,6 +128,7 @@ typedef struct {
 	int		InfoCapTray[CT_Y][CT_X];	// Cap Tray 정보 표시 (0:Not Use, 9:Use)
 	int		STY;						// Ship Tray 라인수 (R53B:7, R54B:7)
 	int		InfoShipTray[ST_Y][ST_X];	// Ship Tray 정보 표시 (0:Not Use, 1:Exist)
+	int		InfoNgTray[ST_Y][ST_X];		// NG Tray 정보 표시 (0:Empty, 2:NG)
 
 	int		InfoIndex[3][PICK];			// Index 정보 표시 0: 좌측	(0:Not Use, 1:Exist)
 	int		InfoCapBuffer[PICK];		// Cap Buffer 정보 표시 0:상단	(0:Not Use, 9:Use)
@@ -174,7 +176,8 @@ typedef struct {
 	BOOL	bScanDone[2];			// 0:CM Align, 1:Cap Align
 	int		nInspCmNo[2][2];		// 0:CM Align, 1:Cap Align, 0:CmNo1, 1:CmNo2
 	// Port 별로 저장해야함.
-	int		nCmInspectInfo[2][50][12];	// CM Align 검사결과 (0:Empty, 1:Good, 2:Normal)
+	int		nInspectInfo[2][50][12];	// 검사결과 (0:Empty, 1:Good, 2:NG, 3:NoResult, 7:Request, 8:NG, 9:Init)
+	
 	int		nCapInspectInfo[2][50][28];	// Cap Align 검사결과 (0:Empty, 1:Good, 2:Normal)
 
 	BOOL	bCycleStop;				// Run 중간에 멈출때 (초기화 필요)
@@ -196,9 +199,7 @@ typedef struct {
 	int		nCmInspPickNo2;
 	int		nCapInspPickNo1;
 	int		nCapInspPickNo2;
-
 	
-
 	BOOL	bAviTrayLoad;
 	int		nCmCntAviPort;
 	int		nCmCntTrayPick;
@@ -276,6 +277,8 @@ typedef struct {
 	CString		sInspectCmLotIDLater;
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 	
+
+
 } GLOVAL_DATA;
 
 typedef struct {
@@ -304,6 +307,7 @@ typedef struct {
 
 	DWORD	dwTaktData[4];	// 0:Load, 1:Assembly, 2:Unload, 3:Index
 	BOOL	bTaktDone[3];	// 0:Load, 1:Assembly, 2:Unload
+
 } GLOVAL_LOT;
 
 typedef struct {
@@ -319,6 +323,8 @@ typedef struct {
 
 	double  dMotionChkPos;
 	double  dMotionPos[35];
+
+
 } GLOVAL_ALM;
 
 typedef struct {

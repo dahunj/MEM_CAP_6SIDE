@@ -215,53 +215,26 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 	if (sJudge != "G" && sNgCode.GetLength() < 2) sNgCode = "NON";	// Good 일때 NG Code는 Space(" ")
 
 	if (sGbn == "T1" || sGbn == "T2") 
-	{
-		int nMode = theApp.Get_MainMode();
-		int nPreInfo = gData.nCmInspectInfo[nPx][nTx][nCx];
-		int nNo1 = gData.nInspCmNo[0][0] - 1;
-		int nNo2 = gData.nInspCmNo[0][1] - 1;
+	{	
+		int nPreInfo = gData.nInspectInfo[nPx][nTx][nCx];
+		if (nPreInfo != 7) { g_objCommon.Show_Error(6103); return; }					
 
-		int nPickNo = (nCx == nNo2 ? gData.nCmInspPickNo2 - 1 : (nCx == nNo1 ? gData.nCmInspPickNo1 - 1 : -1));
-		if (nPickNo < 0) return;
+		if (sJudge == "G") return;	// Good이면 종료
 
-		gData.nCmInspectInfo[nPx][nTx][nCx] = (sJudge == "G" ? 1 : 2);
+		gData.nInspectInfo[nPx][nTx][nCx] = 8;	// NG
+	
 
-		if (pEquipData->bUseVisionAlignAlarm && gData.nCmInspectInfo[nPx][nTx][nCx] == 2 )
+		/*if (pEquipData->bUseVisionAlignAlarm && gData.nInspectInfo[nPx][nTx][nCx] == 2 )
 		{
-			CString sLog;
-			sLog.Format("[Alarm] CM Vision NG PortNo:%d, TrayNo:%d, CmNo:%d", nPx+1, nTx+1, nCx+1);
-			g_objLogFile.Save_HandlerLog(sLog);
-			g_objAviHandler.Set_NotifyCmAlignAlarm();
-			g_objCommon.Show_Error(3606);	return;		
-		}
+		CString sLog;
+		sLog.Format("[Alarm] CM Vision NG PortNo:%d, TrayNo:%d, CmNo:%d", nPx+1, nTx+1, nCx+1);
+		g_objLogFile.Save_HandlerLog(sLog);
+		g_objAviHandler.Set_NotifyCmAlignAlarm();
+		g_objCommon.Show_Error(3606);	return;		
+		}*/
 
-	} else if (sGbn == "B1" || sGbn == "B2") {
-		int nNo1 = gData.nInspCmNo[1][0] - 1;
-		int nNo2 = gData.nInspCmNo[1][1] - 1;
-
-		int nPickNo = (nCx == nNo2 ? gData.nCapInspPickNo2 - 1 : (nCx == nNo1 ? gData.nCapInspPickNo1 - 1 : -1));
-		if (nPickNo < 0) return;
-
-		gData.nCapInspectInfo[nPx][nTx][nCx] = (sJudge == "G" ? 1 : (sJudge == "N" ? 2 : 0));	// G,N,E
-
-		if (gData.nCapInspectInfo[nPx][nTx][nCx] == 2) {
-			CString strErrSub;
-			strErrSub.Format(" ==> Picker:%d, Tray:%d, CM:%d", nPickNo+1, nTx+1, nCx+1);
-			g_objCommon.Set_ErrorSubMessage(strErrSub);
-			g_objCommon.Show_Error(6220);	// 3706
-			return;
-		}
-
-		int nCase = g_objSequenceMain.Get_MainRunCase(AUTO_VISION_CAP);
-		if (nCase != 5) { Exception_Log("Inspect Complete", sGbn, nCase); return; }
-		if (m_nB12ScanCnt > m_nB12ScanReq) return;
-
-		m_nB12ScanCnt++;
-		if (m_nB12ScanCnt == m_nB12ScanReq) {
-			gData.bScanDone[1] = TRUE;
-			g_objSequenceMain.Set_MainRunCase(AUTO_VISION_CAP, 10);
-		}
-	}
+	} 
+	
 }
 
 void CInspector::Get_ScanComplete(CString sGbn, CString sLotId, CString sPortNo, CString sTrayNo, CString sCmNo)
@@ -440,6 +413,9 @@ void CInspector::Set_LoadComplete(CString sGbn, CString sLotId, int nPortNo, int
 		strBar1.Format("NO_INFO1");
 		strBar2.Format("NO_INFO2");
 	}
+
+	if (nTNo1 > 0 && nCNo1 > 0) gData.nInspectInfo[nPortNo-1][nTNo1-1][nCNo1-1] = 7;	// Request
+	if (nTNo2 > 0 && nCNo2 > 0) gData.nInspectInfo[nPortNo-1][nTNo2-1][nCNo2-1] = 7;	// Request
 
 	strSendCmd.Format("LOAD,COMPLETE,%s,%s,%d,%d,%d,%d,%d,%s,%s,%d,%d,%d,%d", sGbn, sLotId, nPortNo, nTNo1, nTNo2, nCNo1, nCNo2, strBar1, strBar2, nPickNo1, nPickNo2, nINo1, nINo2);
 	Send_Command(strSendCmd);
