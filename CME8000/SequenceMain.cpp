@@ -5135,32 +5135,37 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			{
 				int nPx = gData.nPNoUnloadTray - 1;
 
-				if (Check_UnloadLotEnd(nPx+1) && !m_bUnloadLotEnd[nPx]) {
-					if (m_pEquipData->bInlineMode) {
-						if (gData.nTNoShipStg[nSpWorkStg-1] == gData.nAviTrayUse[nPx]) {
-							if (m_nShipStg1Case == 10) { if (m_nShipStg2Case != 40) return TRUE; m_nShipStg2Case = 22; m_nShipStg1Case = 21; }
-							if (m_nShipStg2Case == 10) { if (m_nShipStg1Case != 40) return TRUE; m_nShipStg1Case = 22; m_nShipStg2Case = 21; }
-							m_bUnloadLotEnd[nPx] = TRUE;
+				if (Check_UnloadLotEnd(nPx+1) && !m_bUnloadLotEnd) {
+					if (m_pEquipData->bUseInlineMode) {
+						if (gData.nTNoUnloadTray == gData.nTrayUseCount[nPx]) {
+							if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
+							if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
+							m_bUnloadLotEnd = TRUE;
 						}
 					} else {
-						if (m_nShipStg1Case == 10) { if (m_nShipStg2Case != 40) return TRUE; m_nShipStg2Case = 22; m_nShipStg1Case = 21; }
-						if (m_nShipStg2Case == 10) { if (m_nShipStg1Case != 40) return TRUE; m_nShipStg1Case = 22; m_nShipStg2Case = 21; }
-						m_bUnloadLotEnd[nPx] = TRUE;
-						if (Check_UnloadLotEndAll() && !m_bUnloadLotEndAll) m_bUnloadLotEndAll = TRUE;
+						if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
+						if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
+						m_bUnloadLotEnd = TRUE;
+						if (Check_UnloadLotEnd() && !m_bUnloadLotEnd) m_bUnloadLotEnd = TRUE;
 					}
 				}
 
-				if (Check_NgTrayFull() && m_nShipStg1Case == 10) { if (m_nShipStg2Case != 40) return TRUE; m_nShipStg2Case = 22; m_nShipStg1Case = 21; }
-				if (Check_NgTrayFull() && m_nShipStg2Case == 10) { if (m_nShipStg1Case != 40) return TRUE; m_nShipStg1Case = 22; m_nShipStg2Case = 21; }
+				if (Check_NgTrayFull() && m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
+				if (Check_NgTrayFull() && m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
 			}
 
-			if		(Exist_ShipPickerNg()) { m_nShipPickCase = 30; m_tShipPickLoop.Set_LoopTime(10000); }	// ´Ù½Ã
-			else if (Check_ShipPickerEmpty()) {		// º¹±Í
-				if (m_nShipStg1Case == 10 || m_nShipStg2Case == 10) {
-					if (m_nShipStg1Case == 10) { if (m_nShipStg2Case != 40) return TRUE; g_objCommon.Move_Position(AX_SHIP_STAGE1_Y, 0); m_nShipStg2Case = 18; }	// Stage1 Load, Stage2 Work
-					if (m_nShipStg2Case == 10) { if (m_nShipStg1Case != 40) return TRUE; g_objCommon.Move_Position(AX_SHIP_STAGE2_Y, 0); m_nShipStg1Case = 18; }	// Stage2 Load, Stage1 Work
+			if		(Exist_ShipPickerNg()) // ´Ù½Ã
+			{ 
+				m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(10000); 
+			}	
+			else if (Check_UnloadPickerEmpty()) // º¹±Í
+			{		
+				if (m_nUnloadStage1Case == 10 || m_nUnloadStage2Case == 10) 
+				{
+					if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 0); m_nUnloadStage2Case = 18; }	// Stage1 Load, Stage2 Work
+					if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 0); m_nUnloadStage1Case = 18; }	// Stage2 Load, Stage1 Work
 				}
-				m_nShipPickCase = 51; m_tShipPickLoop.Set_LoopTime(10000);
+				m_nUnloadPickCase = 51; m_tUnloadPickLoop.Set_LoopTime(10000);
 			}
 		}
 		break;
