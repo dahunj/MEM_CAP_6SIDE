@@ -5299,8 +5299,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 9:		// Z Move to Move Up
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && m_pDX05->iUnloadStage1Exist) {
-
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && m_pDX05->iUnloadStage1Exist) 
+		{
 			m_pDY05->oUnloadStage1MasterIn = FALSE;
 			m_pDY05->oUnloadStage1SlaveIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
@@ -5328,25 +5328,28 @@ BOOL CSequenceMain::UnloadStage1_Run()
 	case -1:
 		if(g_objCommon.Get_UnloadStageMasterSlaveIn(1))
 		{
+			m_bShipStg1Ng = FALSE;
 			m_nUnloadStage1Case = 10; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 10:	// 안전 확인 
-		if (m_nUnloadStage2Case > 22 ) 
+		if (m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 30 || m_nUnloadStage2Case >= 50) 
 		{ 			
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); 
 		}
 		return TRUE;
 
 	case 11:	// Y Move to Work Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && m_pDX05->iUnloadStage1Exist ) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && m_pDX05->iUnloadStage1Exist ) 
+		{
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);	// Work Position
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 12:	// Position check
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 1)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 1)) 
+		{
 			m_tUnloadStage1Loop.Takt_Save(14, 7);
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// Move Up
@@ -5354,12 +5357,21 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 13:
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && m_pDX05->iUnloadStage1Exist ) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && m_pDX05->iUnloadStage1Exist )
+		{
 			m_tUnloadStage1Loop.Takt_Save(14, 5);
-			Init_UnloadTray();
-			gData.nShipTrayLoad++;
-			threshold = 0;
-			m_nUnloadStage1Case = 14; m_tUnloadStage1Loop.Set_LoopTime(5000);
+
+			if (m_bShipStg1Ng) 
+			{
+				m_nUnloadStage1Case = 21; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			} 
+			else
+			{
+				Init_UnloadTray();
+				gData.nShipTrayLoad++;
+				threshold = 0;
+				m_nUnloadStage1Case = 14; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			}			
 		}
 		break;
 	case 14:
@@ -5405,15 +5417,29 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			m_nUnloadStage1Case = 3; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
+		// NG 모듈 완료 후 이동 (복귀)
+	case 18:	// Y Move to Work Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) {
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);	// Work Pos
+			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
+		}
+		break;
+	case 19:	// Check Y Work Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 1)) { m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); }
+		break;
+
 
 	case 20:	// Working
 		
 		return TRUE;
 
 	case 21:	// 안전 확인
-		if (m_nUnloadStage2Case <= 10 || m_nUnloadStage2Case > 52) {
-			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE1_Y)) {
+		if (m_nUnloadStage2Case <= 10 || m_nUnloadStage2Case > 52) 
+		{
+			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE1_Y)) 
+			{
 				m_tUnloadStage1Loop.Takt_Start();
+				m_bShipStg1Ng = FALSE;
 				// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
 				m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
@@ -5421,7 +5447,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		return TRUE;
 	case 22:	// Y Move to Unload Port Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0)) 
+		{
 			m_tUnloadStage1Loop.Takt_Save(14, 14);
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
@@ -5514,6 +5541,20 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			g_objLogFile.Save_TestLog(m_strLog);
 		}
 		break;
+		// NG 모듈 배출 전 이동 (Avoid)
+	case 38:	// 안전 확인
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
+		{
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);	// Unload Pos
+			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
+		}
+		break;
+	case 39:	// Check Y Unload Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 2)) { m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); }
+		break;
+	case 40:	// Wait for Stage2 Done
+		return TRUE;
+
 
 	case 50:	// Stage2 Check
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) &&
@@ -5524,7 +5565,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		return TRUE;
 
 	case 51:	// 안전 확인, Y Move to Load Port Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist ) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist )
+		{
 			if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 0)) break;	// 인터락
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 0);
@@ -5532,8 +5574,10 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 52:	// stage2 Check
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0)) {
-			if (m_nUnloadStage2Case >= 20) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0)) 
+		{
+			if (m_nUnloadStage2Case >= 20) 
+			{
 				m_tUnloadStage1Loop.Takt_Save(14, 15);
 				m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			}
@@ -5685,12 +5729,13 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;
 	case -1:
 		if (g_objCommon.Get_UnloadStageMasterSlaveIn(2) ) 
-		{ 				
+		{ 	
+			m_bShipStg2Ng = FALSE;
 			m_nUnloadStage2Case = 10; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
 		break;
 	case 10:	// 안전 확인 
-		if (m_nUnloadStage1Case > 22 ) 
+		if (m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 30 || m_nUnloadStage1Case >= 50 ) 
 		{ 				
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
@@ -5704,7 +5749,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		}
 		break;
 	case 12:	// Position check
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 1)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 1)) 
+		{
 			m_tUnloadStage2Loop.Takt_Save(15, 7);
 			m_tUnloadStage2Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// Move Up
@@ -5714,10 +5760,18 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	case 13:
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && m_pDX05->iUnloadStage2Exist ) {
 			m_tUnloadStage2Loop.Takt_Save(15, 5);
-			Init_UnloadTray();
-			gData.nShipTrayLoad++;
-			threshold = 0;
-			m_nUnloadStage2Case = 14; m_tUnloadStage2Loop.Set_LoopTime(5000);
+
+			if (m_bShipStg2Ng) {
+				m_nUnloadStage2Case = 21; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			} 
+			else
+			{
+				Init_UnloadTray();
+				gData.nShipTrayLoad++;
+				threshold = 0;
+				m_nUnloadStage2Case = 14; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			}
+			
 		}
 		break;
 	case 14:
@@ -5764,13 +5818,27 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		}
 		break;
 
+		// NG 모듈 완료 후 이동 (복귀)
+	case 18:	// Y Move to Work Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) {
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);	// Work Pos
+			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
+		}
+		break;
+	case 19:	// Check Y Work Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 1)) { m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); }
+		break;
+
 	case 20:	// Working
 		return TRUE;
 
 	case 21:	// 안전 확인
-		if (m_nUnloadStage1Case <= 10 || m_nUnloadStage1Case > 52) {
-			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE2_Y)) {
+		if (m_nUnloadStage1Case <= 10 || m_nUnloadStage1Case > 52) 
+		{
+			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE2_Y))
+			{
 				m_tUnloadStage2Loop.Takt_Start();
+				m_bShipStg2Ng = FALSE;
 				// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
 				m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
@@ -5870,6 +5938,21 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			g_objLogFile.Save_TestLog(m_strLog);
 		}
 		break;
+
+		// NG 모듈 배출 전 이동 (Avoid)
+	case 38:	// 안전 확인
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
+		{
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);	// Unload Pos
+			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
+		}
+		break;
+	case 39:	// Check Y Unload Position
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 2)) { m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); }
+		break;
+	case 40:	// Wait for Stage2 Done
+		return TRUE;
+
 
 	case 50:	// Stage2 Check
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) &&

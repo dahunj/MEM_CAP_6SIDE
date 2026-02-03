@@ -81,6 +81,11 @@ public:
 	CLabelCS	m_lblCMVision[3];
 	CStaticCS	m_stcCMVision[3];
 
+	CGroupCS	m_grpResultTest;
+	CLabelCS	m_lblResultTest;
+	CCheckCS	m_chkResultTestUse;
+	CEditCS		m_edtResultTest;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
