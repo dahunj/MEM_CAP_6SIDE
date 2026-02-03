@@ -370,8 +370,8 @@ BOOL CSequenceMain::LotEnd_Run()
 // 	double dRate = (nSum == 0 ? 0.0 : gLot.nGoodCount[nPNo] * 100.0 / nSum);
 
 
-	/*strMsg.Format("Lot End ==> ID(%s)", gLot.sLotID[nPNo]);
-	g_objLogFile.Save_HandlerLog(strMsg);*/
+	strMsg.Format("Run End ==> ID(%s)", gLot.sLotID[nPNo]);
+	g_objLogFile.Save_HandlerLog(strMsg);
 
 	strMsg.Format("Run End.\n\n");
 
