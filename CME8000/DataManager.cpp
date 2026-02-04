@@ -197,8 +197,7 @@ BOOL CDataManager::Read_EquipData()
 	gData.nCapMaxCount = CT_Y * CT_X;	// Tray 배열 (4x7)
 	gData.STY =  ST_Y;
 	gData.nShipMaxCount = gData.STY * ST_X;	// Tray 배열 (3x7 or 3x6)
-
-
+	
 	m_EquipData.nResultTestNg = INI.Get_Integer("RESULT_TEST", "RESULT_NG", 0);
 
 	//doorinterlock log

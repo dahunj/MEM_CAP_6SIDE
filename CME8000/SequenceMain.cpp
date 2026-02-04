@@ -770,15 +770,15 @@ BOOL CSequenceMain::Check_InspectDone(int nPNo, int nTNo, int nCNo, int &nInfo)
 	{
 		int nRand = g_objCommon.Get_Random(0, 99);
 		int nNg = m_pEquipData->nResultTestNg;
-		int nSum = gLot.nGoodCount[nPx] + gLot.nNgCount[nPx];
+		int nSum = gLot.nNgCount[nPx];//gLot.nGoodCount[nPx] + gLot.nNgCount[nPx];
 
-		int nJudge = (nRand < nNg && nSum < m_pEquipData->nInspectCmScanTimes) ? 8 : 9;
+		int nJudge = (nRand < nNg && nSum < m_pEquipData->nInspectCmScanTimes*LT_X) ? 8 : 9;
 		gData.nInspectInfo[nPx][nTx][nCx] = nJudge;
 		(nJudge == 9) ? gLot.nGoodCount[nPx]++ : gLot.nNgCount[nPx]++;
 
 		CString strLog;
-		strLog.Format("ResultTest_Use : Info(%d),PortNo(%d),TrayNo(%d),CmNo(%d)", nInfo, nPNo, nTNo, nCNo);
-		if (m_pEquipData->bResultTestUse) g_objLogFile.Save_TestLog(strLog);
+		strLog.Format("ResultTest_Use : Info(%d),PortNo(%d),TrayNo(%d),CmNo(%d)", nJudge, nPNo, nTNo, nCNo);
+		if (m_pEquipData->bResultTestUse) g_objLogFile.Save_SeqLog(strLog); //g_objLogFile.Save_TestLog(strLog);
 
 	} 
 	else
@@ -947,8 +947,8 @@ BOOL CSequenceMain::Select_AssyPickerNgPos(int &nPos)
 BOOL CSequenceMain::Select_UnloadPickerPos(int &nPos, int &nCnt)
 {
 	nPos = -1; nCnt = 0;
-	for (int i = 0; i < PICK; i++) { if (gData.InfoUnloadPick[i] > 0) { nPos = i; break; } }
-	for (int j = nPos; j < PICK; j++) { if (gData.InfoUnloadPick[j] == 0) break; nCnt++; }
+	for (int i = 0; i < PICK; i++) { if (gData.InfoUnloadPick[i] == 1) { nPos = i; break; } }
+	for (int j = nPos; j < PICK; j++) { if (gData.InfoUnloadPick[j] != 1) break; nCnt++; }
 	if (nPos == -1 || nCnt == 0) return FALSE;
 	return TRUE;
 }
@@ -4635,7 +4635,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 	static double dSpPickX = 0.0, dSpStageY = 0.0;
 	static int nSpPickMove = 0;
 
-
+	
 	switch (m_nUnloadPickCase) 
 	{
 	case 0:		// Trans Stage Check
@@ -4685,6 +4685,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 1);
 			g_objCommon.Set_InfoUnloadPickerDown();
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}		
 		break;
@@ -4695,6 +4697,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			m_tUnloadPickLoop.Takt_Start();
 			g_objCommon.Set_TransStageClampOff();
 			g_objCommon.Set_TransStageVacOff(0);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4718,6 +4722,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			gData.nLNoUnloadPicker = gData.nCNoUnloadPick[0] / PICK;
 
 			g_objCommon.Set_InfoUnloadPickerVacOn();
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4733,6 +4739,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);
 			g_objCommon.Set_TransStageAirOff(0);
 			
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);		
 		}
 		break;
@@ -4746,12 +4753,16 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			if (m_nUnloadStage1Case == 20 || m_nUnloadStage2Case == 20) 
 			{
 				//m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
-				m_nUnloadPickCase = 7; m_tUnloadPickLoop.Set_LoopTime(5000);
+
+				m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
 			} 
 			else
 			{	// Unload Stage 대기위치에 없으면 언로드 대기 위치로 이동.
 				g_objCommon.Move_Position(AX_UNLOAD_PICKER_X, 1);
 				g_objCommon.Move_Position(AX_UNLOAD_PICKER_P, 1);
+
+				m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 			}	
 		}
@@ -4763,12 +4774,15 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 1) && g_objCommon.Check_Position(AX_UNLOAD_PICKER_P, 1)) 
 		{
 			m_tUnloadPickLoop.Takt_Save(13, 4);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 
 	case 10:	// 검사완료 대기 및 판정
-		for (int i = 0; i < PICK; i++) {
+		for (int i = 0; i < PICK; i++)
+		{
 			if (Check_InspectDone(gData.nPNoUnloadPick, gData.nTNoUnloadPick[i], gData.nCNoUnloadPick[i], gData.InfoUnloadPick[i])) continue;
 			bInspectFail = TRUE; break;
 		}
@@ -4783,13 +4797,16 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				(gData.InfoUnloadPick[i] == 1) ? gLot.nGoodCount[gData.nPNoUnloadPick-1]++ : gLot.nNgCount[gData.nPNoUnloadPick-1]++;
 			}
 		}
-		m_nUnloadPickCase = 8; m_tUnloadPickLoop.Set_LoopTime(5000);
+
+		m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+		m_nUnloadPickCase = 15; m_tUnloadPickLoop.Set_LoopTime(5000);
 		break;
 
 	case 15:	// Picker 정보 확인 & X 축 이동
 		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0) && g_objCommon.Get_UnloadPickerUp(0)) {
-			if		(Exist_ShipPickerOk()) 
+			if	(Exist_ShipPickerOk()) 
 			{ 
+				m_strLog.Format("Seq,14,UnloadPicker,%d,Picker gripping Good ", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase = 20; m_tUnloadPickLoop.Set_LoopTime(5000); 
 			}
 			else if (Exist_ShipPickerNg())
@@ -4798,6 +4815,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				{
 					if (m_nUnloadStage1Case == 20) { g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2); m_nUnloadStage1Case = 39; m_tUnloadStage1Loop.Set_LoopTime(10000); }
 					if (m_nUnloadStage2Case == 20) { g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2); m_nUnloadStage2Case = 39; m_tUnloadStage2Loop.Set_LoopTime(10000); }
+					
+					m_strLog.Format("Seq,14,UnloadPicker,%d,Picker gripping NG", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 					m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(5000);
 				}
 			}
@@ -4850,6 +4869,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			if (m_nUnloadStage2Case == 20) { nUpWorkTray = 2; dUpY = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE2_Y); }
 			dUpX = g_objAJinAXL.Get_Position(AX_UNLOAD_PICKER_X);
 
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4860,8 +4880,10 @@ BOOL CSequenceMain::UnloadPicker_Run()
 		{
 			if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) break;
 
-			if (Select_UnloadPickerPos(nUpStart, nUpPickCnt)) {
-				if (Select_UnloadTrayPos(nUpPosX, nUpPosY)){
+			if (Select_UnloadPickerPos(nUpStart, nUpPickCnt)) 
+			{
+				if (Select_UnloadTrayPos(nUpPosX, nUpPosY))
+				{
 					m_tUnloadPickLoop.Takt_Start();
 
 					nUpTrayCnt = ST_X - nUpPosX;
@@ -4877,6 +4899,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_P, 1);
 
+					m_strLog.Format("Seq,14,UnloadPicker,%d,PickerX and StgY Start to Move", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 					m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 				}
 			}
@@ -4886,18 +4909,24 @@ BOOL CSequenceMain::UnloadPicker_Run()
 		if (((nUpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_UNLOAD_STAGE1_Y, dUpY)) ||
 			(nUpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_UNLOAD_STAGE2_Y, dUpY))) &&
 			g_objAJinAXL.Is_MoveDone(AX_UNLOAD_PICKER_X, dUpX) && g_objCommon.Check_Position(AX_UNLOAD_PICKER_P, 1) &&
-			g_objCommon.Get_InfoUnloadPickerCapCheck()) {
+			g_objCommon.Get_InfoUnloadPickerCapCheck()) 
+		{
 			m_tUnloadPickLoop.Takt_Save(13, 5);
 			m_tUnloadPickLoop.Takt_Start();
 
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1);
 			g_objCommon.Set_UnloadPickerDownMulti(nUpStart+1, nUpDownSu);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,PickerX done and Start Down", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 23:	// Vac Off
-		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1) && g_objCommon.Get_UnloadPickerDownMulti(nUpStart+1, nUpDownSu)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1) && g_objCommon.Get_UnloadPickerDownMulti(nUpStart+1, nUpDownSu)) 
+		{
 			g_objCommon.Set_UnloadPickerVacOffMulti(nUpStart+1, nUpDownSu);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
@@ -4906,7 +4935,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			if (!m_tUnloadPickLoop.Waiting_Time(m_pEquipData->nVacOffDelay[2])) break;
 
 			gData.nULPNo = gData.nPNoUnloadPick;
-			for (int i = 0; i < nUpDownSu; i++) {
+			for (int i = 0; i < nUpDownSu; i++) 
+			{
 				//모듈트랙킹
 				int nPNo = gData.nPNoUnloadPick - 1;
 				int nTNo = gData.nTNoUnloadPick[nUpStart+i] - 1;
@@ -4927,11 +4957,14 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 			g_objCommon.Set_UnloadPickerAirOffMulti(nUpStart+1, nUpDownSu);
 			g_objCommon.Set_UnloadPickerUp(0);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,Put Good Done", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 25:	// Position Check, Unload Tray Full Check
-		if (g_objCommon.Get_UnloadPickerUp(0) && g_objCommon.Get_InfoUnloadPickerVacOff()) {
+		if (g_objCommon.Get_UnloadPickerUp(0) && g_objCommon.Get_InfoUnloadPickerVacOff()) 
+		{
 			m_tUnloadPickLoop.Takt_Save(13, 6);
 			m_tUnloadPickLoop.Takt_Start();
 			if (Check_UnloadPickerEmpty() || Check_UnloadTrayFull()) 
@@ -4998,36 +5031,43 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						m_nUnloadStage2Case = 21;
 					}
 				}
-
-				if (Check_UnloadPickerEmpty()) 
-				{
-					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
-					m_nUnloadPickCase = 51; m_tUnloadPickLoop.Set_LoopTime(10000);
-				}
-				else if(Exist_ShipPickerOk())
-				{
-					m_nUnloadPickCase = 20; m_tUnloadPickLoop.Set_LoopTime(10000);
-				}
-				else if(Exist_ShipPickerNg())
-				{
-					if ((m_nUnloadStage1Case == 20 && m_nUnloadStage2Case == 10) || (m_nUnloadStage2Case == 20 && m_nUnloadStage1Case == 10))
-					{
-						if (m_nUnloadStage1Case == 20 && m_nUnloadStage2Case == 10) { nUpWorkTray = 2; m_nUnloadStage1Case = 38; }
-						if (m_nUnloadStage2Case == 20 && m_nUnloadStage1Case == 10) { nUpWorkTray = 1; m_nUnloadStage2Case = 38; }
-						g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1);	// Stage Down
-						m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(5000);
-					}
-				}
 			} 
-			else
+
+			if (Check_UnloadPickerEmpty()) 
+			{
+				g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
+
+				m_strLog.Format("Seq,14,UnloadPicker,%d,Return to Get CM from Index", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nUnloadPickCase = 51; m_tUnloadPickLoop.Set_LoopTime(10000);
+			}
+			else if(Exist_ShipPickerOk())
+			{
+				m_strLog.Format("Seq,14,UnloadPicker,%d,Picker have GOOD left", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nUnloadPickCase = 20; m_tUnloadPickLoop.Set_LoopTime(10000);
+			}
+			else if(Exist_ShipPickerNg())
+			{
+				if ((m_nUnloadStage1Case == 20 && m_nUnloadStage2Case == 10) || (m_nUnloadStage2Case == 20 && m_nUnloadStage1Case == 10))
+				{
+					if (m_nUnloadStage1Case == 20 && m_nUnloadStage2Case == 10) { nUpWorkTray = 2; m_nUnloadStage1Case = 38; }
+					if (m_nUnloadStage2Case == 20 && m_nUnloadStage1Case == 10) { nUpWorkTray = 1; m_nUnloadStage2Case = 38; }
+					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1);	// Stage Down
+
+					m_strLog.Format("Seq,14,UnloadPicker,%d,Picker have NG left", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+					m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(5000);
+				}
+			}
+			
+			/*else
 			{
 				m_nUnloadPickCase = 20; m_tUnloadPickLoop.Set_LoopTime(30000);
-			}
+			}*/
 		}
 		break;
 		// NG Tray
 	case 30:	// Wait for Stage Ready
-		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0) || g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0) || g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1)) 
+		{
 			if (!g_objCommon.Get_UnloadPickerUp(0)) break;
 			if (!g_objCommon.Get_InfoUnloadPickerVacOn()) break;
 
@@ -5062,6 +5102,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				if (nUpWorkTray == 2) dSpStageY = m_pMoveData->dUnloadStage2Y[1] + nUpPosY * m_pEquipData->dShipTrayPitchY;
 				if (nUpWorkTray == 1) g_objAJinAXL.Move_Absolute(AX_UNLOAD_STAGE1_Y, dSpStageY);
 				if (nUpWorkTray == 2) g_objAJinAXL.Move_Absolute(AX_UNLOAD_STAGE2_Y, dSpStageY);
+
+				m_strLog.Format("Seq,14,UnloadPicker,%d,PickerX and StgY started to move to put NG", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 			}
 		}
@@ -5076,6 +5118,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 					
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1);
 					g_objCommon.Set_UnloadPickerDownMulti(nUpStart+1, nUpDownSu);
+
+					m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 					m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 			}
 		}
@@ -5109,12 +5153,14 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			g_dlgWork.PostMessage(UM_UPDATE_TRAY_INFO, 4, NULL);	// NG Tray
 			//g_dlgWork.PostMessage(UM_UPDATE_RESULT, gData.nPNoShipStg[nSpWorkStg-1], NULL);
 
+			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 34:	// Picker Up
-		if (g_objCommon.Get_InfoUnloadPickerVacOff()) {
-			if (!m_tUnloadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[6])) break;	// Ship Picker Vac Off
+		if (g_objCommon.Get_InfoUnloadPickerVacOff()) 
+		{
+			if (!m_tUnloadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[5])) break;	// Ship Picker Vac Off
 
 			g_objCommon.Set_UnloadPickerAirOffMulti(nUpStart+1, nUpDownSu);
 			g_objCommon.Set_UnloadPickerUp(0);
@@ -5124,6 +5170,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);  // UPH 개선 (2025.06.17)
 			}	
 			
+			m_strLog.Format("Seq,14,UnloadPicker,%d,Put NG Done", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -5137,34 +5184,93 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 				if (Check_UnloadLotEnd(nPx+1) && !m_bUnloadLotEnd) {
 					if (m_pEquipData->bUseInlineMode) {
-						if (gData.nTNoUnloadTray == gData.nTrayUseCount[nPx]) {
-							if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
-							if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
+						if (gData.nTNoUnloadTray == gData.nTrayUseCount[nPx]) 
+						{
+							if ( m_nUnloadStage1Case <= 10) 
+							{ 
+								if (m_nUnloadStage2Case != 40) return TRUE;
+
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+								m_nUnloadStage2Case = 22;
+								m_nUnloadStage1Case = 21; 
+							}
+							if ( m_nUnloadStage2Case <= 10)
+							{ 
+								if (m_nUnloadStage1Case != 40) return TRUE;
+
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+								m_nUnloadStage1Case = 22; 
+								m_nUnloadStage2Case = 21;
+							}
 							m_bUnloadLotEnd = TRUE;
 						}
 					} else {
-						if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
-						if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
+						if (m_nUnloadStage1Case <= 10) 
+						{ 
+							if (m_nUnloadStage2Case != 40) return TRUE;
+
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+							m_nUnloadStage2Case = 22; 
+							m_nUnloadStage1Case = 21; 
+						}
+						if (m_nUnloadStage2Case <= 10) 
+						{ 
+							if (m_nUnloadStage1Case != 40) return TRUE;
+
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+							m_nUnloadStage1Case = 22;
+							m_nUnloadStage2Case = 21; 
+						}
 						m_bUnloadLotEnd = TRUE;
 						if (Check_UnloadLotEnd() && !m_bUnloadLotEnd) m_bUnloadLotEnd = TRUE;
 					}
 				}
 
-				if (Check_NgTrayFull() && m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; m_nUnloadStage2Case = 22; m_nUnloadStage1Case = 21; }
-				if (Check_NgTrayFull() && m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; m_nUnloadStage1Case = 22; m_nUnloadStage2Case = 21; }
+				if (Check_NgTrayFull() && m_nUnloadStage1Case <= 10) 
+				{ 
+					if (m_nUnloadStage2Case != 40) return TRUE; 
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+					m_nUnloadStage2Case = 22; 
+					m_nUnloadStage1Case = 21; 
+				}
+				if (Check_NgTrayFull() && m_nUnloadStage2Case <= 10)
+				{ 
+					if (m_nUnloadStage1Case != 40) return TRUE;
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+					m_nUnloadStage1Case = 22; 
+					m_nUnloadStage2Case = 21;
+				}
 			}
 
-			if		(Exist_ShipPickerNg()) // 다시
+			if(Exist_ShipPickerNg()) // 다시
 			{ 
+				m_strLog.Format("Seq,14,UnloadPicker,%d,Picker have NG left", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(10000); 
 			}	
 			else if (Check_UnloadPickerEmpty()) // 복귀
 			{		
-				if (m_nUnloadStage1Case == 10 || m_nUnloadStage2Case == 10) 
+				if ((m_nUnloadStage1Case <= 10) || (m_nUnloadStage2Case <= 10)) 
 				{
-					if (m_nUnloadStage1Case == 10) { if (m_nUnloadStage2Case != 40) return TRUE; g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 0); m_nUnloadStage2Case = 18; }	// Stage1 Load, Stage2 Work
-					if (m_nUnloadStage2Case == 10) { if (m_nUnloadStage1Case != 40) return TRUE; g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 0); m_nUnloadStage1Case = 18; }	// Stage2 Load, Stage1 Work
+					if (m_nUnloadStage1Case <= 10)  // Stage1 Load, Stage2 Work
+					{ 
+						if (m_nUnloadStage2Case != 40) return TRUE;
+						g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 0);
+						m_nUnloadStage2Case = 18;
+					}	
+					if ((m_nUnloadStage2Case <= 10))  // Stage2 Load, Stage1 Work
+					{ 
+						if (m_nUnloadStage1Case != 40) return TRUE;
+						g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 0);
+						m_nUnloadStage1Case = 18;
+					}	
 				}
+				m_strLog.Format("Seq,14,UnloadPicker,%d,Picker have nothing", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase = 51; m_tUnloadPickLoop.Set_LoopTime(10000);
 			}
 		}
@@ -5178,12 +5284,16 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			m_tUnloadPickLoop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_X, 0);
 			g_objCommon.Move_Position(AX_UNLOAD_PICKER_P, 0);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,Return", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 52:	// Position Check
 		if (g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 0) && g_objCommon.Check_Position(AX_UNLOAD_PICKER_P, 0)) {
 			m_tUnloadPickLoop.Takt_Save(13, 8);
+
+			m_strLog.Format("Seq,14,UnloadPicker,%d,Return", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase = 0; m_tUnloadPickLoop.Set_LoopTime(10000);
 
 			m_strLog.Format("UnloadPicker, %d", GetTickCount() - m_dwUnloadPick);
@@ -5224,6 +5334,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			&& m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
 			m_dwUnloadStage1 = GetTickCount();
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		else
@@ -5329,12 +5440,15 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if(g_objCommon.Get_UnloadStageMasterSlaveIn(1))
 		{
 			m_bShipStg1Ng = FALSE;
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Move to wait position", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case = 10; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 10:	// 안전 확인 
 		if (m_nUnloadStage2Case > 22 && m_nUnloadStage2Case < 30 || m_nUnloadStage2Case >= 50) 
-		{ 			
+		{ 	
+			m_strLog.Format("Seq,15,ULStg1,%d,wait Done", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); 
 		}
 		return TRUE;
@@ -5363,6 +5477,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 
 			if (m_bShipStg1Ng) 
 			{
+				m_strLog.Format("Seq,15,ULStg1,%d,Let ShipTray pass to use for NG Tray", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage1Case = 21; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			} 
 			else
@@ -5370,6 +5485,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 				Init_UnloadTray();
 				gData.nShipTrayLoad++;
 				threshold = 0;
+
+				m_strLog.Format("Seq,15,ULStg1,%d,Initial ShipTray", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage1Case = 14; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			}			
 		}
@@ -5380,6 +5497,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			threshold++;
 			if(threshold > 10) 
 			{
+				m_strLog.Format("Seq,15,ULStg1,%d,Sensor Check at Work Position", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			}
 		}
@@ -5419,8 +5537,11 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		break;
 		// NG 모듈 완료 후 이동 (복귀)
 	case 18:	// Y Move to Work Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
+		{
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);	// Work Pos
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Back to Work Pos after NG Unload Done", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5442,6 +5563,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 				m_bShipStg1Ng = FALSE;
 				// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
+
+				m_strLog.Format("Seq,15,ULStg1,%d,Work Done and Move Down", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			}
 		}
@@ -5451,7 +5574,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		{
 			m_tUnloadStage1Loop.Takt_Save(14, 14);
 			m_tUnloadStage1Loop.Takt_Start();
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2); //unload 
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5546,11 +5669,17 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
 		{
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);	// Unload Pos
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Avoid for NG unload", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 39:	// Check Y Unload Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 2)) { m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); }
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 2)) 
+		{ 
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
+			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000); 
+		}
 		break;
 	case 40:	// Wait for Stage2 Done
 		return TRUE;
@@ -5560,6 +5689,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) &&
 			((!m_bUnloadLotEnd && m_nUnloadStage2Case >= 20) || (m_bUnloadLotEnd && m_nUnloadStage2Case > 20)))
 		{
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);	// Lot 종료 시점이더라도 잔량있는 트레이 배출할 수 있게 해준다.
 		}
 		return TRUE;
@@ -5570,6 +5700,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 0)) break;	// 인터락
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 0);
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5579,6 +5711,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			if (m_nUnloadStage2Case >= 20) 
 			{
 				m_tUnloadStage1Loop.Takt_Save(14, 15);
+
+				m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 			}
 			return TRUE;
@@ -5588,12 +5722,16 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0)) {
 			m_tUnloadStage1Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 54:	// Position Check
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1)) {
 			m_tUnloadStage1Loop.Takt_Save(14, 16);
+
+			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case = 1; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5629,8 +5767,12 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
 			m_dwUnloadStage2 = GetTickCount();
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
-		} else {
+		} 
+		else
+		{
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
 		break;
@@ -5639,14 +5781,23 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			g_objCommon.Get_UnloadStageMasterSlaveOut(2) && !m_pDX05->iUnloadStage2Exist  &&
 			m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
-			if (gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipTrayMax) {	// Ship Count 확인
+			if (gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipTrayMax)
+			{	// Ship Count 확인
+
+				m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case = 15; m_tUnloadStage2Loop.Set_LoopTime(5000);
-			} else {
+			}
+			else
+			{
 				m_tUnloadStage2Loop.Takt_Start();
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);
+
+				m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			}
-		} else {
+		} 
+		else 
+		{
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
 		break;
@@ -5656,6 +5807,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_tUnloadStage2Loop.Takt_Start();
 			m_pDY05->oUnloadStage2MasterIn = TRUE;
 			g_objAJinAXL.Write_Output(5);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5731,12 +5884,15 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Get_UnloadStageMasterSlaveIn(2) ) 
 		{ 	
 			m_bShipStg2Ng = FALSE;
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case = 10; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
 		break;
 	case 10:	// 안전 확인 
 		if (m_nUnloadStage1Case > 22 && m_nUnloadStage1Case < 30 || m_nUnloadStage1Case >= 50 ) 
 		{ 				
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
 		return TRUE;
@@ -5761,7 +5917,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && m_pDX05->iUnloadStage2Exist ) {
 			m_tUnloadStage2Loop.Takt_Save(15, 5);
 
-			if (m_bShipStg2Ng) {
+			if (m_bShipStg2Ng) 
+			{
+				m_strLog.Format("Seq,16,ULStg2,%d,Let ShipTray pass to use for NG Tray", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case = 21; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			} 
 			else
@@ -5769,6 +5927,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 				Init_UnloadTray();
 				gData.nShipTrayLoad++;
 				threshold = 0;
+
+				m_strLog.Format("Seq,16,ULStg2,%d,Initial ShipTray", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case = 14; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			}
 			
@@ -5780,6 +5940,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			threshold++;
 			if(threshold > 20) 
 			{
+				m_strLog.Format("Seq,16,ULStg2,%d,Sensor Check at Work Position", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			}
 		}
@@ -5820,8 +5981,11 @@ BOOL CSequenceMain::UnloadStage2_Run()
 
 		// NG 모듈 완료 후 이동 (복귀)
 	case 18:	// Y Move to Work Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
+		{
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);	// Work Pos
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Back to Work Pos after NG Unload Done", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5841,6 +6005,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 				m_bShipStg2Ng = FALSE;
 				// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
+
+				m_strLog.Format("Seq,16,ULStg2,%d,Work Done and Move Down", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			}
 		}
@@ -5885,6 +6051,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_tUnloadStage2Loop.Takt_Save(15, 11);
 			m_tUnloadStage2Loop.Takt_Start();
 			g_objCommon.Set_UnloadPortSupportIn(2);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5894,6 +6062,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_tUnloadStage2Loop.Takt_Start();
 			m_pDY05->oUnloadStage2SlaveIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5901,6 +6071,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (!m_pDX05->iUnloadStage2SlaveIn && m_pDX05->iUnloadStage2SlaveOut) {
 			m_pDY05->oUnloadStage2MasterIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5908,7 +6080,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Get_UnloadStageMasterSlaveOut(2)) {
 			m_tUnloadStage2Loop.Takt_Save(15, 13);
 			m_tUnloadStage2Loop.Takt_Start();
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down				
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down	
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5944,11 +6118,17 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) && g_objCommon.Get_UnloadPickerUp(0)) 
 		{
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);	// Unload Pos
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Avoid for NG unload", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 39:	// Check Y Unload Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 2)) { m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); }
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 2)) 
+		{ 
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
+			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
+		}
 		break;
 	case 40:	// Wait for Stage2 Done
 		return TRUE;
@@ -5958,6 +6138,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) &&
 			((!m_bUnloadLotEnd && m_nUnloadStage1Case >= 20) || (m_bUnloadLotEnd && m_nUnloadStage1Case > 20)))
 		{
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);	// Lot 종료 시점이더라도 잔량있는 트레이 배출할 수 있게 해준다.
 		}
 		return TRUE;
@@ -5967,6 +6148,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0)) break;	// 인터락
 			m_tUnloadStage2Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 0);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5974,6 +6157,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 0)) {
 			if (m_nUnloadStage1Case >= 20) {
 				m_tUnloadStage2Loop.Takt_Save(15, 15);
+
+				m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 			}
 			return TRUE;
@@ -5983,12 +6168,16 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 0)) {
 			m_tUnloadStage2Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 54:	// Position Check
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1)) {
 			m_tUnloadStage2Loop.Takt_Save(15, 16);
+
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case = 1; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;

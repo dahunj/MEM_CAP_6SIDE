@@ -18,9 +18,7 @@ typedef struct tag_EQUIP_DATA {
 	BOOL	bUseMES;
 	BOOL	bUseInlineMode;
 	BOOL	bUseVisionCapDir;
-
 	
-
 	BOOL	bUseTrayPickerTurn;
 	BOOL	bUseCapPickerTurn;
 	BOOL	bChkAssyPickerTilt;

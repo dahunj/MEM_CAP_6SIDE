@@ -37,7 +37,7 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_GROUP_0 + i, m_Group[i]);
-	for (int i = 0; i < 3; i++) DDX_Control(pDX, IDC_LABEL_0 + i, m_Label[i]);
+	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_LABEL_0 + i, m_Label[i]);
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_GRP_LOT_0 + i, m_grpLot[i]);
 	for (int i = 0; i < 6; i++) DDX_Control(pDX, IDC_LBL_LOT_0 + i, m_lblLot[i]);
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_STC_LOT_ID_0 + i, m_stcLotId[i]);
@@ -88,15 +88,17 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LED_LOT_LOAD_ENABLE, m_ledLotLoadEnable);
 	DDX_Control(pDX, IDC_CHK_CYCLE_STOP, m_chkCycleStop);
 	DDX_Control(pDX, IDC_CHK_MES_USE, m_chkMesUse);
-	for (int i = 0; i < 3; i++) DDX_Control(pDX, IDC_PIC_TRAY_BACK_0 + i, m_picTrayBack[i]);
+	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_PIC_TRAY_BACK_0 + i, m_picTrayBack[i]);
 
 	DDX_Control(pDX, IDC_STC_LOAD_TRAY_COUNT, m_stcLoadTrayCount);
 	DDX_Control(pDX, IDC_STC_CAP_TRAY_COUNT, m_stcCapTrayCount);
 	DDX_Control(pDX, IDC_STC_SHIP_TRAY_COUNT, m_stcShipTrayCount);
+	DDX_Control(pDX, IDC_STC_SHIP_TRAY_COUNT_NG, m_stcNGTrayCount);
 
 	DDX_Control(pDX, IDC_GRD_LOAD_TRAY, m_grdLoadTray);
 	DDX_Control(pDX, IDC_GRD_CAP_TRAY, m_grdCapTray);
 	DDX_Control(pDX, IDC_GRD_SHIP_TRAY , m_grdShipTray);
+	DDX_Control(pDX, IDC_GRD_SHIP_TRAY_NG , m_grdNGTray);
 
 	for (int i = 0; i < 16; i++) DDX_Control(pDX, IDC_STC_WORK_CASE_0 + i, m_stcWorkCase[i]);
 	for (int i = 0; i < 12; i++) DDX_Control(pDX, IDC_STC_PORT_NO_0 + i, m_stcPortNo[i]);
@@ -171,7 +173,7 @@ void CWorkDlg::Initial_Controls()
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
 	for (int i = 0; i < 10; i++) m_Group[i].Init_Ctrl("¹ÙÅÁ", 12, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
-	for (int i = 0; i < 3; i++) m_Label[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x80, 0x80, 0x80));
+	for (int i = 0; i < 4; i++) m_Label[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x80, 0x80, 0x80));
 
 	for (int i = 0; i < 2; i++) m_grpLot[i].Init_Ctrl("¹ÙÅÁ", 12, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
 	for (int i = 0; i < 3; i++) m_lblLot[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x20, 0x20, 0x80));
@@ -217,13 +219,17 @@ void CWorkDlg::Initial_Controls()
 	m_ledLotLoadEnable.Init_Ctrl("¹ÙÅÁ", 10, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	m_chkCycleStop.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	m_chkMesUse.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
-	for (int i = 0; i < 3; i++) m_picTrayBack[i].Set_Color(COLOR_DEFAULT, RGB(0xF0, 0xF0, 0x80));
+	for (int i = 0; i < 4; i++) m_picTrayBack[i].Set_Color(COLOR_DEFAULT, RGB(0xF0, 0xF0, 0x80));
+	
 	m_stcLoadTrayCount.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
 	m_stcCapTrayCount.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
 	m_stcShipTrayCount.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
+	m_stcNGTrayCount.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
+
 	Initial_Grid(&m_grdLoadTray, LT_Y, LT_X);
 	Initial_Grid(&m_grdCapTray, CT_Y, CT_X);
 	Initial_Grid(&m_grdShipTray, ST_Y, ST_X);
+	Initial_Grid(&m_grdNGTray, ST_Y, ST_X);
 	for (int i = 0; i < 16; i++) m_stcWorkCase[i].Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
 	for (int i = 0; i < 12; i++) m_stcPortNo[i].Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
 	for (int i = 0; i < 4; i++) m_stcTakt[i].Init_Ctrl("Arial", 9, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
@@ -1509,16 +1515,37 @@ LRESULT CWorkDlg::OnUpdateTrayInfo(WPARAM nTray, LPARAM lParam)
 		g_dlgOperator.Update_TrayInfo(nTray, nNo);
 	}
 
-	if (nTray == 0 || nTray == 3) {		// Unload Tray
+	
+
+	if (nTray == 0 || nTray == 3) {		// NG Tray
 		strText.Format("%d", gData.nTNoUnloadTray);
 		m_stcShipTrayCount.SetWindowText(strText);
-		
+
 		for (int i = 0; i < gData.STY; i++) {
 			for (int j = 0; j < ST_X; j++) {
 				if		(gData.InfoShipTray[i][j] >  1) m_grdShipTray.Set_CellBackClr(i, j, RGB(0x70, 0x70, 0x70));	// Not Use
 				else if	(gData.InfoShipTray[i][j] == 1) m_grdShipTray.Set_CellBackClr(i, j, RGB(0x00, 0xFF, 0x00));	// Good
 				else if (gData.InfoShipTray[i][j] == 0) m_grdShipTray.Set_CellBackClr(i, j, RGB(0xFF, 0xFF, 0xFF));	// Empty
 				else									m_grdShipTray.Set_CellBackClr(i, j, RGB(0x80, 0x80, 0x80));	// Error
+			}
+		}
+		g_dlgOperator.Update_TrayInfo(nTray, nNo);
+	}
+
+
+	if (nTray == 0 || nTray == 4)  // Unload Tray
+	{		
+		strText.Format("%d", gData.nTNoUnloadTray);
+		m_stcNGTrayCount.SetWindowText(strText);
+
+		for (int i = 0; i < gData.STY; i++) 
+		{
+			for (int j = 0; j < ST_X; j++)
+			{
+				if		(gData.InfoNgTray[i][j] >  1) m_grdNGTray.Set_CellBackClr(i, j, RGB(0x70, 0x70, 0x70));	// Not Use
+				else if	(gData.InfoNgTray[i][j] == 1) m_grdNGTray.Set_CellBackClr(i, j, RGB(0x00, 0xFF, 0x00));	// Good
+				else if (gData.InfoNgTray[i][j] == 0) m_grdNGTray.Set_CellBackClr(i, j, RGB(0xFF, 0xFF, 0xFF));	// Empty
+				else									m_grdNGTray.Set_CellBackClr(i, j, RGB(0x80, 0x80, 0x80));	// Error
 			}
 		}
 		g_dlgOperator.Update_TrayInfo(nTray, nNo);

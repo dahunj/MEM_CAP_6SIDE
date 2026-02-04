@@ -386,3 +386,9 @@ extern GLOVAL_UPH	gUph;
 extern GLOVAL_MES	gMes;
 extern GLOBAL_DOORLOCK gDoorLock;
 extern GLOVAL_PART		gPart;
+
+
+#define UL_STG1_Z_MOVE_DOWN 0
+#define UL_STG1_Z_MOVE_UP 1
+
+#define UL_STG1_Y_WORK_POS 1
