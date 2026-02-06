@@ -5190,8 +5190,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							{ 
 								if (m_nUnloadStage2Case != 40) return TRUE;
 
-								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
-								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// Move Down
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// work
 								m_nUnloadStage2Case = 22;
 								m_nUnloadStage1Case = 21; 
 							}
@@ -5199,8 +5199,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							{ 
 								if (m_nUnloadStage1Case != 40) return TRUE;
 
-								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
-								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// Move Down
+								g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// work
 								m_nUnloadStage1Case = 22; 
 								m_nUnloadStage2Case = 21;
 							}
@@ -5211,8 +5211,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						{ 
 							if (m_nUnloadStage2Case != 40) return TRUE;
 
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// Move Down
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// work
 							m_nUnloadStage2Case = 22; 
 							m_nUnloadStage1Case = 21; 
 						}
@@ -5220,8 +5220,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						{ 
 							if (m_nUnloadStage1Case != 40) return TRUE;
 
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// Move Down
+							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// work
 							m_nUnloadStage1Case = 22;
 							m_nUnloadStage2Case = 21; 
 						}
@@ -5233,16 +5233,16 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				if (Check_NgTrayFull() && m_nUnloadStage1Case <= 10) 
 				{ 
 					if (m_nUnloadStage2Case != 40) return TRUE; 
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 0);	// Move Down
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 1);	// work
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// Move Down
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// work
 					m_nUnloadStage2Case = 22; 
 					m_nUnloadStage1Case = 21; 
 				}
 				if (Check_NgTrayFull() && m_nUnloadStage2Case <= 10)
 				{ 
 					if (m_nUnloadStage1Case != 40) return TRUE;
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 1);	// work
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// Move Down
+					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// work
 					m_nUnloadStage1Case = 22; 
 					m_nUnloadStage2Case = 21;
 				}
@@ -5898,7 +5898,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		return TRUE;
 
 	case 11:	// Y Move to Work Position
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 0) && m_pDX05->iUnloadStage2Exist) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP) && m_pDX05->iUnloadStage2Exist) {
 			m_tUnloadStage2Loop.Takt_Start();
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);	// Work Position
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
