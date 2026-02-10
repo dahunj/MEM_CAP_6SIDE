@@ -403,7 +403,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(0);
 	KillTimer(1);
-
+	
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
