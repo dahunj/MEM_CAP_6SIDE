@@ -412,15 +412,24 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		if (pEquipData->bUseVisionCmAlign) g_objInspector.Set_StatusRequest();
 	}
 	DX_DATA_12 *pDX12 = g_objAJinAXL.Get_pDX12();
-	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) {
+	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) 
+	{
 		g_objLogFile.Save_HandlerLog("[Work Mode] START S/W push");
 		m_rdoWorkStart.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("START", 903, "Start");
-	} else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) {
+		SetTimer(0, 100, NULL);
+		//SetTimer(1, 5000, NULL);
+		return;
+	} 
+	else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) 
+	{
 		g_objLogFile.Save_HandlerLog("[Work Mode] STOP S/W push");
 		MachineStopLog("STOP_BUTTON_PUSH");
 		m_rdoWorkStop.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");
+		SetTimer(0, 100, NULL);
+		//SetTimer(1, 5000, NULL);
+		return;
 	}
 
 	if (pDX12->iResetSw) g_objCommon.Show_Alarm("", STATE_ALARM, FALSE);	// Alarm Off
@@ -487,17 +496,20 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		}
 	}
 
-	int nMode = theApp.Get_MainMode();
-	if (nMode == MODE_OPERATOR || nMode == MODE_WORK)
-	{	
-		SetTimer(0, 100, NULL);
-		SetTimer(1, 5000, NULL);
-	}
-	else
-	{
-		KillTimer(0);
-		//KillTimer(1);
-	}
+	SetTimer(0, 100, NULL);
+	SetTimer(1, 5000, NULL);
+
+	//int nMode = theApp.Get_MainMode();
+	//if (nMode == MODE_OPERATOR || nMode == MODE_WORK)
+	//{	
+	//	SetTimer(0, 100, NULL);
+	//	SetTimer(1, 5000, NULL);
+	//}
+	//else
+	//{
+	//	KillTimer(0);
+	//	//KillTimer(1);
+	//}
 	CDialogEx::OnTimer(nIDEvent);
 }
 
