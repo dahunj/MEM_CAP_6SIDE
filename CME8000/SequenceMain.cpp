@@ -68,6 +68,10 @@ CSequenceMain::CSequenceMain()
 	 gData.bInspectCmThisLotVSkip = FALSE;
 	 gData.nInspectCmCheckTime = 0;
 
+	 gLot.nAlmCnt[0] = gLot.nAlmCnt[1] = 0;
+	 gLot.dwStopTime[0] = gLot.dwStopTime[1] = 0;
+	 gLot.dwFirstUnload[0] = gLot.dwFirstUnload[1] = 0;
+
 	Reset_MainRunCase();
 }
 
@@ -460,7 +464,8 @@ void CSequenceMain::Set_ClearRunData(int nType)
 	m_dwLastUnLoad = 0;
 
 	gLot.nErrorCount = 0;
-	gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime = 0;
+	gLot.dwRunTime = gLot.dwErrorTime =0;
+	gLot.dwStopTime[0] = gLot.dwStopTime[1] = 0;
 	gLot.bLotEndComplete[0] = FALSE;
 	gLot.bLotEndComplete[1] = FALSE;
 	gLot.nCapFailCount[0] = gLot.nCapFailCount[1] = 0;
@@ -1001,8 +1006,11 @@ void CSequenceMain::Job_LotStart(int nPortNo)
  	gLot.nErrorCount = 0;
  	if (gData.bFirstLotStart == TRUE) {
 		gData.bFirstLotStart = FALSE;
-		gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime = 0;
+		gLot.dwRunTime = gLot.dwErrorTime = 0;
 	}
+
+	gLot.dwStopTime[0] = 0;
+	gLot.dwStopTime[1] = 0;
 
 	g_dlgWork.PostMessage(UM_LOT_START_END, (WPARAM)1, nPortNo);	// LotStart
 }
@@ -1029,12 +1037,25 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	int nTrayCnt = gData.nLastTrayNo[nLPNo];
 	int nCmCnt = gLot.nCapCount[nLPNo];
 
-	DWORD dwTime = gLot.dwLotEnd[nLPNo] - gLot.dwLotStart[nLPNo];
-	gLot.dTackTime = dwTime / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
+
+	//Start to End
+	DWORD dwTime_StoE = gLot.dwLotEnd[nLPNo] - gLot.dwLotStart[nLPNo];
+	gLot.dTactTime_StoE = dwTime_StoE / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
 	m_dwLastUnLoad = gLot.dwLotEnd[nLPNo] - m_dwLastUnLoad;
 
+	//Runtime
+	DWORD dwTime_RunTime = gLot.dwLotEnd[nLPNo] - gLot.dwLotStart[nLPNo] - gLot.dwStopTime[nLPNo];
+	gLot.dTactTime_RunTime = dwTime_RunTime / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
+		
+	//Unload
+	DWORD dwTime_Unload = gLot.dwLotEnd[nLPNo] - gLot.dwLotStart[nLPNo] - gLot.dwStopTime[nLPNo];
+	gLot.dTactTime_Unload = dwTime_Unload / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
+
+	double dEff_RunTime = (double)dwTime_RunTime / (double)dwTime_StoE;
+	double dEff_UnloadTime = (double)dwTime_Unload / (double)dwTime_StoE;
+
 	m_strLog.Format("LotID,%s,Start_Time,%s,End_Time,%s,Time,%d,Tray_Count,%02d,CM_Count,%04d,Tack,%0.7lf",
-		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.dTackTime);
+		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_StoE, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.dTactTime_StoE);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 
 // 	double dOne = (double)(dwTime - m_dwFirstLoad - m_dwLastUnLoad) / (gLot.nCmCount[nLPNo] - 1);
@@ -1042,7 +1063,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 // 	g_objLogFile.Save_HandlerLog(m_strLog);
 	
 	m_strLog.Format("%s,%s,%s,%d,%02d,%04d,%0.7lf,%d",
-		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.dTackTime, gLot.nCapFailCount[nLPNo]);
+		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_RunTime, dwTime_Unload, gLot.dTactTime_StoE, gLot.dTactTime_RunTime, gLot.dTactTime_Unload,gLot.nAlmCnt[nLPNo], gLot.dwStopTime[nLPNo], dEff_RunTime, dEff_UnloadTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.nCapFailCount[nLPNo]);
 	g_objLogFile.Save_JobListLog(m_strLog, TRUE);
 
 	g_dlgWork.PostMessage(UM_LOT_START_END, (WPARAM)2, nPortNo);	// LotEnd
@@ -1050,7 +1071,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	// UPH & 생산량
 	//if (gLot.sLotID[nLPNo].GetLength() < 12) return;		// Lot ID
 
-	gUph.dTaktTime = gLot.dTackTime;
+	gUph.dTaktTime = gLot.dTactTime_RunTime;
 
 	if (time.wHour >= 7 && time.wHour < 19) gUph.nCmCount[0] += nCmCnt;	//gLot.nCmCount[nLPNo];
 	else gUph.nCmCount[1] += nCmCnt;	//gLot.nCmCount[nLPNo];
@@ -1059,7 +1080,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	int j = gUph.nLotCount[i];
 	if (j > 49) return;		// 1시간에 LOT 수량 MAX 50개
 
-	gUph.dTakt[i][j] = gLot.dTackTime;
+	gUph.dTakt[i][j] = gLot.dTactTime_RunTime;
 	gUph.nLotCount[i] = j + 1;
 
 	int nSum = nCmCnt;	//gLot.nCmCount[nLPNo]; //gLot.nGoodCount[nLPNo] + gLot.nNgCount[nLPNo];
@@ -1082,12 +1103,12 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 	pMainDlg->Set_LotStateTime();
 	strMsg.Format("%s,%s,%s,%0.3lf,%d,%0.3lf,%0.3lf,%0.3lf,%d,%0.2lf,%0.3lf,%0.3lf,%0.2lf",
-		gLot.sLotID[nLPNo], strStart, strEnd, gLot.dTackTime, nSum, (double)(gLot.dwRunTime) / 1000,
-		(double)(gLot.dwStopTime) / 1000, (double)(gLot.dwErrorTime) / 1000, gLot.nErrorCount, dRate, 3600 / gLot.dTackTime ,(double)(gLot.dwRunTime + gLot.dwErrorTime + gLot.dwStopTime) / gLot.nErrorCount);
+		gLot.sLotID[nLPNo], strStart, strEnd, gLot.dTactTime_RunTime, nSum, (double)(gLot.dwRunTime) / 1000,
+		(double)(gLot.dwStopTime[nLPNo]) / 1000, (double)(gLot.dwErrorTime) / 1000, gLot.nErrorCount, dRate, 3600 / gLot.dTactTime_RunTime ,(double)(gLot.dwRunTime + gLot.dwErrorTime + gLot.dwStopTime[nLPNo]) / gLot.nErrorCount);
 	g_objLogFile.Save_OperatingRatio(strMsg);
 
 	gData.dwRunTimeAccumulated += gLot.dwRunTime;
-	gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime = 0;
+	gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime[nLPNo] = 0;
 
 	g_objLogFile.Save_AverageCycle(nLPNo);
 	g_objLogFile.Save_LotLog(nPortNo);	//gjcs
@@ -3819,7 +3840,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) &&
 			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) 
 		{
-			if (Check_IndexModule()) {
+			if (Check_IndexModule()) 
+			{
 				m_dwAssyPick = GetTickCount();
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 			}
@@ -4563,17 +4585,24 @@ BOOL CSequenceMain::UnloadPicker_Run()
 		}
 		break;
 	case 3:		// 정보전달, Picker Vac On
-		if (g_objCommon.Get_TransStageClampOff()) {
+		if (g_objCommon.Get_TransStageClampOff()) 
+		{
 // 			if (!m_tUnloadPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[3])) break;
 			m_tUnloadPickLoop.Takt_Save(13, 2);
 			m_tUnloadPickLoop.Takt_Start();
 
-			for (int i = 0; i < PICK; i++) {
+			for (int i = 0; i < PICK; i++) 
+			{
 				gData.InfoUnloadPick[i] = gData.InfoTransStage[i]; gData.InfoTransStage[i] = 0;
 				gData.nTNoUnloadPick[i] = gData.nTNoTransStage[i]; gData.nTNoTransStage[i] = 0;
 				gData.nCNoUnloadPick[i] = gData.nCNoTransStage[i]; gData.nCNoTransStage[i] = 0;
 
 				gData.sCIDUnloadPicker[i] = gData.sCIDTransStage[i];
+
+				if(gData.InfoUnloadPick[i] > 0 && gData.nTNoUnloadPick[i] == 1 && gData.nCNoUnloadPick[i] == 1)
+				{
+					gLot.dwFirstUnload[gData.nPNoTransStage-1] = GetTickCount();
+				}
 			}
 			gData.nPNoUnloadPick = gData.nPNoTransStage; gData.nPNoTransStage = 0;
 			gData.nINoUnloadPicker = gData.nINoTransStage;

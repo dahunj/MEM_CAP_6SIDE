@@ -1075,7 +1075,12 @@ void CCME8000Dlg::Set_LotStateTime()
 		/*gLot.dwErrorTime += dwTime;	gLot.nErrorCount++; break;*/
 		break;
 	default:
-		if (!gAlm.bBegin) gLot.dwStopTime += dwTime; break;
+		if (!gAlm.bBegin) 
+		{
+			gLot.dwStopTime[0] += dwTime;
+			gLot.dwStopTime[1] += dwTime;
+			break;
+		}
 	}
 	m_dwSetTimer = GetTickCount();
 }
