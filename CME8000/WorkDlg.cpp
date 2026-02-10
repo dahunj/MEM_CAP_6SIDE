@@ -402,7 +402,8 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(0);
-	
+	KillTimer(1);
+
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
@@ -412,6 +413,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		if (pEquipData->bUseVisionCmAlign) g_objInspector.Set_StatusRequest();
 	}
 	DX_DATA_12 *pDX12 = g_objAJinAXL.Get_pDX12();
+	
 	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) 
 	{
 		g_objLogFile.Save_HandlerLog("[Work Mode] START S/W push");
