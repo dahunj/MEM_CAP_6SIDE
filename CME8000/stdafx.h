@@ -269,7 +269,6 @@ typedef struct {
 	DWORD	dwRunTimeNow;
 	DWORD	dwRunTimeAccumulated;
 
-
 	BOOL		bInspectCmThisLotVSkip; // 연속랏이어서 돌던거는 마저 돌고 다음랏부터 비전 시작 
 	int			nInspectCmCheckTime;
 	CString		sInspectCmLotIDPrevious;

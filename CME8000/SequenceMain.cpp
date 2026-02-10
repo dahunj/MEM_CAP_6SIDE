@@ -72,6 +72,9 @@ CSequenceMain::CSequenceMain()
 	 gLot.dwStopTime[0] = gLot.dwStopTime[1] = 0;
 	 gLot.dwFirstUnload[0] = gLot.dwFirstUnload[1] = 0;
 
+	 gLot.nAlmCnt[0] = 0;
+	 gLot.nAlmCnt[1] = 0;
+
 	Reset_MainRunCase();
 }
 
@@ -1048,7 +1051,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	gLot.dTactTime_RunTime = dwTime_RunTime / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
 		
 	//Unload
-	DWORD dwTime_Unload = gLot.dwLotEnd[nLPNo] - gLot.dwLotStart[nLPNo] - gLot.dwStopTime[nLPNo];
+	DWORD dwTime_Unload = gLot.dwLotEnd[nLPNo] - gLot.dwFirstUnload[nLPNo] - gLot.dwStopTime[nLPNo];
 	gLot.dTactTime_Unload = dwTime_Unload / 1000.0 / nCmCnt;	//gLot.nCmCount[nLPNo];	// Floating-point inexact result
 
 	double dEff_RunTime = (double)dwTime_RunTime / (double)dwTime_StoE;
@@ -1062,7 +1065,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 // 	m_strLog.Format("LotID(%s), Load(%0.3lf), Unload(%0.3lf), Takt as 600 EA Run(%0.6lf)", gLot.sLotID[nLPNo], (double)m_dwFirstLoad / 1000, (double)m_dwLastUnLoad / 1000, (dOne * 599 + m_dwFirstLoad + m_dwLastUnLoad) / 600000.0);
 // 	g_objLogFile.Save_HandlerLog(m_strLog);
 	
-	m_strLog.Format("%s,%s,%s,%d,%02d,%04d,%0.7lf,%d",
+	m_strLog.Format("%s,%s,%s,%d,%d,%0.3lf,%0.3lf,%0.3lf,%d,%d,%0.3lf,%0.3lf,%d,%d,%d",
 		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_RunTime, dwTime_Unload, gLot.dTactTime_StoE, gLot.dTactTime_RunTime, gLot.dTactTime_Unload,gLot.nAlmCnt[nLPNo], gLot.dwStopTime[nLPNo], dEff_RunTime, dEff_UnloadTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.nCapFailCount[nLPNo]);
 	g_objLogFile.Save_JobListLog(m_strLog, TRUE);
 
@@ -1109,6 +1112,9 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 
 	gData.dwRunTimeAccumulated += gLot.dwRunTime;
 	gLot.dwRunTime = gLot.dwErrorTime = gLot.dwStopTime[nLPNo] = 0;
+	gLot.dwFirstUnload[nLPNo] = 0;
+	gLot.nAlmCnt[nLPNo] = 0;
+
 
 	g_objLogFile.Save_AverageCycle(nLPNo);
 	g_objLogFile.Save_LotLog(nPortNo);	//gjcs
@@ -4599,7 +4605,8 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 				gData.sCIDUnloadPicker[i] = gData.sCIDTransStage[i];
 
-				if(gData.InfoUnloadPick[i] > 0 && gData.nTNoUnloadPick[i] == 1 && gData.nCNoUnloadPick[i] == 1)
+				if(gData.InfoUnloadPick[i] > 0 && gData.nTNoUnloadPick[i] == 1 && gLot.dwFirstUnload[gData.nPNoTransStage-1] == 0
+					&& ( gData.nCNoUnloadPick[i] == 1 || gData.nCNoUnloadPick[i] == 5 || gData.nCNoUnloadPick[i] == 9 ))
 				{
 					gLot.dwFirstUnload[gData.nPNoTransStage-1] = GetTickCount();
 				}

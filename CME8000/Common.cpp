@@ -200,7 +200,11 @@ void CCommon::Move_Position(int nAxis, int nMoveIdx)
 void CCommon::Show_Error(int nErrNo)
 {
 	g_csShowError.Lock();
-	if (!g_dlgError.IsWindowVisible() && !g_dlgAlarm.IsWindowVisible()) {
+	if (!g_dlgError.IsWindowVisible() && !g_dlgAlarm.IsWindowVisible()) 
+	{
+		gLot.nAlmCnt[0]++;
+		gLot.nAlmCnt[1]++;
+
 		g_dlgError.Set_ErrorNumber(nErrNo);
 		g_dlgError.ShowWindow(SW_SHOW);
 	}

@@ -232,7 +232,7 @@ void CLogFile::Save_JobListLog(CString sLog, BOOL bMode)
 	GetLocalTime(&time);
 
 	CString sTitle, strFile, strSave;
-	sTitle.Format("Time,lotNum,Start_Time,End_Time,Run_Time,Unload_Time,Tact(S-E),Tact(RunTime),Tact(Unload_Time),Alarm_Count,Stop_Time,Efficiency(RunTime), Efficiency(Unload),Tray_Count,CM_Count,Tack,Good_Count,NG_Count,NG1_Count,NG2_Count,MESNG_Count\r\n");
+	sTitle.Format("Time,lotNum,Start_Time,End_Time,Run_Time,Unload_Time,Tact(S-E),Tact(RunTime),Tact(Unload_Time),Alarm_Count,Stop_Time,Efficiency(RunTime), Efficiency(Unload),Tray_Count,CM_Count,Capfail_Count,\r\n");
 	strFile.Format("%s\\%04d%02d%02d_JobList.txt", strPath, time.wYear, time.wMonth, time.wDay);
 
 	CFile file;
