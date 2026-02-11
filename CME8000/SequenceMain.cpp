@@ -4902,7 +4902,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			if (m_nUnloadStage1Case == 20 || m_nUnloadStage2Case == 20) 
 			{
 				//m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
-
+				gData.dwInspectSkipTime = GetTickCount();
 				m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
 			} 
