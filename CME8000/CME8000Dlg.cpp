@@ -169,6 +169,9 @@ BOOL CCME8000Dlg::OnInitDialog()
 
 	gData.sInspectCmLotIDLater = "";
 	gData.sInspectCmLotIDPrevious = "";
+
+	Save_EquipCappingCnt();
+
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -940,6 +943,7 @@ void CCME8000Dlg::Exit_System(int nExitNo)
 	KillTimer(TIMER_EMPTY_LAMP_FLKR);
 	KillTimer(TIMER_DOOR_LOCK);
 
+	
 	Save_EquipCappingCnt();	// Capping한 수량 저장
 	g_objLogFile.Save_HandlerLog("[Main Dialog] Program Exit");
 	g_dlgWork.MachineStopLog("PROGRAM_EXIT");

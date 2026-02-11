@@ -69,6 +69,9 @@ CSequenceMain::CSequenceMain()
 	 gData.nInspectCmCheckTime = 0;
 
 	Reset_MainRunCase();
+
+	
+
 }
 
 CSequenceMain::~CSequenceMain()
@@ -3882,7 +3885,8 @@ BOOL CSequenceMain::CapBuffer_Run()
 		}
 		break;
 	case 3:		// Position Check
-		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 2)) {
+		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 2)) 
+		{
 			m_tCapBufferLoop.Takt_Save(10, 5);
 			m_nCapBufferCase = 10; m_tCapBufferLoop.Set_LoopTime(5000);
 		}
@@ -3892,20 +3896,22 @@ BOOL CSequenceMain::CapBuffer_Run()
 		return TRUE;
 
 	case 11:	// Cap Align In
-		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 2)) {
-			
+		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 2))
+		{			
 			m_nCapBufferCase++; m_tCapBufferLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 12:	// 안전확인, return
-		if (m_pDX09->iCapCleanerDown && !m_pDX09->iCapCleanerUp) {
+		if (m_pDX09->iCapCleanerDown && !m_pDX09->iCapCleanerUp) 
+		{
 			m_tCapBufferLoop.Takt_Start();
 			g_objCommon.Move_Position(AX_CAP_BUFFER_Y, 0);
 			m_nCapBufferCase++; m_tCapBufferLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 13:	// Position Check
-		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 0)) {
+		if (g_objCommon.Check_Position(AX_CAP_BUFFER_Y, 0)) 
+		{
 			m_tCapBufferLoop.Takt_Save(10, 6);
 			m_nCapBufferCase = 0; m_tCapBufferLoop.Set_LoopTime(5000);
 			m_strLog.Format("CapBuffer, %d", GetTickCount() - m_dwCapBuffer);
@@ -3943,8 +3949,22 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) &&
 			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) 
 		{
+			//Loadcell 측정 해야하는지 확인.
+			if (m_pEquipData->nLoadCellChkCnt != 0 && m_pEquipData->nCappingCnt >= m_pEquipData->nLoadCellChkCnt)
+			{
+				nApJobNo = 0;	// 측정하는 피커 시작 번호
+				dApY = m_pMoveData->dCapBufferY[3];
+				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);	// Load Cell Position	
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nAssyPickCase = 70; m_tAssyPickLoop.Set_LoopTime(10000);
+				break;
+			}
+
 			if (Check_IndexModule()) {
 				m_dwAssyPick = GetTickCount();
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 			}
 			else 
@@ -3956,11 +3976,14 @@ BOOL CSequenceMain::AssyPicker_Run()
 		break;
 	case 2:		// Z Move to Buffer Down, Picker Vac On
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) &&
-			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) {
+			g_objCommon.Get_AssyPickerUp(0) && m_pDX08->iAssyPickerTiltUp && !m_pDX08->iAssyPickerTiltDown) 
+		{
 			m_tAssyPickLoop.Takt_Start();
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 1);
 			g_objCommon.Set_InfoAssyPickerDown(0);
 			g_objCommon.Set_InfoAssyPickerVacOn();
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -3968,6 +3991,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 1) && g_objCommon.Get_InfoAssyPickerDown(0)) {
 			if (!m_tAssyPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[2])) break;
 			g_objCommon.Set_CapBufferAlign(FALSE);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -3984,37 +4009,33 @@ BOOL CSequenceMain::AssyPicker_Run()
 			}
 			g_objCommon.Set_AssyPickerUp(0);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 5:		// X/Y/Z Move to Inspection Position
-		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) && g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Get_InfoAssyPickerVacOn()) {
+		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) && g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Get_InfoAssyPickerVacOn()) 
+		{
 			m_tAssyPickLoop.Takt_Save(11, 1);
 			m_tAssyPickLoop.Takt_Start();
+			
+			g_objCommon.Move_Position(AX_ASSY_PICKER_X, 1);
+			g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 1);
+			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 2);
 
-			//Loadcell 측정 해야하는지 확인.
-			if (m_pEquipData->nLoadCellChkCnt != 0 && m_pEquipData->nCappingCnt >= m_pEquipData->nLoadCellChkCnt)
-			{
-				nApJobNo = 0;	// 측정하는 피커 시작 번호
-				dApY = m_pMoveData->dCapBufferY[3];
-				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);	// Load Cell Position	
-				m_nAssyPickCase = 70; m_tAssyPickLoop.Set_LoopTime(10000);
-			}
-			else
-			{
-				
-				g_objCommon.Move_Position(AX_ASSY_PICKER_X, 1);
-				g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 1);
-				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 2);
-				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
-			}
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);			
 		}
 		break;
 	case 6:		// Position Check
-		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 1) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 1) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 2)) {
-				if(m_nCapBufferCase != 10) break;
-				if (m_nCapBufferCase == 10) m_nCapBufferCase = 11;
+		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 1) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 1) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 2)) 
+		{
+			if(m_nCapBufferCase != 10) break;
+			if (m_nCapBufferCase == 10) m_nCapBufferCase = 11;
 			m_tAssyPickLoop.Takt_Save(11, 2);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 10; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4029,19 +4050,28 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Move_Position(AX_ASSY_PICKER_X, 2+nApIdxNo);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 2+nApIdxNo);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(30000);
 		}
 		break;
 	case 12:	// Position Check
-		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 2+nApIdxNo) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 2+nApIdxNo) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0)) {
+		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 2+nApIdxNo) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 2+nApIdxNo) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0))
+		{
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 15; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 15:	// Index Check
-		if (m_nMainIndexCase <= 10 && !gData.IndexDone[1]) {
-			if (Check_IndexEmpty(1)) {
+		if (m_nMainIndexCase <= 10 && !gData.IndexDone[1])
+		{
+			if (Check_IndexEmpty(1)) 
+			{
 				gData.IndexDone[1] = TRUE;
-			} else {
+			} 
+			else 
+			{
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase = 16; m_tTransStageLoop.Set_LoopTime(5000);
 			}
 		}
@@ -4058,6 +4088,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 
 		m_pDY11->oIndexAssyVacUp = TRUE;
 		g_objAJinAXL.Write_Output(11);
+
+		m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 		m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		break;
 	case 17:	// Index Assy Vac On
@@ -4065,14 +4097,21 @@ BOOL CSequenceMain::AssyPicker_Run()
 			m_tAssyPickLoop.Takt_Save(11, 4);
 			m_tAssyPickLoop.Takt_Start();
 			g_objCommon.Set_InfoIndexAssyVacuumOn();
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 18:	// Index Assy Align Out
 		m_tAssyPickLoop.Takt_Save(11, 5);
-		if (Check_CapInspAllGood()) {
+		if (Check_CapInspAllGood()) 
+		{
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-		} else {
+		} 
+		else 
+		{
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 50; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4092,6 +4131,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Set_InfoAssyPickerDown(1);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 3);	// Assembly Down Position
  			if (!m_pEquipData->bUseIndexAssyVac) g_objCommon.Set_IndexAssyVacuumOff(0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 25; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4102,6 +4143,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 			if (!m_tAssyPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[5])) break;	// Assy Picker Cap Press Delay
 			dApZ = m_pMoveData->dAssyPickerZ[4];	// Cap Press
 			g_objAJinAXL.Move_AbsSlow(AX_ASSY_PICKER_Z, dApZ, 0.5);	// Slow
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4109,6 +4152,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objAJinAXL.Is_MoveDone(AX_ASSY_PICKER_Z, dApZ) && g_objCommon.Get_InfoAssyPickerDown(1)) {
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;	//2021.06.23c
 			g_objCommon.Set_InfoAssyPickerVacOff();
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4118,11 +4163,17 @@ BOOL CSequenceMain::AssyPicker_Run()
 			if (m_pEquipData->bChkAssyPickerTilt) {
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 5);	// Tilt Position
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-			} else {
+			} 
+			else
+			{
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);	// Ready Position
 				g_objCommon.Set_InfoAssyPickerAirOff();
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase = 30; m_tAssyPickLoop.Set_LoopTime(5000);
 			}			
 		}
@@ -4134,27 +4185,41 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Set_InfoAssyPickerAirOff();
 			g_objCommon.Move_Position(AX_ASSY_PICKER_X, 6);	// Tilt Position
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 6);	// Tilt Position
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-		} else {
-			if (!m_pEquipData->bChkAssyPickerTilt) {
+		} 
+		else
+		{
+			if (!m_pEquipData->bChkAssyPickerTilt) 
+			{
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);	// Ready Position
 				g_objCommon.Set_InfoAssyPickerAirOff();
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase = 30; m_tAssyPickLoop.Set_LoopTime(5000);
 			}
 		}
 		break;
 	case 29:	// Tilt Check Cylinder Down
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 5) && g_objCommon.Check_Position(AX_ASSY_PICKER_X, 6) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 6) &&
-			g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Get_InfoAssyPickerVacOff()) {
+			g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Get_InfoAssyPickerVacOff()) 
+		{
 			m_pDY08->oAssyPickerTiltDown = TRUE;
 			g_objAJinAXL.Write_Output(8);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-		} else {
+		} 
+		else 
+		{
 			if (!m_pEquipData->bChkAssyPickerTilt) {
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);	// Ready Position
 				g_objCommon.Set_InfoAssyPickerAirOff();
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 			}
 		}
@@ -4196,6 +4261,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 				gData.dIndexCmSizeX[nApIdxNo][i] = gData.dIndexCmSizeY[nApIdxNo][i] = 0.0;
 			}
 			g_objCommon.Set_IndexAssyVacuumOff(0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 35; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4212,6 +4279,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objAJinAXL.Write_Output(8);
 			g_objAJinAXL.Write_Output(11);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4225,6 +4294,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 
 			g_objCommon.Move_Position(AX_ASSY_PICKER_X, 0);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Y, 0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4232,6 +4303,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_X, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Y, 0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) &&
 			g_objCommon.Get_AssyPickerUp(0) && !m_pDX08->iAssyPickerTiltDown && m_pDX08->iAssyPickerTiltUp) {
 			m_tAssyPickLoop.Takt_Save(11, 9);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 0; m_tAssyPickLoop.Set_LoopTime(5000);
 
 			m_strLog.Format("AssyPicker, %d", GetTickCount() - m_dwAssyPick);
@@ -4256,12 +4329,16 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Set_InfoAssyPickerGoodDown();	// Good Down
 
 			if (!m_pEquipData->bUseIndexAssyVac) g_objCommon.Set_IndexAssyVacuumOff(0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 56; m_tAssyPickLoop.Set_LoopTime(5000);	//2021.06.23c
 		}
 		break;
 	case 51:	// Position Check
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 3) && g_objCommon.Get_InfoAssyPickerGoodDown()) {
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 55; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4271,6 +4348,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 3) && g_objCommon.Get_InfoAssyPickerGoodDown()) {
 			dApZ = m_pMoveData->dAssyPickerZ[4];	// Cap Press
 			g_objAJinAXL.Move_AbsSlow(AX_ASSY_PICKER_Z, dApZ, 0.5);	// Slow
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4278,6 +4357,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objAJinAXL.Is_MoveDone(AX_ASSY_PICKER_Z, dApZ) && g_objCommon.Get_InfoAssyPickerGoodDown()) {
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;	//2021.06.23c
 			g_objCommon.Set_InfoAssyPickerGoodVacOff();	// Good Vac Off
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4292,6 +4373,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Set_AssyPickerUp(0);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 3);	// Index Down
 			g_objCommon.Set_InfoAssyPickerGoodAirOff();	// Good Air Off
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 60; m_tAssyPickLoop.Set_LoopTime(5000);			
 		}
 		break;
@@ -4305,17 +4388,27 @@ BOOL CSequenceMain::AssyPicker_Run()
 			dApY = m_pMoveData->dAssyPickerY[2+nApIdxNo] + gData.dAlignDiffY[nApJobNo];
 			g_objAJinAXL.Move_Absolute(AX_ASSY_PICKER_X, dApX);
 			g_objAJinAXL.Move_Absolute(AX_ASSY_PICKER_Y, dApY);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
-		} else {
+		} 
+		else
+		{
 			if (g_objAJinAXL.Is_Done(AX_ASSY_PICKER_Z)) {
 				if (m_pEquipData->bChkAssyPickerTilt) {
 					g_objCommon.Set_AssyPickerUp(0);
 					g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 5);	// Tilt Position
+
+					m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 					m_nAssyPickCase = 28; m_tAssyPickLoop.Set_LoopTime(5000);
-				} else {
+				} 
+				else
+				{
 					g_objCommon.Set_AssyPickerUp(0);
 					g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);	// Ready Position
 					g_objCommon.Set_InfoAssyPickerAirOff();
+
+					m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 					m_nAssyPickCase = 30; m_tAssyPickLoop.Set_LoopTime(5000);
 				}
 			}
@@ -4339,12 +4432,16 @@ BOOL CSequenceMain::AssyPicker_Run()
 			g_objCommon.Set_AssyPickerDown(nApJobNo+1);
 
 			if (!m_pEquipData->bUseIndexAssyVac) g_objCommon.Set_IndexAssyVacuumOff(0);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 66; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 62:	// Position Check
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 3) && g_objCommon.Get_AssyPickerDown(nApJobNo+1)) {
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 65; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4354,6 +4451,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 3) && g_objCommon.Get_AssyPickerDown(nApJobNo+1)) {
 			dApZ = m_pMoveData->dAssyPickerZ[4];	// Cap Press
 			g_objAJinAXL.Move_AbsSlow(AX_ASSY_PICKER_Z, dApZ, 0.5);	// Slow
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4361,6 +4460,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objAJinAXL.Is_MoveDone(AX_ASSY_PICKER_Z, dApZ) && g_objCommon.Get_AssyPickerDown(nApJobNo+1)) {
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;	//2021.06.23c
 			g_objCommon.Set_AssyPickerVacOff(nApJobNo+1);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -4371,15 +4472,34 @@ BOOL CSequenceMain::AssyPicker_Run()
 			if (gData.InfoIndex[1][nApJobNo] > 0 && gData.InfoAssyPick[nApJobNo] == 2) { gData.InfoAssyPick[nApJobNo] = 9; }
 			g_objCommon.Set_AssyPickerUp(0);
 			g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 3);	// Index Down
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 60; m_tAssyPickLoop.Set_LoopTime(5000);			
 		}
 		break;
+	case 68:
+		if(g_objCommon.Check_Position(AX_ASSY_PICKER_Z,0) && g_objCommon.Get_AssyPickerUp(0))
+		{
+			g_objCommon.Move_Position(AX_CAP_BUFFER_Y, 2);
 
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+			m_nAssyPickCase = 69; m_tAssyPickLoop.Set_LoopTime(10000);
+		}
+		break;
+	case 69:
+		if(g_objCommon.Check_Position(AX_CAP_BUFFER_Y,2))
+		{			
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+			m_nAssyPickCase = 1; m_tAssyPickLoop.Set_LoopTime(10000);
+		}
+		break;
 	// Load Cell 측정.
 	case 70:	// Assy Picker Cylinder Down
-		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) && g_objAJinAXL.Is_MoveDone(AX_CAP_BUFFER_Y, dApY)) {
+		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0) && g_objAJinAXL.Is_MoveDone(AX_CAP_BUFFER_Y, dApY)) 
+		{
 			nApJobNo++;
-			if (nApJobNo > PICK) {
+			if (nApJobNo > PICK) 
+			{
 				nApJobNo = 0;
 				m_pEquipData->nCappingCnt = 0;
 
@@ -4389,13 +4509,18 @@ BOOL CSequenceMain::AssyPicker_Run()
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);	// Ready Up
 
-				m_nAssyPickCase = 5; m_tAssyPickLoop.Set_LoopTime(10000);
-			} else {
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nAssyPickCase = 68; m_tAssyPickLoop.Set_LoopTime(10000);
+			}
+			else
+			{
 				SYSTEMTIME time;
 				GetLocalTime(&time);
 				m_strLoadCellStart.Format("%04d-%02d-%02d %02d:%02d:%02d:%03d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
 
 				g_objCommon.Set_AssyPickerDown(nApJobNo);
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
 			}
 		}
@@ -4404,6 +4529,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		if (g_objCommon.Get_AssyPickerDown(nApJobNo) && g_objAJinAXL.Is_MoveDone(AX_CAP_BUFFER_Y, dApY)) {
 			dApZ = m_pMoveData->dAssyPickerZ[6];	// Load Cell Down
 			g_objAJinAXL.Move_AbsSlow(AX_ASSY_PICKER_Z, dApZ, 0.5);	// Load Cell Down Position
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
 		}
 		break;
@@ -4412,12 +4539,19 @@ BOOL CSequenceMain::AssyPicker_Run()
 			if (!m_tAssyPickLoop.Waiting_Time(m_pEquipData->nDelayAdd[4])) break;	// 측정 전 대기시간
 			gData.dLoadCell[0] = 0.0;
 			g_objLoadCell.Get_Weight(ASSY_LOAD_CELL);
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
 		}
 		break;
 	case 73:	// 측정값 확인 및 Picker Up
-		if (gData.bLoadCellComplete) {
-			if (gData.dLoadCell[0] >= m_pEquipData->dLoadCellRange[0] && gData.dLoadCell[0] <= m_pEquipData->dLoadCellRange[1]) {
+#ifndef AJIN_BOARD_USE
+		gData.bLoadCellComplete = TRUE;
+#endif		
+		if (gData.bLoadCellComplete)
+		{
+			if (gData.dLoadCell[0] >= m_pEquipData->dLoadCellRange[0] && gData.dLoadCell[0] <= m_pEquipData->dLoadCellRange[1]) 
+			{
 				gData.dAssyLoadCell[nApJobNo-1] = gData.dLoadCell[0];
 
 				SYSTEMTIME time;
@@ -4430,31 +4564,45 @@ BOOL CSequenceMain::AssyPicker_Run()
 
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 0);
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase++; m_tAssyPickLoop.Set_LoopTime(10000);
 			}
 		}
 		break;
 	case 74:	// Buffer Stage Y Pitch Move
-		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0)) {
-			if (nApJobNo < PICK) {
+		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0)) 
+		{
+			if (nApJobNo < PICK)
+			{
 				dApY = m_pMoveData->dCapBufferY[3] + nApJobNo * m_pEquipData->dIndexPitch;
 				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);
 			}
+
+			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nAssyPickCase = 70; m_tAssyPickLoop.Set_LoopTime(10000);
 		}
 		break;
 
 	case 75:	// Error 후 처리
-		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0)) {
-			if (m_pEquipData->nLoadCellChkCnt == 0) {	// Load Cell 측정 사용 안함. (
+		if (g_objCommon.Get_AssyPickerUp(0) && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0)) 
+		{
+			if (m_pEquipData->nLoadCellChkCnt == 0) // Load Cell 측정 사용 안함. (
+			{	
 				m_pEquipData->nCappingCnt = 0;
 				CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->m_pMainWnd;
 				pMainDlg->Save_EquipCappingCnt();
-				m_nAssyPickCase = 5; m_tAssyPickLoop.Set_LoopTime(10000);
-			} else {
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
+				m_nAssyPickCase = 1; m_tAssyPickLoop.Set_LoopTime(10000);
+			} 
+			else 
+			{
 				nApJobNo = 0;
 				dApY = m_pMoveData->dCapBufferY[3];
 				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);	// Load Cell Position	
+
+				m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 				m_nAssyPickCase = 70; m_tAssyPickLoop.Set_LoopTime(10000);
 			}
 		}
