@@ -759,11 +759,12 @@ BOOL CSequenceMain::Check_InspectDone(int nPNo, int nTNo, int nCNo, int &nInfo)
 #endif
 
 	// nInspectInfo => 9:Init,8:NG,7:Request
-	if (gData.bCycleStop)  // 모두 OK
+	if (gData.bCycleStop || (GetTickCount() - gData.dwInspectSkipTime) > 10000)  // 모두 OK
 	{	
 		gData.nInspectInfo[nPx][nTx][nCx] = 9;
 		gLot.nGoodCount[nPx]++;
-
+		m_strLog.Format("Inspect Skip - PNo:%d, TNo:%d, CNo:%d", nPNo, nTNo, nCNo);
+		g_objLogFile.Save_HandlerLog(m_strLog);
 	} 
 	else if (m_pEquipData->bResultTestUse)
 	//(gData.bDryRunTest || m_pEquipData->bResultTestUse) 
@@ -4774,13 +4775,14 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 1) && g_objCommon.Check_Position(AX_UNLOAD_PICKER_P, 1)) 
 		{
 			m_tUnloadPickLoop.Takt_Save(13, 4);
-
+			gData.dwInspectSkipTime = GetTickCount();
 			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
 		}
 		break;
 
 	case 10:	// 검사완료 대기 및 판정
+		bInspectFail = FALSE;
 		for (int i = 0; i < PICK; i++)
 		{
 			if (Check_InspectDone(gData.nPNoUnloadPick, gData.nTNoUnloadPick[i], gData.nCNoUnloadPick[i], gData.InfoUnloadPick[i])) continue;

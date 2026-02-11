@@ -222,7 +222,7 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 		if (sJudge == "G") return;	// Good이면 종료
 
 		gData.nInspectInfo[nPx][nTx][nCx] = 8;	// NG
-	
+
 
 		/*if (pEquipData->bUseVisionAlignAlarm && gData.nInspectInfo[nPx][nTx][nCx] == 2 )
 		{

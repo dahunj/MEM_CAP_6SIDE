@@ -71,7 +71,7 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.1.0.0")
+#define MAIN_VERSION	_T("V 2.0.2.0")
 //
 //#define AJIN_BOARD_USE
 //#define LOT_BARCODE_USE
@@ -277,6 +277,7 @@ typedef struct
 	CString		sInspectCmLotIDLater;
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 	
+	DWORD		dwInspectSkipTime;
 
 
 } GLOVAL_DATA;
