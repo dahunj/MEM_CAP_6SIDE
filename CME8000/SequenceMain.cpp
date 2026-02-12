@@ -1157,7 +1157,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	m_strLog.Format("LotID,%s,Start_Time,%s,End_Time,%s,Time,%d,Tray_Count,%02d,CM_Count,%04d,Tack,%0.7lf",
 		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.dTackTime);
 	g_objLogFile.Save_HandlerLog(m_strLog);
-	nLPNo = -101;
+
 // 	double dOne = (double)(dwTime - m_dwFirstLoad - m_dwLastUnLoad) / (gLot.nCmCount[nLPNo] - 1);
 // 	m_strLog.Format("LotID(%s), Load(%0.3lf), Unload(%0.3lf), Takt as 600 EA Run(%0.6lf)", gLot.sLotID[nLPNo], (double)m_dwFirstLoad / 1000, (double)m_dwLastUnLoad / 1000, (dOne * 599 + m_dwFirstLoad + m_dwLastUnLoad) / 600000.0);
 // 	g_objLogFile.Save_HandlerLog(m_strLog);
