@@ -748,8 +748,8 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 		if (file.GetLength() < 1) file.Write(strTitle, strTitle.GetLength());
 
 		//¡ÆE¡íc¡Æa¡Æu (0:Empty, 1:Good, 2:NG)
-		int nJudge = 1;
-		strJudge = (nJudge == 1 ? "G" : (nJudge == 2 ? "N" : " "));
+		
+		strJudge = (gData.nInspectInfo[nPortNo-1][nTrayNo-1][nCmNo-1] == 1 ? "G" : (gData.nInspectInfo[nPortNo-1][nTrayNo-1][nCmNo-1] == 2 ? "N" : ""));
 
 		int nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick;
 		nLdStageNo	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][LOAD_STAGE];

@@ -3952,6 +3952,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 			//Loadcell 측정 해야하는지 확인.
 			if (m_pEquipData->nLoadCellChkCnt != 0 && m_pEquipData->nCappingCnt >= m_pEquipData->nLoadCellChkCnt)
 			{
+				if(m_nCapBufferCase != 10) return TRUE; //  cap buffer 가 올때 까지 대기 
+
 				nApJobNo = 0;	// 측정하는 피커 시작 번호
 				dApY = m_pMoveData->dCapBufferY[3];
 				g_objAJinAXL.Move_Absolute(AX_CAP_BUFFER_Y, dApY);	// Load Cell Position	
@@ -4480,6 +4482,7 @@ BOOL CSequenceMain::AssyPicker_Run()
 	case 68:
 		if(g_objCommon.Check_Position(AX_ASSY_PICKER_Z,0) && g_objCommon.Get_AssyPickerUp(0))
 		{
+			
 			g_objCommon.Move_Position(AX_CAP_BUFFER_Y, 2);
 
 			m_strLog.Format("Seq,12,AssemblyPicker,%d,empty", m_nAssyPickCase); g_objLogFile.Save_SeqLog(m_strLog);
