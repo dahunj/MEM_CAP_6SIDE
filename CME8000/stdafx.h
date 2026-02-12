@@ -55,6 +55,11 @@
 
 #include <math.h>
 
+#include <dbghelp.h>
+#include <stdio.h>
+#include <time.h>
+#pragma comment(lib, "Dbghelp.lib")
+
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
