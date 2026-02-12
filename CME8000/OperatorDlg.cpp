@@ -488,6 +488,8 @@ void COperatorDlg::Update_TrayInfo(int nTray, int nNo)
 			}
 		}
 	}
+
+	
 }
 
 void COperatorDlg::Change_Model()

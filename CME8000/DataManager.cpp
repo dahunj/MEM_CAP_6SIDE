@@ -72,6 +72,9 @@ void CDataManager::Reset_EquipData()
 	m_EquipData.nCappingCnt = 0;
 	m_EquipData.nLoadCellChkCnt = 0;
 
+	m_EquipData.bResultTestUse = FALSE;
+	m_EquipData.nResultTestNg = 0;
+
 
 	//m_EquipData.sVendor[0] = "DH";
 	//m_EquipData.sVendor[1] = "HS";
@@ -150,8 +153,8 @@ BOOL CDataManager::Read_EquipData()
 #endif
 	m_EquipData.bUseVisionAlignAlarm = INI.Get_Bool("OPTION", "VISION_ALIGN_ALARM", FALSE);
 	m_EquipData.bUseVisionAlignOffset = INI.Get_Bool("OPTION", "VISION_ALIGN_OFFSET", FALSE);
-
-	m_EquipData.nInspectCmScanTimes = INI.Get_Integer("OPTION", "SCAN_TIMES", 10000);	
+		
+	m_EquipData.nInspectCmScanTimes = (ST_Y * ST_X) / 4;//INI.Get_Integer("OPTION", "SCAN_TIMES", 10000);	
 	m_EquipData.nInspectCmLotTimes = INI.Get_Integer("OPTION", "LOT_TIMES", 10000);
 	m_EquipData.nInspectCmMinutes = INI.Get_Integer("OPTION", "MINUTES", 10000);
 		
@@ -194,6 +197,8 @@ BOOL CDataManager::Read_EquipData()
 	gData.nCapMaxCount = CT_Y * CT_X;	// Tray 배열 (4x7)
 	gData.STY =  ST_Y;
 	gData.nShipMaxCount = gData.STY * ST_X;	// Tray 배열 (3x7 or 3x6)
+	
+	m_EquipData.nResultTestNg = INI.Get_Integer("RESULT_TEST", "RESULT_NG", 0);
 
 	//doorinterlock log
 

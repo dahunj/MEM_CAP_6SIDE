@@ -24,6 +24,7 @@ CCriticalSection g_csMachineStopLog;
 CCriticalSection g_csMesAgentLog;
 CCriticalSection g_csCmTrackingLog;
 CCriticalSection g_csBarcodeLog;
+CCriticalSection g_csSeqLog;
 
 CLogFile::CLogFile()
 {
@@ -747,8 +748,8 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 		if (file.GetLength() < 1) file.Write(strTitle, strTitle.GetLength());
 
 		//¡ÆE¡íc¡Æa¡Æu (0:Empty, 1:Good, 2:NG)
-		int nJudge = 1;
-		strJudge = (nJudge == 1 ? "G" : (nJudge == 2 ? "N" : " "));
+		
+		strJudge = (gData.nInspectInfo[nPortNo-1][nTrayNo-1][nCmNo-1] == 1 ? "G" : (gData.nInspectInfo[nPortNo-1][nTrayNo-1][nCmNo-1] == 2 ? "N" : ""));
 
 		int nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick;
 		nLdStageNo	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][LOAD_STAGE];
@@ -1499,4 +1500,42 @@ void CLogFile::Save_PCLog(int nPNo, CString sLog)
 	}
 
 
+}
+
+
+void CLogFile::Save_SeqLog(CString sLog)
+{
+	g_csSeqLog.Lock();
+
+	CString strPath = gsCurrentDir + "\\LOG\\Seq";
+
+	Create_Folder(strPath);
+
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+
+	CString strFile, strSave;
+	strFile.Format("%s\\%04d%02d%02d.txt", strPath, time.wYear, time.wMonth, time.wDay);
+
+	CFile file;
+	if (file.Open(strFile, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) 
+	{
+		try 
+		{
+			file.SeekToEnd();
+
+			strSave.Format("[%02d:%02d:%02d.%03d], %s\r\n", time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, sLog);
+
+			file.Write(strSave, strSave.GetLength());
+			file.Close();
+
+		}
+		catch (CFileException *pEx)
+		{
+			pEx->Delete();
+		}
+	}
+	g_csSeqLog.Unlock();
+
+	//Save_ECMLog(4, sLog);
 }

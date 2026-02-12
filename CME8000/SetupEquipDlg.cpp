@@ -95,6 +95,11 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	for(int i = 0; i < 3; i++) DDX_Control(pDX, IDC_LBL_VISION_0 +i, m_lblCMVision[i] );
 	for(int i = 0; i < 3; i++) DDX_Control(pDX, IDC_STC_CM_VISION_0 +i, m_stcCMVision[i]);
 
+	DDX_Control(pDX, IDC_GRP_RESULT_TEST, m_grpResultTest);
+	DDX_Control(pDX, IDC_LBL_RESULT_TEST, m_lblResultTest);
+	DDX_Control(pDX, IDC_CHK_RESULT_TEST_USE, m_chkResultTestUse);
+	DDX_Control(pDX, IDC_EDT_RESULT_TEST, m_edtResultTest);
+
 }
 
 BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
@@ -217,6 +222,11 @@ void CSetupEquipDlg::Initial_Controls()
 	for (int i = 0; i < 3; i++) m_lblCMVision[i].Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
 	for (int i = 0; i < 3; i++) m_stcCMVision[i].Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xD0, 0xD0));
 
+	m_grpResultTest.Init_Ctrl("¹ÙÅÁ", 12, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
+	m_lblResultTest.Init_Ctrl("¹ÙÅÁ", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
+	m_chkResultTestUse.Init_Ctrl("¹ÙÅÁ", 10, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60), CCheckCS::emRed, 0);
+	m_edtResultTest.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
+
 }
 
 BOOL CSetupEquipDlg::OnInitDialog() 
@@ -253,6 +263,11 @@ void CSetupEquipDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	m_stcPasswordMt.ShowWindow(SW_HIDE);
 	m_lblPasswordSi.ShowWindow(SW_HIDE);
 	m_edtPasswordSi.ShowWindow(SW_HIDE);
+
+	m_grpResultTest.ShowWindow(SW_HIDE);
+	m_lblResultTest.ShowWindow(SW_HIDE);
+	m_chkResultTestUse.ShowWindow(SW_HIDE);
+	m_edtResultTest.ShowWindow(SW_HIDE);
 }
 
 void CSetupEquipDlg::OnStnClickedStcEquipName()
@@ -393,7 +408,13 @@ void CSetupEquipDlg::OnStnClickedStcPasswordMt()
 
 void CSetupEquipDlg::OnStnClickedStcShowHidden()
 {
-	if (m_grpHidden.IsWindowVisible()) {
+	if (m_grpHidden.IsWindowVisible()) 
+	{
+		m_grpResultTest.ShowWindow(SW_HIDE);
+		m_lblResultTest.ShowWindow(SW_HIDE);
+		m_chkResultTestUse.ShowWindow(SW_HIDE);
+		m_edtResultTest.ShowWindow(SW_HIDE);
+
 		m_grpHidden.ShowWindow(SW_HIDE);
 		m_lblPasswordMt.ShowWindow(SW_HIDE);
 		m_stcPasswordMt.ShowWindow(SW_HIDE);
@@ -401,6 +422,12 @@ void CSetupEquipDlg::OnStnClickedStcShowHidden()
 		m_lblPasswordSi.ShowWindow(SW_HIDE);
 		m_edtPasswordSi.ShowWindow(SW_HIDE);
 	} else {
+		m_grpResultTest.ShowWindow(SW_SHOW);
+		m_lblResultTest.ShowWindow(SW_SHOW);
+		m_chkResultTestUse.ShowWindow(SW_SHOW);
+		m_edtResultTest.ShowWindow(SW_SHOW);
+
+
 		m_grpHidden.ShowWindow(SW_SHOW);
 		m_lblPasswordMt.ShowWindow(SW_SHOW);
 		m_stcPasswordMt.ShowWindow(SW_SHOW);
@@ -484,6 +511,9 @@ void CSetupEquipDlg::Display_EquipData()
 
 	m_stcPasswordMt.SetWindowText(pEquipData->sPasswordMt);
 	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSi);
+
+	strData.Format("%d", pEquipData->nResultTestNg); m_edtResultTest.SetWindowText(strData);
+
 }
 
 void CSetupEquipDlg::Save_EquipData()
@@ -563,8 +593,12 @@ void CSetupEquipDlg::Save_EquipData()
 	m_stcVacOffDelay[0].GetWindowText(strData);
 	g_objMES.Save_AviRmsData("Cap Clean Blowing Time", strData);
 
-	g_objLogFile.Save_HandlerLog("[Setup Equip] Save Click");
+	pEquipData->bResultTestUse = m_chkResultTestUse.GetCheck();
+	m_edtResultTest.GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("RESULT_TEST", "RESULT_NG", nData);
 
+
+	g_objLogFile.Save_HandlerLog("[Setup Equip] Save Click");
+	
 	Cancel_EquipData();
 }
 
