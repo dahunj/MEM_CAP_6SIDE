@@ -219,9 +219,12 @@ void CInspector::Get_InspectComplete(CString sGbn, CString sLotId, CString sPort
 		int nPreInfo = gData.nInspectInfo[nPx][nTx][nCx];
 		if (nPreInfo != 7) { g_objCommon.Show_Error(6103); return; }					
 
-		if (sJudge == "G") return;	// Good이면 종료
-
-		gData.nInspectInfo[nPx][nTx][nCx] = 8;	// NG
+		if (sJudge == "G") gData.nInspectInfo[nPx][nTx][nCx] = 9;	// Good이면 종료
+		else 
+		{
+			gData.nInspectInfo[nPx][nTx][nCx] = 8;	// NG
+		}
+		
 
 
 		/*if (pEquipData->bUseVisionAlignAlarm && gData.nInspectInfo[nPx][nTx][nCx] == 2 )

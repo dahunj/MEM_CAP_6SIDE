@@ -754,15 +754,15 @@ BOOL CSequenceMain::Check_InspectDone(int nPNo, int nTNo, int nCNo, int &nInfo)
 	int nTx = nTNo - 1;	// Tray Index
 	int	nCx = nCNo - 1;	// CM Index
 
-#ifdef DRY_RUN_TEST
-	gData.nInspectInfo[nPx][nTx][nCx] = 9;
-	gLot.nGoodCount[nPx]++;
-
-	return TRUE;
-#endif
+//#ifdef DRY_RUN_TEST
+//	gData.nInspectInfo[nPx][nTx][nCx] = 9;
+//	gLot.nGoodCount[nPx]++;
+//
+//	return TRUE;
+//#endif
 
 	// nInspectInfo => 9:Init,8:NG,7:Request
-	if (gData.bCycleStop || (GetTickCount() - gData.dwInspectSkipTime) > 10000)  // 모두 OK
+	if (gData.bCycleStop || (GetTickCount() - gData.dwInspectSkipTime) > 20000)  // 모두 OK
 	{	
 		gData.nInspectInfo[nPx][nTx][nCx] = 9;
 		gLot.nGoodCount[nPx]++;
@@ -789,7 +789,8 @@ BOOL CSequenceMain::Check_InspectDone(int nPNo, int nTNo, int nCNo, int &nInfo)
 	{
 		if (m_pEquipData->bUseVisionCmAlign && gData.nInspectInfo[nPx][nTx][nCx] == 7) return FALSE;
 	}
-
+	m_strLog.Format("Inspect Result - %d", gData.nInspectInfo[nPx][nTx][nCx] == 9);
+		g_objLogFile.Save_HandlerLog(m_strLog);
 	if 		(gData.nInspectInfo[nPx][nTx][nCx] == 9) nInfo = gData.nInspectInfo[nPx][nTx][nCx] = 1;	// OK
 	else if (gData.nInspectInfo[nPx][nTx][nCx] == 8) nInfo = gData.nInspectInfo[nPx][nTx][nCx] = 2;	// NG
 	else if (gData.nInspectInfo[nPx][nTx][nCx] == 7) nInfo = gData.nInspectInfo[nPx][nTx][nCx] = 3;	// NoResult
@@ -4907,7 +4908,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				//m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
 				gData.dwInspectSkipTime = GetTickCount();
 				m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
-				m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
+				m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(60000);
 			} 
 			else
 			{	// Unload Stage 대기위치에 없으면 언로드 대기 위치로 이동.
@@ -4928,7 +4929,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			m_tUnloadPickLoop.Takt_Save(13, 4);
 			gData.dwInspectSkipTime = GetTickCount();
 			m_strLog.Format("Seq,14,UnloadPicker,%d,empty", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
-			m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(5000);
+			m_nUnloadPickCase = 10; m_tUnloadPickLoop.Set_LoopTime(60000);
 		}
 		break;
 
@@ -5240,6 +5241,11 @@ BOOL CSequenceMain::UnloadPicker_Run()
 		if ((nUpWorkTray == 1 && g_objAJinAXL.Is_MoveDone(AX_UNLOAD_STAGE1_Y, dSpStageY)) 
 			|| (nUpWorkTray == 2 && g_objAJinAXL.Is_MoveDone(AX_UNLOAD_STAGE2_Y, dSpStageY))) 
 		{
+			double dPosCur = 0;
+			if(nUpWorkTray == 1) dPosCur = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE2_Y);
+			if(nUpWorkTray == 2) dPosCur = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE1_Y);
+			if(dPosCur < 1000) return TRUE;
+
 			if (g_objAJinAXL.Is_MoveDone(AX_UNLOAD_PICKER_X, dSpPickX)) 
 			{
 				if (m_nUnloadStage1Case != 10 && m_nUnloadStage2Case != 10) break;
@@ -5610,6 +5616,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP) && m_pDX05->iUnloadStage1Exist ) 
 		{
 			m_tUnloadStage1Loop.Takt_Start();
+			
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);	// Work Position
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
@@ -6044,7 +6051,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;
 	case 10:	// 안전 확인 
 		if (m_nUnloadStage1Case > 23 && m_nUnloadStage1Case < 30 || m_nUnloadStage1Case >= 50 ) 
-		{ 				
+		{ 	
+			
 			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000); 
 		}
@@ -6052,7 +6060,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 
 	case 11:	// Y Move to Work Position
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP) && m_pDX05->iUnloadStage2Exist) {
+			
 			m_tUnloadStage2Loop.Takt_Start();
+
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);	// Work Position
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}

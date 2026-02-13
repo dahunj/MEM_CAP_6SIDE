@@ -285,9 +285,11 @@ void CAviHandler::Get_VisionAlarmOn()
 	pEquipData->bUseVisionCmAlign = TRUE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
-	pEquipData->bUseVisionAlignAlarm = TRUE;
+	pEquipData->bUseVisionAlignAlarm = FALSE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
 
+	g_objDataManager.Read_EquipData();
+	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_VIsionAlarmOff()
@@ -300,11 +302,14 @@ void CAviHandler::Get_VIsionAlarmOff()
 	pEquipData->bUseInlineMode = TRUE;
 	INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
 
-	pEquipData->bUseVisionCmAlign = TRUE;
+	pEquipData->bUseVisionCmAlign = FALSE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
 	pEquipData->bUseVisionAlignAlarm = FALSE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
+
+	g_objDataManager.Read_EquipData();
+	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_TimeUpdate(CString sTime)
