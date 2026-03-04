@@ -310,7 +310,7 @@ typedef union tag_DX_DATA_05 {
 		DWORD iUnloadStage1SlaveIn : 1;		// X0502
 		DWORD iUnloadStage1SlaveOut : 1;	// X0503
 		DWORD iUnloadStage1Exist : 1;		// X0504
-		DWORD iUnloadStage1Exist2 : 1;		// X0505
+		DWORD i0505 : 1;					// X0505
 		DWORD i0506 : 1;					// X0506
 		DWORD i0507 : 1;					// X0507
 		DWORD iUnloadStage2MasterIn : 1;	// X0508
@@ -318,7 +318,7 @@ typedef union tag_DX_DATA_05 {
 		DWORD iUnloadStage2SlaveIn : 1;		// X0510
 		DWORD iUnloadStage2SlaveOut : 1;	// X0511
 		DWORD iUnloadStage2Exist : 1;		// X0512
-		DWORD iUnloadStage2Exist2 : 1;		// X0513
+		DWORD i0513 : 1;					// X0513
 		DWORD i0514 : 1;					// X0514
 		DWORD i0515 : 1;					// X0515
 		DWORD iTransStageClamp1On : 1;		// X0516

@@ -6474,45 +6474,39 @@ BOOL CSequenceMain::Run_Simulation()
 	if(m_nUnloadStage1Case == 1)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage1Exist = FALSE;
-		m_pDX05->iUnloadStage1Exist2 = FALSE;
+		m_pDX05->iUnloadStage1Exist = FALSE;		
 	}
 
 	if(m_nUnloadStage2Case == 1)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage2Exist = FALSE;
-		m_pDX05->iUnloadStage2Exist2 = FALSE;
+		m_pDX05->iUnloadStage2Exist = FALSE;		
 	}
 
 	if(m_nUnloadStage1Case == 9 || m_nUnloadStage2Case == 23)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage1Exist = TRUE;
-		m_pDX05->iUnloadStage1Exist2 = TRUE;
+		m_pDX05->iUnloadStage1Exist = TRUE;		
 	}
 
 
 	if(m_nUnloadStage2Case == 9 || m_nUnloadStage2Case == 23)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage2Exist = TRUE;
-		m_pDX05->iUnloadStage2Exist2 = TRUE;
+		m_pDX05->iUnloadStage2Exist = TRUE;	
 	}
 
 	if(m_nUnloadStage1Case == 30)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage1Exist = FALSE;
-		m_pDX05->iUnloadStage1Exist2 = FALSE;
+		m_pDX05->iUnloadStage1Exist = FALSE;		
 	}
 
 
 	if(m_nUnloadStage2Case == 30)
 	{
 		Sleep(SIM_WAITTIMES);
-		m_pDX05->iUnloadStage2Exist = FALSE;
-		m_pDX05->iUnloadStage2Exist2 = FALSE;
+		m_pDX05->iUnloadStage2Exist = FALSE;		
 	}
 
 	if (m_nLoadStage1Case == 2) { Sleep(SIM_WAITTIMES); m_pDX00->iLoadPort1LowCheck = TRUE; m_pDX01->iLoadPort2LowCheck = TRUE; }
