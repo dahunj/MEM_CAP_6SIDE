@@ -32,9 +32,12 @@ public:
 
 	CCheckCS	m_chkUseInlineMode;
 	CCheckCS	m_chkUseVisionCapDir;
-	CCheckCS	m_chkUseVisionCmAlign;
+
+	CCheckCS	m_chkInspectCMOption;
+	CCheckCS	m_chkInspectNGMix;
 	CCheckCS	m_chkUseVisionAlignAlarm;
-	CCheckCS	m_chkUseVisionAlignOffset;
+
+	
 
 	CCheckCS	m_chkUseTrayPickerTurn;
 	CCheckCS	m_chkUseCapPickerTurn;

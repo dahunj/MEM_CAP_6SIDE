@@ -46,9 +46,10 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_CHK_USE_INLINE_MODE, m_chkUseInlineMode);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_CAP_DIR, m_chkUseVisionCapDir);
-	DDX_Control(pDX, IDC_CHK_USE_VISION_CM_ALIGN, m_chkUseVisionCmAlign);
+	DDX_Control(pDX, IDC_CHK_USE_VISION_CM_ALIGN, m_chkInspectCMOption);
+	DDX_Control(pDX, IDC_CHK_INSPECT_NG_MIX, m_chkInspectNGMix);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_ALIGN_ALARM, m_chkUseVisionAlignAlarm);
-	DDX_Control(pDX, IDC_CHK_USE_VISION_ALIGN_OFFSET, m_chkUseVisionAlignOffset);
+	
 
 	DDX_Control(pDX, IDC_CHK_USE_TRAY_PICKER_TURN, m_chkUseTrayPickerTurn);
 	DDX_Control(pDX, IDC_CHK_USE_CAP_PICKER_TURN, m_chkUseCapPickerTurn);
@@ -168,9 +169,11 @@ void CSetupEquipDlg::Initial_Controls()
 
 	m_chkUseVisionCapDir.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x00, 0xF0, 0xF0), CCheckCS::emRed, 0);
 
-	m_chkUseVisionCmAlign.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
+	m_chkInspectCMOption.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
+	m_chkInspectNGMix.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
+
 	m_chkUseVisionAlignAlarm.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
-	m_chkUseVisionAlignOffset.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
+	
 
 	m_chkUseTrayPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
 	m_chkUseCapPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
@@ -465,10 +468,12 @@ void CSetupEquipDlg::Display_EquipData()
 	
 	m_chkUseInlineMode.SetCheck(pEquipData->bUseInlineMode);
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
-	m_chkUseVisionCmAlign.SetCheck(pEquipData->bUseVisionCmAlign);
-	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
-	m_chkUseVisionAlignOffset.SetCheck(pEquipData->bUseVisionAlignOffset);
+	
+	m_chkInspectCMOption.SetCheck(pEquipData->bUseVisionCmAlign);
+	m_chkInspectNGMix.SetCheck(pEquipData->bInspectNgMix);
 
+	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
+	
 	strData.Format("%d", pEquipData->nInspectCmScanTimes); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
 	strData.Format("%d", pEquipData->nInspectCmLotTimes); m_stcCMVision[1].SetWindowTextA(strData);
 	strData.Format("%d", pEquipData->nInspectCmMinutes); m_stcCMVision[2].SetWindowTextA(strData); 
@@ -549,11 +554,12 @@ void CSetupEquipDlg::Save_EquipData()
 	INI.Set_Bool("OPTION", "INLINE_MODE", m_chkUseInlineMode.GetCheck());
 #ifndef DRY_RUN_TEST
 	INI.Set_Bool("OPTION", "VISION_CAP_DIR", m_chkUseVisionCapDir.GetCheck());
-	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", m_chkUseVisionCmAlign.GetCheck());
+	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", m_chkInspectCMOption.GetCheck());
+	
 #endif
+	INI.Set_Bool("OPTION", "VISION_NG_MIX", m_chkInspectNGMix.GetCheck());
 	INI.Set_Bool("OPTION", "VISION_ALIGN_ALARM", m_chkUseVisionAlignAlarm.GetCheck());
-	INI.Set_Bool("OPTION", "VISION_ALIGN_OFFSET", m_chkUseVisionAlignOffset.GetCheck());
-
+	
 	INI.Set_Bool("OPTION", "TRAY_PICKER_TURN", m_chkUseTrayPickerTurn.GetCheck());
 	INI.Set_Bool("OPTION", "CAP_PICKER_TURN", m_chkUseCapPickerTurn.GetCheck());
 	INI.Set_Bool("OPTION", "ASSY_PICKER_TILT", m_chkAssyPickerTilt.GetCheck());

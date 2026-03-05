@@ -844,7 +844,21 @@ BOOL CSequenceMain::Check_CapInspAllGood()
 
 BOOL CSequenceMain::Exist_ShipPickerOk()
 {
-	for (int i = 0; i < PICK; i++) { if (gData.InfoUnloadPick[i] == 1) return TRUE; }
+	if(m_pEquipData->bInspectNgMix)
+	{
+		for (int i = 0; i < PICK; i++)
+		{
+			if (gData.InfoUnloadPick[i] > 0) return TRUE;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < PICK; i++)
+		{
+			if (gData.InfoUnloadPick[i] == 1) return TRUE;
+		}
+	}
+	
 	return FALSE;
 }
 
@@ -952,8 +966,39 @@ BOOL CSequenceMain::Select_AssyPickerNgPos(int &nPos)
 BOOL CSequenceMain::Select_UnloadPickerPos(int &nPos, int &nCnt)
 {
 	nPos = -1; nCnt = 0;
-	for (int i = 0; i < PICK; i++) { if (gData.InfoUnloadPick[i] == 1) { nPos = i; break; } }
-	for (int j = nPos; j < PICK; j++) { if (gData.InfoUnloadPick[j] != 1) break; nCnt++; }
+	for (int i = 0; i < PICK; i++) 
+	{ 
+		if(m_pEquipData->bInspectNgMix)
+		{
+			if (gData.InfoUnloadPick[i] > 0) 
+			{
+				nPos = i; break;
+			} 
+		}
+		else
+		{
+			if (gData.InfoUnloadPick[i] == 1) 
+			{
+				nPos = i; break;
+			} 
+		}		
+	}
+
+
+	for (int j = nPos; j < PICK; j++) 
+	{ 
+		if(m_pEquipData->bInspectNgMix)
+		{
+			if (gData.InfoUnloadPick[j] == 0) break;
+			nCnt++;
+		}
+		else
+		{
+			if (gData.InfoUnloadPick[j] != 1) break;
+			nCnt++;			
+		}		
+	}
+
 	if (nPos == -1 || nCnt == 0) return FALSE;
 	return TRUE;
 }
@@ -5096,7 +5141,17 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				int nTNo = gData.nTNoUnloadPick[nUpStart+i] - 1;
 				int nCNo = gData.nCNoUnloadPick[nUpStart+i] - 1;
 				gData.nCmJigNo[nPNo][nTNo][nCNo][UNLOAD_PICK] = nUpStart + i + 1;	// Unload Pick
-				g_objLogFile.Save_CmTrackingLog("GOOD", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);
+
+				if(gData.InfoUnloadPick[nUpStart+i] == 1)
+				{
+					g_objLogFile.Save_CmTrackingLog("GOOD", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);
+					
+					
+				}
+				else
+				{
+					g_objLogFile.Save_CmTrackingLog("FAIL", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);
+				}
 				g_objLogFile.Save_CapLasLog(gData.sShipLotID, gData.sCIDUnloadPicker[i], gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i], nUpStart+i+1);
 
 				gData.InfoShipTray[nUpPosY][nUpPosX+i] = gData.InfoUnloadPick[nUpStart+i]; gData.InfoUnloadPick[nUpStart+i] = 0;

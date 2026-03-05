@@ -758,12 +758,22 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 		nIdxLdJig	= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][INDEX_LOAD_JIG];
 		nUlPick		= gData.nCmJigNo[nPortNo-1][nTrayNo-1][nCmNo-1][UNLOAD_PICK];
 		
-		if (strOut == "GOOD") {
+		if (strOut == "GOOD") 
+		{
 			strSave.Format("%02d:%02d:%02d,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
 				time.wHour, time.wMinute, time.wSecond, gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
 				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,
 				0, 0, 0, nTrayCount, nPosY+1, nPosX+1);
-		} else {
+		}
+		else if(strOut == "FAIL")
+		{
+			strSave.Format("%02d:%02d:%02d,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
+				time.wHour, time.wMinute, time.wSecond, gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
+				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,
+				0, 0, 0, nTrayCount, nPosY+1, nPosX+1);
+		}
+		else
+		{
 			strSave.Format("%02d:%02d:%02d,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
 				time.wHour, time.wMinute, time.wSecond, gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
 				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,

@@ -37,6 +37,7 @@ void CDataManager::Reset_EquipData()
 	m_EquipData.bUseInlineMode = FALSE;
 	m_EquipData.bUseVisionCapDir = FALSE;
 	m_EquipData.bUseVisionCmAlign = FALSE;
+	m_EquipData.bInspectNgMix	=	FALSE;
 	m_EquipData.bUseVisionAlignAlarm = FALSE;
 	m_EquipData.bUseVisionAlignOffset = FALSE;
 
@@ -148,9 +149,11 @@ BOOL CDataManager::Read_EquipData()
 	m_EquipData.bUseVisionCapDir = FALSE;
 	m_EquipData.bUseVisionCmAlign = FALSE;
 #else
+
 	m_EquipData.bUseVisionCapDir = INI.Get_Bool("OPTION", "VISION_CAP_DIR", FALSE);
 	m_EquipData.bUseVisionCmAlign = INI.Get_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
 #endif
+	m_EquipData.bInspectNgMix = INI.Get_Bool("OPTION", "VISION_NG_MIX", FALSE);
 	m_EquipData.bUseVisionAlignAlarm = INI.Get_Bool("OPTION", "VISION_ALIGN_ALARM", FALSE);
 	m_EquipData.bUseVisionAlignOffset = INI.Get_Bool("OPTION", "VISION_ALIGN_OFFSET", FALSE);
 		

@@ -54,6 +54,8 @@ typedef struct tag_EQUIP_DATA {
 
 
 	BOOL	bUseVisionCmAlign;
+	BOOL	bInspectNgMix;
+
 	BOOL	bUseVisionAlignAlarm;
 	BOOL	bUseVisionAlignOffset;
 
@@ -63,6 +65,8 @@ typedef struct tag_EQUIP_DATA {
 
 	BOOL	bResultTestUse;		// Result Test Use
 	int		nResultTestNg;		// Result Test Ng Ratio (0~100)
+
+
 
 } EQUIP_DATA;
 
