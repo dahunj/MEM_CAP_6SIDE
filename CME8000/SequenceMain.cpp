@@ -1296,7 +1296,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	if (!m_pEquipData->bUseInlineMode)	g_dlgWork.Enable_UserInput(nPortNo, TRUE);
 
 	g_dlgWork.PostMessage(UM_UPDATE_UPH, NULL, NULL);
-
+	g_objAviHandler.Set_PullForceEnd();
 //	Beep_Post(1000);
 }
 

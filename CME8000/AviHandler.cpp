@@ -400,6 +400,16 @@ void CAviHandler::Set_TrayUnload()
 	gData.bAviTrayLoad = FALSE;
 }
 
+void CAviHandler::Set_PullForceEnd()
+{
+	CString	strSendCmd;
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	strSendCmd.Format("PULLFORCE,END,%s,%d", pEquipData->sAviIp, UDP_AVI_LPORT);
+	Send_Command(strSendCmd);	
+}
+
+
 void CAviHandler::Set_ApdReply()
 {
 	CString	strSendCmd;
