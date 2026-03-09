@@ -5144,9 +5144,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 
 				if(gData.InfoUnloadPick[nUpStart+i] == 1)
 				{
-					g_objLogFile.Save_CmTrackingLog("GOOD", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);
-					
-					
+					g_objLogFile.Save_CmTrackingLog("GOOD", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);					
 				}
 				else
 				{
