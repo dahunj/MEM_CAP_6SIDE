@@ -395,18 +395,18 @@ BOOL CCommon::Check_TrayFull()
 		//Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY);
 		return FALSE;
 	}
-	//if (pDX02->iCapPort2HighCheck)		
-	//{ 
-	//	Show_MsgBox(1,"Cap Port2 Full Sensor Checked.");
-	//	//Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY);
-	//	return FALSE;
-	//}
-	//if (pDX03->iUnloadPort1HighCheck)	
-	//{ 
-	//	Show_MsgBox(1,"Unload Port1 Full Sensor Checked.");
-	//	//Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
-	//	return FALSE;
-	//}
+	if (pDX02->iCapPort2HighCheck && !gData.bCapPort2Wait)		
+	{ 
+		Show_MsgBox(1,"Cap Port2 Full Sensor Checked.");
+		//Show_Alarm("Cap Port1 Full Sensor Checked.", STATE_CAPTRAY);
+		return FALSE;
+	}
+	if (pDX03->iUnloadPort1HighCheck && !gData.bUnloadPort1Wait)	
+	{ 
+		Show_MsgBox(1,"Unload Port1 Full Sensor Checked.");
+		//Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
+		return FALSE;
+	}
 	if (pDX03->iUnloadPort2HighCheck)	
 	{ 
 		Show_MsgBox(1,"Unload Port2 Full Sensor Checked.");
