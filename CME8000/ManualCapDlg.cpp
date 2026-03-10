@@ -34,7 +34,7 @@ void CManualCapDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_CAP_PORT1_IO_0	+ i, m_btnCapPort1Io[i]);
 	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_CAP_PORT1_IO_0	+ i, m_ledCapPort1Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_CAP_PORT2_IO_0	+ i, m_btnCapPort2Io[i]);
-	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_CAP_PORT2_IO_0	+ i, m_ledCapPort2Io[i]);
+	for (int i = 0; i < 11; i++) DDX_Control(pDX, IDC_LED_CAP_PORT2_IO_0	+ i, m_ledCapPort2Io[i]);
 	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_BTN_CAP_STAGE1_X_0	+ i, m_btnCapStage1X[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_CAP_STAGE1_Z_0	+ i, m_btnCapStage1Z[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_CAP_STAGE1_IO_0	+ i, m_btnCapStage1Io[i]);
@@ -85,7 +85,7 @@ void CManualCapDlg::Initial_Controls()
 	for (int i =  0; i <  4; i++) m_btnCapPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i =  0; i < 10; i++) m_ledCapPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i =  0; i <  4; i++) m_btnCapPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
-	for (int i =  0; i < 10; i++) m_ledCapPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
+	for (int i =  0; i < 11; i++) m_ledCapPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i =  0; i <  5; i++) m_btnCapStage1X[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i =  0; i <  4; i++) m_btnCapStage1Z[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i =  0; i <  4; i++) m_btnCapStage1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
@@ -197,6 +197,7 @@ void CManualCapDlg::Display_Status()
 	m_ledCapPort2Io[7].Set_On(pDX02->iCapPort2Support2In);
 	m_ledCapPort2Io[8].Set_On(pDX02->iCapPort2Support1Out);
 	m_ledCapPort2Io[9].Set_On(pDX02->iCapPort2Support2Out);
+	m_ledCapPort2Io[10].Set_On(pDX02->iCapPort2HighCheck);
 
 	m_ledCapStage1Io[0].Set_On(pDX04->iCapStage1MasterIn);
 	m_ledCapStage1Io[1].Set_On(pDX04->iCapStage1MasterOut);

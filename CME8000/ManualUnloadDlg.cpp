@@ -49,7 +49,7 @@ void CManualUnloadDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE2_IO_0	+ i, m_btnUnloadStage2Io[i]);
 	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_LED_UNLOAD_STAGE2_IO_0	+ i, m_ledUnloadStage2Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT1_IO_0		+ i, m_btnUnloadPort1Io[i]);
-	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT1_IO_0		+ i, m_ledUnloadPort1Io[i]);
+	for (int i = 0; i < 11; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT1_IO_0		+ i, m_ledUnloadPort1Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT2_IO_0		+ i, m_btnUnloadPort2Io[i]);
 	for (int i = 0; i < 11; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT2_IO_0		+ i, m_ledUnloadPort2Io[i]);
 }
@@ -104,7 +104,7 @@ void CManualUnloadDlg::Initial_Controls()
 	for (int i = 0; i <  4; i++) m_btnUnloadStage2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i <  5; i++) m_ledUnloadStage2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  4; i++) m_btnUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
-	for (int i = 0; i < 10; i++) m_ledUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
+	for (int i = 0; i < 11; i++) m_ledUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  4; i++) m_btnUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i < 11; i++) m_ledUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 }
@@ -220,6 +220,7 @@ void CManualUnloadDlg::Display_Status()
 	m_ledUnloadPort1Io[7].Set_On(pDX03->iUnloadPort1Support1Out);
 	m_ledUnloadPort1Io[8].Set_On(pDX03->iUnloadPort1Support2Out);
 	m_ledUnloadPort1Io[9].Set_On(!pDX03->iUnloadPort1AreaCheck);
+	m_ledUnloadPort1Io[10].Set_On(pDX03->iUnloadPort1HighCheck);
 
 	m_ledUnloadPort2Io[0].Set_On(pDX03->iUnlaodPort2LowCheck);
 	m_ledUnloadPort2Io[1].Set_On(pDX03->iUnloadPort2SlideOpen);

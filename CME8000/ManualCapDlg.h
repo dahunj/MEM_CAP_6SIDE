@@ -20,7 +20,7 @@ public:
 	CButtonCS	m_btnCapPort1Io[4];
 	CLedCS		m_ledCapPort1Io[10];
 	CButtonCS	m_btnCapPort2Io[4];
-	CLedCS		m_ledCapPort2Io[10];
+	CLedCS		m_ledCapPort2Io[11];
 	CButtonCS	m_btnCapStage1X[5];
 	CButtonCS	m_btnCapStage1Z[4];
 	CButtonCS	m_btnCapStage1Io[4];

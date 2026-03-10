@@ -1055,6 +1055,8 @@ void CWorkDlg::Check_Lamp()
 					if (pEquipData->bUseDoorLock) pDY13->oDoor04Unlock = TRUE; 
 					g_objAJinAXL.Write_Output(13);
 
+					g_objLogFile.Save_HandlerLog("Load port3 S/W True");
+
 					gData.bLoadPort3Wait = TRUE;
 					m_bLoadSw3On = TRUE;
 
@@ -1064,6 +1066,8 @@ void CWorkDlg::Check_Lamp()
 					g_objAJinAXL.Write_Output(1);
 					if (pEquipData->bUseDoorLock) pDY13->oDoor04Unlock = FALSE; 
 					g_objAJinAXL.Write_Output(13);
+
+					g_objLogFile.Save_HandlerLog("Load port3 S/W False");
 
 					gData.bLoadPort3Wait = FALSE;
 					m_bLoadSw3On = TRUE;
@@ -1082,6 +1086,8 @@ void CWorkDlg::Check_Lamp()
 					if (pEquipData->bUseDoorLock) pDY13->oDoor11Unlock = TRUE; 
 					g_objAJinAXL.Write_Output(13);
 
+					g_objLogFile.Save_HandlerLog("Cap port1 S/W True");
+
 					gData.bCapPort1Wait = TRUE;
 					m_bCapSw1On = TRUE;
 
@@ -1091,6 +1097,8 @@ void CWorkDlg::Check_Lamp()
 					g_objAJinAXL.Write_Output(2);
 					if (pEquipData->bUseDoorLock) pDY13->oDoor11Unlock = FALSE; 
 					g_objAJinAXL.Write_Output(13);
+
+					g_objLogFile.Save_HandlerLog("Cap port1 S/W False");
 
 					gData.bCapPort1Wait = FALSE;
 					m_bCapSw1On = TRUE;
@@ -1109,6 +1117,8 @@ void CWorkDlg::Check_Lamp()
 					if (pEquipData->bUseDoorLock) pDY13->oDoor12Unlock = TRUE; 
 					g_objAJinAXL.Write_Output(13);
 
+					g_objLogFile.Save_HandlerLog("Cap port2 S/W True");
+
 					gData.bCapPort2Wait = TRUE;
 					m_bCapSw2On = TRUE;
 				}
@@ -1118,6 +1128,8 @@ void CWorkDlg::Check_Lamp()
 					g_objAJinAXL.Write_Output(2);
 					if (pEquipData->bUseDoorLock) pDY13->oDoor12Unlock = FALSE; 
 					g_objAJinAXL.Write_Output(13);
+
+					g_objLogFile.Save_HandlerLog("Cap port2 S/W False");
 
 					gData.bCapPort2Wait = FALSE;
 					m_bCapSw2On = TRUE;
@@ -1136,6 +1148,8 @@ void CWorkDlg::Check_Lamp()
 					if (pEquipData->bUseDoorLock) pDY13->oDoor10Unlock = TRUE; 
 					g_objAJinAXL.Write_Output(13);
 
+					g_objLogFile.Save_HandlerLog("unload port1 S/W True");
+
 					gData.bUnloadPort1Wait = TRUE;
 					m_bUnloadSw1On = TRUE;
 				}
@@ -1145,6 +1159,8 @@ void CWorkDlg::Check_Lamp()
 					g_objAJinAXL.Write_Output(3);
 					if (pEquipData->bUseDoorLock) pDY13->oDoor10Unlock = FALSE; 
 					g_objAJinAXL.Write_Output(13);
+
+					g_objLogFile.Save_HandlerLog("unload port1 S/W False");
 
 					gData.bUnloadPort1Wait = FALSE;
 					m_bUnloadSw1On = TRUE;
