@@ -197,13 +197,13 @@ typedef union tag_DX_DATA_02 {
 		DWORD iCapPort1SlideOpen : 1;		// X0203
 		DWORD iCapPort1LowCheck : 1;		// X0204
 		DWORD i0205 : 1;					// X0205
-		DWORD i0206 : 1;		// X0206
+		DWORD iCapPort1HighCheck : 1;		// X0206
 		DWORD i0207 : 1;					// X0207
 		DWORD iCapPort1Support1In : 1;		// X0208
 		DWORD iCapPort1Support1Out : 1;		// X0209
 		DWORD iCapPort1Support2In : 1;		// X0210
 		DWORD iCapPort1Support2Out : 1;		// X0211
-		DWORD iCapPort1HighCheck : 1;		// X0212
+		DWORD i0212 : 1;		// X0212
 		DWORD i0213 : 1;					// X0213
 		DWORD i0214 : 1;					// X0214
 		DWORD i0215 : 1;					// X0215

@@ -51,7 +51,7 @@ void CManualUnloadDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT1_IO_0		+ i, m_btnUnloadPort1Io[i]);
 	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT1_IO_0		+ i, m_ledUnloadPort1Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT2_IO_0		+ i, m_btnUnloadPort2Io[i]);
-	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT2_IO_0		+ i, m_ledUnloadPort2Io[i]);
+	for (int i = 0; i < 11; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT2_IO_0		+ i, m_ledUnloadPort2Io[i]);
 }
 
 BEGIN_MESSAGE_MAP(CManualUnloadDlg, CDialogEx)
@@ -106,7 +106,7 @@ void CManualUnloadDlg::Initial_Controls()
 	for (int i = 0; i <  4; i++) m_btnUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i < 10; i++) m_ledUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  4; i++) m_btnUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
-	for (int i = 0; i < 10; i++) m_ledUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
+	for (int i = 0; i < 11; i++) m_ledUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 }
 
 BOOL CManualUnloadDlg::OnInitDialog() 
@@ -231,6 +231,7 @@ void CManualUnloadDlg::Display_Status()
 	m_ledUnloadPort2Io[7].Set_On(pDX03->iUnloadPort2Support1Out);
 	m_ledUnloadPort2Io[8].Set_On(pDX03->iUnloadPort2Support2Out);
 	m_ledUnloadPort2Io[9].Set_On(!pDX03->iUnloadPort2AreaCheck);
+	m_ledUnloadPort2Io[10].Set_On(pDX03->iUnloadPort2HighCheck);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

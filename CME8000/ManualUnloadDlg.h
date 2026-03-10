@@ -38,7 +38,7 @@ public:
 	CButtonCS	m_btnUnloadPort1Io[4];
 	CLedCS		m_ledUnloadPort1Io[10];
 	CButtonCS	m_btnUnloadPort2Io[4];
-	CLedCS		m_ledUnloadPort2Io[10];
+	CLedCS		m_ledUnloadPort2Io[11];
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
