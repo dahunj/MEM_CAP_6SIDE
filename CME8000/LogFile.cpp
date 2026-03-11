@@ -233,7 +233,7 @@ void CLogFile::Save_JobListLog(CString sLog, BOOL bMode)
 	GetLocalTime(&time);
 
 	CString sTitle, strFile, strSave;
-	sTitle.Format("Time,lotNum,Start_Time,End_Time,Run_Time,Tray_Count,CM_Count,Tack,Good_Count,NG_Count,NG1_Count,NG2_Count,MESNG_Count\r\n");
+	sTitle.Format("Time,lotNum,Start_Time,End_Time,Run_Time,Unload_Time,Tact(S-E),Tact(RunTime),Tact(Unload_Time),Alarm_Count,Stop_Time,Efficiency(RunTime), Efficiency(Unload),Tray_Count,CM_Count,NG_Count,\r\n");
 	strFile.Format("%s\\%04d%02d%02d_JobList.txt", strPath, time.wYear, time.wMonth, time.wDay);
 
 	CFile file;
@@ -591,7 +591,7 @@ void CLogFile::Save_LotLog(int nPNo)
 	CFile file;
 	if (!file.Open(strFile, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) return;
 
-	sTemp.Format("LotID,%s,Start_Time,%s,End_Time,%s,Tray_Count,%02d,CM_Count,%04d,Tack,%0.7lf,\r\n\r\n", gLot.sLotID[nNo], gLot.sStartTime[nNo], gLot.sEndTime[nNo], gLot.nTrayCount[nNo], gLot.nCmCount[nNo], gLot.dTackTime);
+	sTemp.Format("LotID,%s,Start_Time,%s,End_Time,%s,Tray_Count,%02d,CM_Count,%04d,Tack,%0.7lf,\r\n\r\n", gLot.sLotID[nNo], gLot.sStartTime[nNo], gLot.sEndTime[nNo], gLot.nTrayCount[nNo], gLot.nCmCount[nNo], gLot.dTactTime_RunTime);
 	sData.Format("%sTray_No,Pocket_No,ID,Inspection Result,ID Result,\r\n", sTemp);
 	file.Write(sData, sData.GetLength());
 
