@@ -1167,7 +1167,7 @@ void CSequenceMain::Job_LotStart(int nPortNo)
 	GetLocalTime(&time);
 
 	gLot.sLotID[nLPNo] = gData.sLotID[nLPNo];
-	gLot.sStartTime[nLPNo].Format("%04d%02d%02d_%02d%02d%02d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+	gLot.sStartTime[nLPNo].Format("%04d-%02d-%02d %02d:%02d:%02d.%03d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
 	m_dwFirstLoad = gLot.dwLotStart[nLPNo] = GetTickCount();
 	gLot.nTrayCount[nLPNo] = gData.nTrayUseCount[nLPNo];
 	gLot.nCmCount[nLPNo] = gData.nCmUseCount[nLPNo];
@@ -1200,7 +1200,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	SYSTEMTIME time;
 	GetLocalTime(&time);
 	gLot.dwLotEnd[nLPNo] = GetTickCount();
-	gLot.sEndTime[nLPNo].Format("%04d%02d%02d_%02d%02d%02d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+	gLot.sEndTime[nLPNo].Format("%04d-%02d-%02d %02d:%02d:%02d.%03d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds);
 
 	if (Get_VisionInspectUse()) g_objInspector.Set_LotEnd(gData.sLotID[nLPNo], nPortNo);
 
@@ -1232,8 +1232,8 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 // 	m_strLog.Format("LotID(%s), Load(%0.3lf), Unload(%0.3lf), Takt as 600 EA Run(%0.6lf)", gLot.sLotID[nLPNo], (double)m_dwFirstLoad / 1000, (double)m_dwLastUnLoad / 1000, (dOne * 599 + m_dwFirstLoad + m_dwLastUnLoad) / 600000.0);
 // 	g_objLogFile.Save_HandlerLog(m_strLog);
 	
-	m_strLog.Format("%s,%s,%s,%d,%d,%0.3lf,%0.3lf,%0.3lf,%d,%d,%0.3lf,%0.3lf,%d,%d,%d",
-		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_RunTime, dwTime_Unload, gLot.dTactTime_StoE, gLot.dTactTime_RunTime, gLot.dTactTime_Unload,gLot.nAlmCnt[nLPNo], gLot.dwStopTime[nLPNo], dEff_RunTime, dEff_UnloadTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.nNgCount[nLPNo]);
+	m_strLog.Format("%s,%s,%s,%d,%d,%0.3lf,%0.3lf,%0.3lf,%0.3lf,%0.3lf,%0.3lf,%d,%d,%0.3lf,%0.3lf,%d,%d,%d",
+		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_RunTime, dwTime_Unload, gLot.dTactTime_StoE, gLot.dTactTime_RunTime, gLot.dTactTime_Unload,3600.0/gLot.dTactTime_StoE, 3600.0/gLot.dTactTime_RunTime, 3600.0/gLot.dTactTime_Unload,gLot.nAlmCnt[nLPNo], gLot.dwStopTime[nLPNo], dEff_RunTime, dEff_UnloadTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.nNgCount[nLPNo]);
 	g_objLogFile.Save_JobListLog(m_strLog, TRUE);
 
 	g_dlgWork.PostMessage(UM_LOT_START_END, (WPARAM)2, nPortNo);	// LotEnd
@@ -5199,7 +5199,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			g_objCommon.Set_UnloadPickerUp(0);
 
 			m_strLog.Format("Seq,14,UnloadPicker,%d,Put Good Done", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
-			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(10000);
+			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(60000);
 		}
 		break;
 	case 25:	// Position Check, Unload Tray Full Check
@@ -5294,7 +5294,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1);	// Stage Down
 
 					m_strLog.Format("Seq,14,UnloadPicker,%d,Picker have NG left", m_nUnloadPickCase); g_objLogFile.Save_SeqLog(m_strLog);
-					m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(5000);
+					m_nUnloadPickCase = 30; m_tUnloadPickLoop.Set_LoopTime(15000);
 				}
 			}
 			
@@ -5320,7 +5320,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 			if (nUpWorkTray == 1) dSpStageY = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE1_Y);
 			if (nUpWorkTray == 2) dSpStageY = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE2_Y);
 
-			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(5000);
+			m_nUnloadPickCase++; m_tUnloadPickLoop.Set_LoopTime(15000);
 		}
 		break;
 	case 31:	// Move to Unload Tray, Tray Position Check
