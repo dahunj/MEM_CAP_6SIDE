@@ -23,7 +23,7 @@ public:
 	BOOL Waiting_Time(DWORD msec);
 
 	void Takt_Start();
-	void Takt_Save(int nFun, int nId);
+	void Takt_Save(int nFun, int nId, CString sLog = "");
 };
 
 ///////////////////////////////////////////////////////////////////////////////
