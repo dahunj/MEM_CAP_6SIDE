@@ -419,19 +419,14 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		g_objLogFile.Save_HandlerLog("[Work Mode] START S/W push");
 		m_rdoWorkStart.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("START", 903, "Start");
-		SetTimer(0, 100, NULL);
-		SetTimer(1, 5000, NULL);
-		return;
+		
 	} 
 	else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) 
 	{
 		g_objLogFile.Save_HandlerLog("[Work Mode] STOP S/W push");
 		MachineStopLog("STOP_BUTTON_PUSH");
 		m_rdoWorkStop.SetCheck(TRUE);
-		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");
-		SetTimer(0, 100, NULL);
-		SetTimer(1, 5000, NULL);
-		return;
+		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");		
 	}
 
 	if (pDX12->iResetSw) g_objCommon.Show_Alarm("", STATE_ALARM, FALSE);	// Alarm Off
