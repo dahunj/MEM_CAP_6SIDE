@@ -237,6 +237,11 @@ void CCommon::Show_Alarm(CString sMsg, int nState, BOOL bOn)
 int CCommon::Show_MsgBox(int nBtnCnt, CString sMsg)
 {
 	CMsgBoxDlg dlgMsgBox;
+	CString sLog;
+
+	sLog.Format("[Show MsgBox],%s", sMsg);
+	g_objLogFile.Save_HandlerLog(sLog);
+
 	dlgMsgBox.Set_Message(nBtnCnt, sMsg);
 	return dlgMsgBox.DoModal();
 }
@@ -382,7 +387,7 @@ BOOL CCommon::Check_PortArea(BOOL bAuto)
 
 BOOL CCommon::Check_TrayFull()
 {
-#ifdef AJIN_BOARD_USE
+
 	DX_DATA_01 *pDX01 = g_objAJinAXL.Get_pDX01();
 	DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
 	DX_DATA_03 *pDX03 = g_objAJinAXL.Get_pDX03();
@@ -417,7 +422,7 @@ BOOL CCommon::Check_TrayFull()
 		//Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
 		return FALSE;
 	}
-#endif
+
 	return TRUE;
 }
 

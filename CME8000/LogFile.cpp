@@ -770,21 +770,21 @@ void CLogFile::Save_CmTrackingLog(CString strOut, int nTrayCount, int nPosX, int
 			strSave.Format("'%04d-%02d-%02d %02d:%02d:%02d.%03d,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
 				time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds,gData.sComName, gData.sLotID[nPortNo-1], gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
 				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,
-				0, 0, 0, nTrayCount, nPosY+1, nPosX+1);
+				0, 0, 0, nTrayCount, nPosY, nPosX);
 		}
 		else if(strOut == "FAIL")
 		{
 			strSave.Format("'%04d-%02d-%02d %02d:%02d:%02d.%03d,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
 				time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, gData.sComName,gData.sLotID[nPortNo-1], gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
 				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,
-				0, 0, 0, nTrayCount, nPosY+1, nPosX+1);
+				0, 0, 0, nTrayCount, nPosY, nPosX);
 		}
 		else
 		{
 			strSave.Format("'%04d-%02d-%02d %02d:%02d:%02d.%03d,%s,%s,%s,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\r\n", 
 				time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, gData.sComName,gData.sLotID[nPortNo-1],  gMes.sBarID[nPortNo-1][nTrayNo-1][nCmNo-1], strJudge, nPortNo, nTrayNo, nCmNo, 
 				nLdStageNo, nLdPick, nIdxLdNo, nIdxLdJig, nUlPick,
-				nTrayCount, nPosY+1, nPosX+1, 0, 0, 0);
+				nTrayCount, nPosY, nPosX, 0, 0, 0);
 		}
 		file.Write(strSave, strSave.GetLength());
 		file.Close();

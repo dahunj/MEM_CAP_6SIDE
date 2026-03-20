@@ -420,7 +420,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		m_rdoWorkStart.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("START", 903, "Start");
 		SetTimer(0, 100, NULL);
-		//SetTimer(1, 5000, NULL);
+		SetTimer(1, 5000, NULL);
 		return;
 	} 
 	else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) 
@@ -430,7 +430,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		m_rdoWorkStop.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");
 		SetTimer(0, 100, NULL);
-		//SetTimer(1, 5000, NULL);
+		SetTimer(1, 5000, NULL);
 		return;
 	}
 
@@ -1801,7 +1801,11 @@ void CWorkDlg::OnBnClickedButton2()
 
 void CWorkDlg::OnBnClickedBtnLotstart1()
 {
-	g_objInspector.Set_LotStart(gData.sLotID[0], 1);
+	DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
+
+	pDX02->iCapPort2HighCheck = TRUE;
+	//g_objInspector.Set_LotStart(gData.sLotID[0], 1);
+	
 }
 
 
