@@ -5451,7 +5451,9 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							}
 							m_bUnloadLotEnd = TRUE;
 						}
-					} else {
+					} 
+					else
+					{
 						if (m_nUnloadStage1Case <= 10) 
 						{ 
 							if (m_nUnloadStage2Case != 40) return TRUE;
