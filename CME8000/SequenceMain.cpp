@@ -4878,16 +4878,23 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 &&
 				Check_LoadTrayLoading(gData.nPNoUnloadTray))
 			{
+				if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
+
 				if (m_nUnloadStage1Case == 20) 
 				{
 					if (m_bShipStg2Ng && m_nUnloadStage2Case != 10) return TRUE;
-					gData.bUnloadTrayLotEnd[0] = TRUE; m_nUnloadStage1Case = 21;
+					gData.bUnloadTrayLotEnd[0] = TRUE; 
+					m_nUnloadStage1Case = 22;
+					m_nUnloadStage2Case = 21;
 				}
 				if (m_nUnloadStage2Case == 20) 
 				{ 
 					if (m_bShipStg1Ng && m_nUnloadStage1Case != 10) return TRUE;
-					gData.bUnloadTrayLotEnd[1] = TRUE; m_nUnloadStage2Case = 21; 
+					gData.bUnloadTrayLotEnd[1] = TRUE; 
+					m_nUnloadStage2Case = 22; 
+					m_nUnloadStage1Case = 21; 
 				}
+				
 
 				Job_LotEnd(gData.nPNoUnloadTray);
 				gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
@@ -5083,17 +5090,23 @@ BOOL CSequenceMain::UnloadPicker_Run()
 					if (gData.nTNoUnloadTray != 0 && gData.nTNoUnloadTray == gData.nLastTrayNo[gData.nPNoUnloadTray-1] &&
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 && Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
+						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
+
 						if (m_nUnloadStage1Case == 20) 
 						{
 							if (m_bShipStg2Ng && m_nUnloadStage2Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[0] = TRUE; m_nUnloadStage1Case = 21;
+							gData.bUnloadTrayLotEnd[0] = TRUE; 
+							m_nUnloadStage1Case = 22;
+							m_nUnloadStage2Case = 21;
 						}
 						if (m_nUnloadStage2Case == 20) 
 						{ 
 							if (m_bShipStg1Ng && m_nUnloadStage1Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[1] = TRUE; m_nUnloadStage2Case = 21; 
+							gData.bUnloadTrayLotEnd[1] = TRUE; 
+							m_nUnloadStage2Case = 22; 
+							m_nUnloadStage1Case = 21; 
 						}
-
+						
 
 						Job_LotEnd(gData.nPNoUnloadTray);
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
@@ -5117,7 +5130,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						}
 					}
 				}
-				return TRUE;
+				//return TRUE;
 			}
 			if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
 
@@ -5239,16 +5252,23 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 &&
 						Check_LoadTrayLoading(gData.nPNoUnloadTray))
 					{
+						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
+
 						if (m_nUnloadStage1Case == 20) 
 						{
 							if (m_bShipStg2Ng && m_nUnloadStage2Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[0] = TRUE; m_nUnloadStage1Case = 21;
+							gData.bUnloadTrayLotEnd[0] = TRUE; 
+							m_nUnloadStage1Case = 22;
+							m_nUnloadStage2Case = 21;
 						}
 						if (m_nUnloadStage2Case == 20) 
 						{ 
 							if (m_bShipStg1Ng && m_nUnloadStage1Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[1] = TRUE; m_nUnloadStage2Case = 21; 
+							gData.bUnloadTrayLotEnd[1] = TRUE; 
+							m_nUnloadStage2Case = 22;
+							m_nUnloadStage1Case = 21; 
 						}
+						
 
 						Job_LotEnd(gData.nPNoUnloadTray);
 						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
@@ -5264,17 +5284,23 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				{
 					if (Check_LoadTrayLoading(gData.nPNoUnloadTray)) 
 					{
+						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
+
 						if (m_nUnloadStage1Case == 20) 
 						{ 
 							if (m_bShipStg2Ng && m_nUnloadStage2Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[0] = TRUE; m_nUnloadStage1Case = 21; 
+							gData.bUnloadTrayLotEnd[0] = TRUE; 
+							m_nUnloadStage1Case = 22;
+							m_nUnloadStage2Case = 21; 
 						}
 						if (m_nUnloadStage2Case == 20)
 						{ 
 							if (m_bShipStg1Ng && m_nUnloadStage1Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[1] = TRUE; m_nUnloadStage2Case = 21;
+							gData.bUnloadTrayLotEnd[1] = TRUE; 
+							m_nUnloadStage2Case = 22;
+							m_nUnloadStage1Case = 21;
 						}
-
+						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
 
 						Job_LotEnd(gData.nPNoUnloadTray);
 						if (m_pThreadBeep == NULL) {
@@ -5631,7 +5657,20 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		{
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
+		if ((gData.nPNoUnloadTray != gData.nPNoUnloadPort) && gData.nPNoUnloadPort != 0) 
+		{
+			m_nUnloadStage1Case = -4;
+		}		
 		break;
+	case -4:
+		if ((gData.nPNoUnloadTray != gData.nPNoUnloadPort) && gData.nPNoUnloadPort != 0) 
+		{
+			//pass
+		}
+		else{
+			m_nUnloadStage1Case = 1;m_tUnloadStage1Loop.Set_LoopTime(5000);
+		}
+		return TRUE;
 	case 2:		// Ship Tray Check, Z Move to Support Up
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) &&
 			g_objCommon.Get_UnloadStageMasterSlaveOut(1) && !m_pDX05->iUnloadStage1Exist 
@@ -6023,7 +6062,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			m_tUnloadStage1Loop.Takt_Save(14, 16);
 
 			m_strLog.Format("Seq,15,ULStg1,%d,Empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
-			m_nUnloadStage1Case = 1; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			m_nUnloadStage1Case = 1; m_tUnloadStage1Loop.Set_LoopTime(15000);
 		}
 		break;
 	}
@@ -6066,7 +6105,20 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		{
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
+		if ((gData.nPNoUnloadTray != gData.nPNoUnloadPort) && gData.nPNoUnloadPort != 0)
+		{
+			m_nUnloadStage2Case = -4;
+		}		
 		break;
+	case -4:
+		if ((gData.nPNoUnloadTray != gData.nPNoUnloadPort) && gData.nPNoUnloadPort != 0) 
+		{
+			//pass
+		}
+		else{
+			m_nUnloadStage2Case = 1;m_tUnloadStage2Loop.Set_LoopTime(5000);
+		}
+		return TRUE;
 	case 2:		// Ship Tray Check, Z Move to Support Up
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) &&
 			g_objCommon.Get_UnloadStageMasterSlaveOut(2) && !m_pDX05->iUnloadStage2Exist  &&
@@ -6474,7 +6526,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_tUnloadStage2Loop.Takt_Save(15, 16);
 
 			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
-			m_nUnloadStage2Case = 1; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			m_nUnloadStage2Case = 1; m_tUnloadStage2Loop.Set_LoopTime(15000);
 		}
 		break;
 	}
