@@ -287,7 +287,7 @@ void CSetupEquipDlg::OnRdoModelClick(UINT nID)
 	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
 
 	CString strData;
-	CString strModel = (m_rdoModel[1].GetCheck() ? "R54B" : "R53B");
+	CString strModel = (m_rdoModel[1].GetCheck() ? "R64B" : "R63B");
 
 	int nTrayY =  ST_Y;
 	strData.Format("%d", nTrayY); m_stcShipTrayData[1].SetWindowText(strData);
@@ -538,7 +538,7 @@ void CSetupEquipDlg::Save_EquipData()
 	g_objCommon.Backup_File(gsCurrentDir + "\\System", "EquipData");
 
 	m_stcEquipName.GetWindowText(strData); INI.Set_String("EQUIPMENT", "NAME", strData);
-	strModel = (m_rdoModel[1].GetCheck() ? "R54B" : "R53B"); INI.Set_String("EQUIPMENT", "MODEL", strModel);
+	strModel = (m_rdoModel[1].GetCheck() ? "R64B" : "R63B"); INI.Set_String("EQUIPMENT", "MODEL", strModel);
 	nData = m_cboLotBarcodePort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "LOT_BARCODE", nData + 1);
 	nData = m_cboAssyLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "ASSY_LOAD_CELL", nData + 8);
 	nData = m_cboUnloadLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "UNLOAD_LOAD_CELL", nData + 8);

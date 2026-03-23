@@ -76,7 +76,7 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.2.1")
+#define MAIN_VERSION	_T("V 2.1.0.3")
 //
 //#define AJIN_BOARD_USE
 //#define LOT_BARCODE_USE
@@ -91,9 +91,9 @@
 #define SIM_WAITTIMEM	 1		//
 #define	VELOCITY_WEIGHT	 8
 
-// R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
-// R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
-const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 5, PICK = 4;
+// R63B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
+// R64B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
+const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 6, PICK = 4;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -131,7 +131,7 @@ typedef struct
 	BOOL	IndexDone[3];				// 0:Load, 1:Assembly 2:Trans
 	int		InfoLoadTray[LT_Y][LT_X];	// Load Tray 정보 표시 (0:Not Use, 9:Use)
 	int		InfoCapTray[CT_Y][CT_X];	// Cap Tray 정보 표시 (0:Not Use, 9:Use)
-	int		STY;						// Ship Tray 라인수 (R53B:7, R54B:7)
+	int		STY;						// Ship Tray 라인수 (R63B:7, R64B:7)
 	int		InfoShipTray[ST_Y][ST_X];	// Ship Tray 정보 표시 (0:Not Use, 1:Exist)
 	int		InfoNgTray[ST_Y][ST_X];		// NG Tray 정보 표시 (0:Empty, 2:NG)
 
