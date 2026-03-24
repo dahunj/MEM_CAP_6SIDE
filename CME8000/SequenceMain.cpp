@@ -5325,6 +5325,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						if (m_bShipStg1Ng && m_nUnloadStage1Case != 10) return TRUE;
 						m_nUnloadStage2Case = 21;
 					}
+					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 				}
 			} 
 
@@ -5548,18 +5549,23 @@ BOOL CSequenceMain::UnloadPicker_Run()
 					if (m_nUnloadStage2Case != 40) return TRUE; 
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// Move Down
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// work
+					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);
+					
 					m_nUnloadStage2Case = 22; 
 					m_nUnloadStage1Case = 21; 
 					m_bShipStg2Ng = FALSE;
+					
 				}
 				if (Check_NgTrayFull() && m_nUnloadStage2Case <= 10)
 				{ 
 					if (m_nUnloadStage1Case != 40) return TRUE;
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, UNLOADSTAGE1_Z_MOVEUP);	// Move Down
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP);	// work
+					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);
 					m_nUnloadStage1Case = 22; 
 					m_nUnloadStage2Case = 21;
 					m_bShipStg1Ng = FALSE;
+					
 				}
 			}
 
