@@ -423,3 +423,29 @@ const int UNLOADSTAGE1_Y_WORKPOS = 1;
 #define UL_STG1_Z_MOVE_UP 1
 
 #define UL_STG1_Y_WORK_POS 1
+
+struct ShipStg1_Z
+{
+	enum data
+	{
+		Down = 0,
+		Work = 1,
+		LoadSupportUp = 2,
+		LoadSupportDown = 3,
+		UnloadSupportUp = 4,
+		UnloadSupportDown = 5,
+	};
+};
+
+struct ShipStg2_Z
+{
+	enum data
+	{
+		Down = 0,
+		Work = 1,
+		LoadSupportUp = 2,
+		LoadSupportDown = 3,
+		UnloadSupportUp = 4,
+		UnloadSupportDown = 5,
+	};
+};
