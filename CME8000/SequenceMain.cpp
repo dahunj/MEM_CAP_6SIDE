@@ -5648,50 +5648,60 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
 		}
 		break;
-	case 3:		// Stage Master In
+	case 3:		
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 2)) {
 			m_tUnloadStage1Loop.Takt_Save(14, 1);
 			m_tUnloadStage1Loop.Takt_Start();
-			m_pDY05->oUnloadStage1MasterIn = TRUE;
-			g_objAJinAXL.Write_Output(5);
+			g_objCommon.Set_UnloadPortSupportOut(1);
+						
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 4:		// Stage Slave In
-		if (m_pDX05->iUnloadStage1MasterIn && !m_pDX05->iUnloadStage1MasterOut) {
-			m_pDY05->oUnloadStage1SlaveIn = TRUE;
-			g_objAJinAXL.Write_Output(5);
+		if (g_objCommon.Get_UnloadPortSupportOut(1)) {
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 3);	
+						
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 5:		// Master/Slave Check
-		if (g_objCommon.Get_UnloadStageMasterSlaveIn(1)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 3))
+		{
+			g_objCommon.Set_UnloadPortSupportIn(1);
+					
 			m_tUnloadStage1Loop.Takt_Save(14, 6);	// Master/slave In
-			m_tUnloadStage1Loop.Takt_Start();
-			g_objCommon.Set_UnloadPortSupportOut(1);
+			m_tUnloadStage1Loop.Takt_Start();			
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 6:		// Z Move to Support Down
-		if (g_objCommon.Get_UnloadPortSupportOut(1)) {
+		if (g_objCommon.Get_UnloadPortSupportIn(1)) {
+			
+			m_pDY05->oUnloadStage1MasterIn = TRUE;
+			g_objAJinAXL.Write_Output(5);
+			
 			m_tUnloadStage1Loop.Takt_Save(14, 2);	// Support Out
 			m_tUnloadStage1Loop.Takt_Start();
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 3);				
+						
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 7:		// Support In
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 3)) {
-			if (!m_tUnloadStage1Loop.Waiting_Time(500)) break;
+		if (m_pDX05->iUnloadStage1MasterIn && !m_pDX05->iUnloadStage1MasterOut) {
+			
+			if (!m_tUnloadStage1Loop.Waiting_Time(300)) break;
+			m_pDY05->oUnloadStage1SlaveIn = TRUE;
+			g_objAJinAXL.Write_Output(5);
+
 			m_tUnloadStage1Loop.Takt_Save(14, 3);	// Support Down
 			m_tUnloadStage1Loop.Takt_Start();
-			g_objCommon.Set_UnloadPortSupportIn(1);
+			
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 8:		// Tray Check, Stage Master In
-		if (g_objCommon.Get_UnloadPortSupportIn(1)) {
-			if (!m_tUnloadStage1Loop.Waiting_Time(500)) break;
+		if (g_objCommon.Get_UnloadStageMasterSlaveIn(1)) {
+			if (!m_tUnloadStage1Loop.Waiting_Time(300)) break;
 			m_tUnloadStage1Loop.Takt_Save(14, 4);	// Support In
 			m_tUnloadStage1Loop.Takt_Start();
 			// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
@@ -6096,48 +6106,58 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 2)) {
 			m_tUnloadStage2Loop.Takt_Save(15, 1);
 			m_tUnloadStage2Loop.Takt_Start();
-			m_pDY05->oUnloadStage2MasterIn = TRUE;
-			g_objAJinAXL.Write_Output(5);
-
+			
+			g_objCommon.Set_UnloadPortSupportOut(1);
+						
 			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 4:		// Stage Slave In
-		if (m_pDX05->iUnloadStage2MasterIn && !m_pDX05->iUnloadStage2MasterOut) {
-			m_pDY05->oUnloadStage2SlaveIn = TRUE;
-			g_objAJinAXL.Write_Output(5);
+		if (g_objCommon.Get_UnloadPortSupportOut(1)) 
+		{
+			if (!m_tUnloadStage2Loop.Waiting_Time(300)) break;
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 3);	
+						
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 5:		// Master/Slave Check
-		if (g_objCommon.Get_UnloadStageMasterSlaveIn(2)) {
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 3)) {
+			
+			g_objCommon.Set_UnloadPortSupportIn(1);
 			m_tUnloadStage2Loop.Takt_Save(15, 6);	// Master/Slave In
 			m_tUnloadStage2Loop.Takt_Start();
-			g_objCommon.Set_UnloadPortSupportOut(1);
+			
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 6:		// Z Move to Support Down
-		if (g_objCommon.Get_UnloadPortSupportOut(1)) {
+		if (g_objCommon.Get_UnloadPortSupportIn(1)) {
+			
+			m_pDY05->oUnloadStage2MasterIn = TRUE;
+			g_objAJinAXL.Write_Output(5);
+
 			m_tUnloadStage2Loop.Takt_Save(15, 2);	// Support Out
 			m_tUnloadStage2Loop.Takt_Start();
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 3);				
+						
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 7:		// Support In
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 3)) {
-			if (!m_tUnloadStage2Loop.Waiting_Time(500)) break;
+		if (m_pDX05->iUnloadStage2MasterIn && !m_pDX05->iUnloadStage2MasterOut) {
+			
+			m_pDY05->oUnloadStage2SlaveIn = TRUE;
+			g_objAJinAXL.Write_Output(5);
 			m_tUnloadStage2Loop.Takt_Save(15, 3);	// Support Down
 			m_tUnloadStage2Loop.Takt_Start();
-			g_objCommon.Set_UnloadPortSupportIn(1);
+			
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 8:		// Tray Check, Stage Master In
-		if (g_objCommon.Get_UnloadPortSupportIn(1)) {
-			if (!m_tUnloadStage2Loop.Waiting_Time(500)) break;
+		if (g_objCommon.Get_UnloadStageMasterSlaveIn(2)) {
+			if (!m_tUnloadStage2Loop.Waiting_Time(300)) break;
 			m_tUnloadStage2Loop.Takt_Save(15, 4);	// Support In
 			m_tUnloadStage2Loop.Takt_Start();
 			// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
