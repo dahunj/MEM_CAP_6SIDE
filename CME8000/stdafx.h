@@ -423,3 +423,7 @@ const int UNLOADSTAGE1_Y_WORKPOS = 1;
 #define UL_STG1_Z_MOVE_UP 1
 
 #define UL_STG1_Y_WORK_POS 1
+
+
+
+struct ShipStg1Z
