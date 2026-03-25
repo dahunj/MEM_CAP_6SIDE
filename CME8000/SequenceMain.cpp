@@ -5878,6 +5878,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		{
 		
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2); //unload 
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5889,6 +5890,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			
 			gData.nPNoUnloadPort = gData.nPNoUnloadTray;
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 5);	// Support Down
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5896,13 +5898,15 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 5)) {
 			
 			g_objCommon.Set_UnloadPortSupportOut(2);
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 25:	// Z Move to Support Up
 		if (g_objCommon.Get_UnloadPortSupportOut(2)) {
 		
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 4);	// Support Up				
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 4);	// Support Up
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5910,6 +5914,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 4)) {
 			
 			g_objCommon.Set_UnloadPortSupportIn(2);
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5918,6 +5923,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			
 			m_pDY05->oUnloadStage1SlaveIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5925,13 +5931,15 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		if (!m_pDX05->iUnloadStage1SlaveIn && m_pDX05->iUnloadStage1SlaveOut) {
 			m_pDY05->oUnloadStage1MasterIn = FALSE;
 			g_objAJinAXL.Write_Output(5);
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 29:	// Stage2 Check, Z Move to Move Down
 		if (g_objCommon.Get_UnloadStageMasterSlaveOut(1)) {
 			
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down				
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -5955,6 +5963,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 				gData.bUnloadPort2Wait = TRUE;
 				gData.nPNoUnloadTray = 0;
 			}
+			m_strLog.Format("Seq,15,ULStg1,%d,empty", m_nUnloadStage1Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage1Case = 50; m_tUnloadStage1Loop.Set_LoopTime(5000);
 
 			m_strLog.Format("UnloadStage1, %d", GetTickCount() - m_dwUnloadStage1);
@@ -6267,6 +6276,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	case 16:	// MES 결과 확인.
 		if (g_objMES.m_nMESShipSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesShipReg) {
 			g_dlgWork.Change_ShipLotId();	// 정보 이동.
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -6276,7 +6286,8 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
 			
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);				
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);	
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case = 3; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -6316,16 +6327,17 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, UNLOADSTAGE2_Z_MOVEUP)) {
 		
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 23:	// Z Move to Support Down
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 2) && m_pDX05->iUnloadStage2Exist  && m_pDX03->iUnloadPort2SlideClose) {
 			if ((gData.nPNoUnloadTray != gData.nPNoUnloadPort) && gData.nPNoUnloadPort != 0) return TRUE;
-
-		
+					
 			gData.nPNoUnloadPort = gData.nPNoUnloadTray;
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 5);	// Support Down
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -6333,13 +6345,15 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 5)) {
 		
 			g_objCommon.Set_UnloadPortSupportOut(2);
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
 	case 25:	// Z Move to Support Up
 		if (g_objCommon.Get_UnloadPortSupportOut(2)) {
 		
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 4);	// Support Up				
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 4);	// Support Up
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;
@@ -6400,6 +6414,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 				gData.bUnloadPort2Wait = TRUE;
 				gData.nPNoUnloadTray = 0;
 			}
+			m_strLog.Format("Seq,16,ULStg2,%d,Empty", m_nUnloadStage2Case); g_objLogFile.Save_SeqLog(m_strLog);
 			m_nUnloadStage2Case = 50; m_tUnloadStage2Loop.Set_LoopTime(5000);
 
 			m_strLog.Format("UnloadStage2, %d", GetTickCount() - m_dwUnloadStage2);
