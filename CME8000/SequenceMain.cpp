@@ -5307,7 +5307,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							m_nUnloadStage1Case = 21;
 							m_tUnloadStage1Loop.Set_LoopTime(5000); m_tUnloadStage2Loop.Set_LoopTime(5000);
 						}
-						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
+						
 
 						Job_LotEnd(gData.nPNoUnloadTray);
 						if (m_pThreadBeep == NULL) {

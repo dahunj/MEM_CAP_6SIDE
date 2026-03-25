@@ -1130,7 +1130,8 @@ void CWorkDlg::Check_Lamp()
 		}
 		// Unload Tray
 		if (pDX12->iUnload1Sw) {
-			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) {
+			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) 
+			{
 				if (!gData.bUnloadPort1Wait && !m_bUnloadSw1On) {
 					pMainDlg->Set_LampFlicker_Unload1(TRUE);
 					pDY03->oUnloadPort1SlideLock = FALSE; pDY03->oUnloadPort1SlideUnlock = TRUE;
