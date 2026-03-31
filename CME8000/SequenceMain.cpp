@@ -4228,7 +4228,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 		}
 		break;
 	case 26:	// Assy Picker Vac Off
-		if (g_objAJinAXL.Is_MoveDone(AX_ASSY_PICKER_Z, dApZ) && g_objCommon.Get_InfoAssyPickerDown(1)) {
+		if (g_objAJinAXL.Is_MoveDone(AX_ASSY_PICKER_Z, dApZ) && g_objCommon.Get_InfoAssyPickerDown(1))
+		{
 			if(!m_tAssyPickLoop.Waiting_Time(100)) break;	//2021.06.23c
 			g_objCommon.Set_InfoAssyPickerVacOff();
 
@@ -4237,9 +4238,11 @@ BOOL CSequenceMain::AssyPicker_Run()
 		}
 		break;
 	case 27:	// Z Move to Tilt Check
-		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 4)) {
+		if (g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 4)) 
+		{
 			if (!m_tAssyPickLoop.Waiting_Time(m_pEquipData->nVacOffDelay[1])) break;
-			if (m_pEquipData->bChkAssyPickerTilt) {
+			if (m_pEquipData->bChkAssyPickerTilt) 
+			{
 				g_objCommon.Set_AssyPickerUp(0);
 				g_objCommon.Move_Position(AX_ASSY_PICKER_Z, 5);	// Tilt Position
 
@@ -4350,7 +4353,8 @@ BOOL CSequenceMain::AssyPicker_Run()
 	case 35:	// Picker Up
 		if (((m_pEquipData->bChkAssyPickerTilt && m_pDX08->iAssyPickerTiltDown && !m_pDX08->iAssyPickerTiltUp && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 5)) || 
 			(!m_pEquipData->bChkAssyPickerTilt && !m_pDX08->iAssyPickerTiltDown && m_pDX08->iAssyPickerTiltUp && g_objCommon.Check_Position(AX_ASSY_PICKER_Z, 0))) &&
-			g_objCommon.Get_AssyPickerUp(0)) {
+			g_objCommon.Get_AssyPickerUp(0)) 
+		{
 			m_tAssyPickLoop.Takt_Start();
 			m_pDY08->oAssyPickerTiltDown = FALSE;
 			m_pDY11->oIndexAssyVacUp = FALSE;
