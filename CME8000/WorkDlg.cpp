@@ -1020,6 +1020,7 @@ void CWorkDlg::Check_Lamp()
 					g_objCommon.Show_MsgBox(1, "Port1 Lot 정보를 확인해 주십시오.");
 				}
 			}
+			g_objLogFile.Save_HandlerLog("[Load 1 Switch Clicked]");
 		}
 		// Load Port2
 		if (pDX12->iLoad2Sw && bLoad2) {
@@ -1046,11 +1047,15 @@ void CWorkDlg::Check_Lamp()
 					g_objCommon.Show_MsgBox(1, "Port2 Lot 정보를 확인해 주십시오.");
 				}
 			}
+			g_objLogFile.Save_HandlerLog("[Load 2 Switch Clicked]");
 		}
 		// Load Port3
-		if (pDX12->iLoad3Sw) {
-			if (pDX01->iLoadPort3SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor04Open)) {	// 안전 확인.
-				if (!gData.bLoadPort3Wait && !m_bLoadSw3On) {
+		if (pDX12->iLoad3Sw) 
+		{
+			if (pDX01->iLoadPort3SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor04Open)) 
+			{	// 안전 확인.
+				if (!gData.bLoadPort3Wait && !m_bLoadSw3On) 
+				{
 					pMainDlg->Set_LampFlicker_Load3(TRUE);
 					pDY01->oLoadPort3SlideLock = FALSE; pDY01->oLoadPort3SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(1);
@@ -1060,7 +1065,9 @@ void CWorkDlg::Check_Lamp()
 					gData.bLoadPort3Wait = TRUE;
 					m_bLoadSw3On = TRUE;
 
-				} else if (gData.bLoadPort3Wait && !m_bLoadSw3On) {
+				} 
+				else if (gData.bLoadPort3Wait && !m_bLoadSw3On) 
+				{
 					pMainDlg->Set_LampFlicker_Load3(FALSE);
 					pDY01->oLoadPort3SlideLock = TRUE; pDY01->oLoadPort3SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(1);
@@ -1071,13 +1078,19 @@ void CWorkDlg::Check_Lamp()
 					m_bLoadSw3On = TRUE;
 				}
 			}
-		} else {
+			g_objLogFile.Save_HandlerLog("[Load 3 Switch Clicked]");
+		}
+		else
+		{
 			m_bLoadSw3On = FALSE;
 		}
 		// Cap Port
-		if (pDX12->iCap1Sw) {
-			if (pDX02->iCapPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor11Open)) {	// 안전 확인.
-				if (!gData.bCapPort1Wait && !m_bCapSw1On) {
+		if (pDX12->iCap1Sw) 
+		{
+			if (pDX02->iCapPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor11Open)) 
+			{	// 안전 확인.
+				if (!gData.bCapPort1Wait && !m_bCapSw1On) 
+				{
 					pMainDlg->Set_LampFlicker_Cap1(TRUE);
 					pDY02->oCapPort1SlideLock = FALSE; pDY02->oCapPort1SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(2);
@@ -1087,7 +1100,9 @@ void CWorkDlg::Check_Lamp()
 					gData.bCapPort1Wait = TRUE;
 					m_bCapSw1On = TRUE;
 
-				} else if (gData.bCapPort1Wait && !m_bCapSw1On) {
+				} 
+				else if (gData.bCapPort1Wait && !m_bCapSw1On) 
+				{
 					pMainDlg->Set_LampFlicker_Cap1(FALSE);
 					pDY02->oCapPort1SlideLock = TRUE; pDY02->oCapPort1SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(2);
@@ -1098,12 +1113,17 @@ void CWorkDlg::Check_Lamp()
 					m_bCapSw1On = TRUE;
 				}
 			}
-		} else {
+			g_objLogFile.Save_HandlerLog("[Cap 1 Switch Clicked]");
+		} 
+		else 
+		{
 			m_bCapSw1On = FALSE;
 		}
 
-		if (pDX12->iCap2Sw) {
-			if (pDX02->iCapPort2SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor12Open)) {	// 안전 확인.
+		if (pDX12->iCap2Sw)
+		{
+			if (pDX02->iCapPort2SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor12Open)) 
+			{	// 안전 확인.
 				if (!gData.bCapPort2Wait && !m_bCapSw2On) {
 					pMainDlg->Set_LampFlicker_Cap2(TRUE);
 					pDY02->oCapPort2SlideLock = FALSE; pDY02->oCapPort2SlideUnlock = TRUE;
@@ -1125,13 +1145,20 @@ void CWorkDlg::Check_Lamp()
 					m_bCapSw2On = TRUE;
 				}
 			}
-		} else {
+
+			g_objLogFile.Save_HandlerLog("[Cap 2 Switch Clicked]");
+		} 
+		else 
+		{
 			m_bCapSw2On = FALSE;
 		}
 		// Unload Tray
-		if (pDX12->iUnload1Sw) {
-			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) {
-				if (!gData.bUnloadPort1Wait && !m_bUnloadSw1On) {
+		if (pDX12->iUnload1Sw) 
+		{
+			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) 
+			{
+				if (!gData.bUnloadPort1Wait && !m_bUnloadSw1On) 
+				{
 					pMainDlg->Set_LampFlicker_Unload1(TRUE);
 					pDY03->oUnloadPort1SlideLock = FALSE; pDY03->oUnloadPort1SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(3);
@@ -1141,7 +1168,8 @@ void CWorkDlg::Check_Lamp()
 					gData.bUnloadPort1Wait = TRUE;
 					m_bUnloadSw1On = TRUE;
 				}
-				else if (gData.bUnloadPort1Wait && !m_bUnloadSw1On) {
+				else if (gData.bUnloadPort1Wait && !m_bUnloadSw1On) 
+				{
 					pMainDlg->Set_LampFlicker_Unload1(FALSE);
 					pDY03->oUnloadPort1SlideLock = TRUE; pDY03->oUnloadPort1SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(3);
@@ -1152,11 +1180,15 @@ void CWorkDlg::Check_Lamp()
 					m_bUnloadSw1On = TRUE;
 				}
 			}
-		} else {
+			g_objLogFile.Save_HandlerLog("[Unload 1 Switch Clicked]");
+		} 
+		else 
+		{
 			m_bUnloadSw1On = FALSE;
 		}
 
-		if (pDX12->iUnload2Sw && gData.bUnloadPort2Wait) {
+		if (pDX12->iUnload2Sw && gData.bUnloadPort2Wait) 
+		{
 			if (pDX03->iUnloadPort2SlideClose && (!pEquipData->bUseDoorLock || (!pDX13->iDoor05Open && !pDX13->iDoor06Open))) {	// 안전 확인.
 				pMainDlg->Set_LampFlicker_Unload2(FALSE);
 				pDY03->oUnloadPort2SlideLock = TRUE; pDY03->oUnloadPort2SlideUnlock = FALSE;
@@ -1169,10 +1201,13 @@ void CWorkDlg::Check_Lamp()
 				gData.nPNoUnloadPort = 0;
 				gData.bUnloadPort2Wait = FALSE;
 				gData.bUnloadTrayLotEnd[0] = FALSE;
-				gData.bUnloadTrayLotEnd[1] = FALSE;
+				gData.bUnloadTrayLotEnd[1] = FALSE;								
+				
 				//gData.nGoodTrayCount = 0;
 			}
+			g_objLogFile.Save_HandlerLog("[Unload 2 Switch Clicked]");
 		}
+
 	}
 	//Cap Port1, 2, Unload Port1 버튼 누르면 도어락 풀리고 작업중 Flag Set
 	//Flag Set 상태에서 버튼 누르면 도어락 걸리고 Flag Clear
