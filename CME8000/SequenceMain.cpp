@@ -4888,12 +4888,12 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				{
 					if (m_nUnloadStage2Case != 10) return TRUE;
 					gData.bUnloadTrayLotEnd[0] = TRUE; 
-					m_nUnloadStage2Case = 21;
+					//m_nUnloadStage2Case = 21;
 					m_nUnloadStage1Case = 22;
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
-					Sleep(100);
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
+					//Sleep(100);
+					//g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
 					
 					m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 				}
@@ -4902,11 +4902,11 @@ BOOL CSequenceMain::UnloadPicker_Run()
 					if (m_nUnloadStage1Case != 10) return TRUE;
 					gData.bUnloadTrayLotEnd[1] = TRUE; 
 					m_nUnloadStage2Case = 22;
-					m_nUnloadStage1Case = 21;
+					//m_nUnloadStage1Case = 21;
 					g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 					g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
-					Sleep(100);
-					g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
+					//Sleep(100);
+					//g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
 					m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 				}
 				
@@ -4925,14 +4925,14 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				if (gData.bUnloadTrayLotEnd[1] == FALSE && m_nUnloadStage2Case > 20 && m_nUnloadStage2Case < 30) { gData.bUnloadTrayLotEnd[1] = TRUE; } 
 
 				// 마지막 Tray 배출 이후 다른 스테이지 Empty Tray가 대기위치에 없을때는 여기에서 초기화 해준다.
-				if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) ||
+				/*if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) ||
 					(m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20) ) 
 				{
 					m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(3);
 					gData.bUnloadPort2Wait = TRUE;
 					gData.nPNoUnloadTray = 0;
-				}
+				}*/
 			}
 		}
 		return TRUE;
@@ -5110,12 +5110,12 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						{
 							if (m_nUnloadStage2Case != 10) return TRUE;
 							gData.bUnloadTrayLotEnd[0] = TRUE; 
-							m_nUnloadStage2Case = 21;
+							//m_nUnloadStage2Case = 21;
 							m_nUnloadStage1Case = 22;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
 					
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 						}
@@ -5124,11 +5124,11 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							if (m_nUnloadStage1Case != 10) return TRUE;
 							gData.bUnloadTrayLotEnd[1] = TRUE; 
 							m_nUnloadStage2Case = 22;
-							m_nUnloadStage1Case = 21;
+							//m_nUnloadStage1Case = 21;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 						}
 
@@ -5145,13 +5145,13 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						if (gData.bUnloadTrayLotEnd[1] == FALSE && m_nUnloadStage2Case > 20 && m_nUnloadStage2Case < 30) { gData.bUnloadTrayLotEnd[1] = TRUE; } 
 
 						// 마지막 Tray 배출 이후 다른 스테이지 Empty Tray가 대기위치에 없을때는 여기에서 초기화 해준다.
-						if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) || (m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20)) 
+						/*if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) || (m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20)) 
 						{
 							m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;
 							g_objAJinAXL.Write_Output(3);
 							gData.bUnloadPort2Wait = TRUE;
 							gData.nPNoUnloadTray = 0;
-						}
+						}*/
 					}
 				}
 				//return TRUE;
@@ -5278,12 +5278,12 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						{
 							if ( m_nUnloadStage2Case != 10) return TRUE;
 							gData.bUnloadTrayLotEnd[0] = TRUE; 
-							m_nUnloadStage2Case = 21;
+							//m_nUnloadStage2Case = 21;
 							m_nUnloadStage1Case = 22;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 						}
 						if (m_nUnloadStage2Case == 20) 
@@ -5291,11 +5291,11 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							if (m_nUnloadStage1Case != 10) return TRUE;
 							gData.bUnloadTrayLotEnd[1] = TRUE; 
 							m_nUnloadStage2Case = 22;
-							m_nUnloadStage1Case = 21;
+							//m_nUnloadStage1Case = 21;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 						}
 
@@ -5319,12 +5319,12 @@ BOOL CSequenceMain::UnloadPicker_Run()
 						{ 
 							if (m_nUnloadStage2Case != 10) return TRUE;
 							gData.bUnloadTrayLotEnd[0] = TRUE; 
-							m_nUnloadStage2Case = 21;
+							//m_nUnloadStage2Case = 21;
 							m_nUnloadStage1Case = 22;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 														
 						}
@@ -5334,11 +5334,11 @@ BOOL CSequenceMain::UnloadPicker_Run()
 							gData.bUnloadTrayLotEnd[1] = TRUE; 
 							
 							m_nUnloadStage2Case = 22;
-							m_nUnloadStage1Case = 21;
+							//m_nUnloadStage1Case = 21;
 							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
 							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
+							//Sleep(100);
+							//g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
 							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
 						}						
 
@@ -6042,8 +6042,8 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 30:	// Position Check
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist ) {
-		
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist ) 
+		{		
 			if (gData.bUnloadTrayLotEnd[0] && m_bUnloadLotEnd) {	// 도어락 오픈 후처리 확인.
 				m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;
 				//m_pDY13->oDoor05Unlock = TRUE;

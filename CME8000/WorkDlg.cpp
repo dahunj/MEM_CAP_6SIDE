@@ -1161,7 +1161,8 @@ void CWorkDlg::Check_Lamp()
 				pMainDlg->Set_LampFlicker_Unload2(FALSE);
 				pDY03->oUnloadPort2SlideLock = TRUE; pDY03->oUnloadPort2SlideUnlock = FALSE;
 				g_objAJinAXL.Write_Output(3);
-				if (pEquipData->bUseDoorLock) {
+				if (pEquipData->bUseDoorLock) 
+				{
 					pDY13->oDoor05Unlock = FALSE; pDY13->oDoor06Unlock = FALSE;
 					g_objAJinAXL.Write_Output(13);
 				}
