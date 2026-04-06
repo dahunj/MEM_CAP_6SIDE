@@ -5036,68 +5036,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 	case 20:		
 		if (g_objCommon.Get_InfoUnloadPickerVacOn() && g_objCommon.Get_UnloadPickerUp(0) &&
 			(g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0) || g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, nUpWorkTray+1))) 
-		{
-			 
-			if (gData.nPNoUnloadPick != gData.nPNoUnloadTray && gData.nPNoUnloadTray > 0)
-			{
-				if (m_pEquipData->bUseInlineMode) 
-				{
-					// Avi Lotend가 늦게 들어오거나 타이밍이 안맞아 Unload Picker가 지나쳤을 경우 대기하는데에서 확인해준다.
-					if (gData.nTNoUnloadTray != 0 && gData.nTNoUnloadTray == gData.nLastTrayNo[gData.nPNoUnloadTray-1] &&
-						gData.nLastTrayNo[gData.nPNoUnloadTray-1] > 0 && Check_LoadTrayLoading(gData.nPNoUnloadTray))
-					{
-						if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
-						
-						if (m_nUnloadStage1Case == 20) 
-						{
-							if (m_nUnloadStage2Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[0] = TRUE; 
-							if(m_bShipStg2Ng) m_nUnloadStage2Case = 21;
-							m_nUnloadStage1Case = 22;
-							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 1);
-					
-							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
-						}
-						if (m_nUnloadStage2Case == 20) 
-						{ 
-							if (m_nUnloadStage1Case != 10) return TRUE;
-							gData.bUnloadTrayLotEnd[1] = TRUE; 
-							m_nUnloadStage2Case = 22;
-							if(m_bShipStg1Ng)m_nUnloadStage1Case = 21;
-							g_objCommon.Move_Position(AX_UNLOAD_PICKER_Z, 0);	// Ready Up
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Y, 2);
-							Sleep(100);
-							g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Y, 1);
-							m_tUnloadStage1Loop.Set_LoopTime(15000); m_tUnloadStage2Loop.Set_LoopTime(15000);
-						}
-
-						Job_LotEnd(gData.nPNoUnloadTray);
-						gData.nLastTrayNo[gData.nPNoUnloadTray-1] = 0;
-						if (m_pThreadBeep == NULL) {
-							m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));
-						}
-						gData.nTNoUnloadTray = 0;
-						g_dlgWork.PostMessage(UM_SHOW_MSG, 2, NULL);		// 2020.09.14 khs
-						
-						// 배출중일때 초기화 할수있도록 gData.bUnloadTrayLotEnd = TRUE
-						if (gData.bUnloadTrayLotEnd[0] == FALSE && m_nUnloadStage1Case > 20 && m_nUnloadStage1Case < 30) { gData.bUnloadTrayLotEnd[0] = TRUE; } 
-						if (gData.bUnloadTrayLotEnd[1] == FALSE && m_nUnloadStage2Case > 20 && m_nUnloadStage2Case < 30) { gData.bUnloadTrayLotEnd[1] = TRUE; } 
-
-						// 마지막 Tray 배출 이후 다른 스테이지 Empty Tray가 대기위치에 없을때는 여기에서 초기화 해준다.
-						/*if ((m_nUnloadStage1Case >= 30 && m_nUnloadStage2Case < 20) || (m_nUnloadStage2Case >= 30 && m_nUnloadStage1Case < 20)) 
-						{
-							m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;
-							g_objAJinAXL.Write_Output(3);
-							gData.bUnloadPort2Wait = TRUE;
-							gData.nPNoUnloadTray = 0;
-						}*/
-					}
-				}
-				//return TRUE;
-			}
+		{		
 			if (m_nUnloadStage1Case != 20 && m_nUnloadStage2Case != 20) return TRUE;
 
 			if (m_nUnloadStage1Case == 20) { nUpWorkTray = 1; dUpY = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE1_Y); m_bShipStg1Ng = FALSE; }
