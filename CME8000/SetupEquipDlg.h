@@ -89,6 +89,8 @@ public:
 	CCheckCS	m_chkResultTestUse;
 	CEditCS		m_edtResultTest;
 
+	CCheckCS	m_chkUseDryRun;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 

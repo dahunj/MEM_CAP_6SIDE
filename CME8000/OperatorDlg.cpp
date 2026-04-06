@@ -280,17 +280,22 @@ void COperatorDlg::OnBnClickedBtnOperInitial()
 void COperatorDlg::OnBnClickedBtnOperWork()
 {
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
-#ifdef DRY_RUN_TEST
-	ShowWindow(SW_HIDE);
-	g_dlgSetup.Set_LoginUser(2);	// SI
-	pMainDlg->Set_CurrentMode(MODE_WORK);
-#else
-	int nUser = 0;
-	if (g_objCommon.Show_Password(nUser) != IDOK) return;
 
-	ShowWindow(SW_HIDE);
-	pMainDlg->Set_CurrentMode(MODE_WORK);
-#endif
+	if(gData.bUseDryRun)
+	{
+		ShowWindow(SW_HIDE);
+		g_dlgSetup.Set_LoginUser(2);	// SI
+		pMainDlg->Set_CurrentMode(MODE_WORK);
+	}
+	else
+	{
+		int nUser = 0;
+		if (g_objCommon.Show_Password(nUser) != IDOK) return;
+
+		ShowWindow(SW_HIDE);
+		pMainDlg->Set_CurrentMode(MODE_WORK);
+	}
+
 // 	ShowWindow(SW_HIDE);
 // 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 // 	pMainDlg->Set_CurrentMode(MODE_WORK);
@@ -299,17 +304,22 @@ void COperatorDlg::OnBnClickedBtnOperWork()
 void COperatorDlg::OnBnClickedBtnOperManual()
 {
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
-#ifdef DRY_RUN_TEST
-	ShowWindow(SW_HIDE);
-	g_dlgSetup.Set_LoginUser(2);	// SI
-	pMainDlg->Set_CurrentMode(MODE_MANUAL);
-#else
-	int nUser = 0;
-	if (g_objCommon.Show_Password(nUser) != IDOK) return;
 
-	ShowWindow(SW_HIDE);
-	pMainDlg->Set_CurrentMode(MODE_MANUAL);
-#endif
+	if(gData.bUseDryRun)
+	{
+		ShowWindow(SW_HIDE);
+		g_dlgSetup.Set_LoginUser(2);	// SI
+		pMainDlg->Set_CurrentMode(MODE_MANUAL);
+	}
+	else
+	{
+		int nUser = 0;
+		if (g_objCommon.Show_Password(nUser) != IDOK) return;
+
+		ShowWindow(SW_HIDE);
+		pMainDlg->Set_CurrentMode(MODE_MANUAL);
+	}
+
 
 // 	ShowWindow(SW_HIDE);
 // 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
@@ -319,18 +329,23 @@ void COperatorDlg::OnBnClickedBtnOperManual()
 void COperatorDlg::OnBnClickedBtnOperSetup()
 {
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
-#ifdef DRY_RUN_TEST
-	ShowWindow(SW_HIDE);
-	g_dlgSetup.Set_LoginUser(2);	// SI
-	pMainDlg->Set_CurrentMode(MODE_SETUP);
-#else
-	int nUser = 0;
-	if (g_objCommon.Show_Password(nUser) != IDOK) return;
-	g_dlgSetup.Set_LoginUser(nUser);
 
-	ShowWindow(SW_HIDE);
-	pMainDlg->Set_CurrentMode(MODE_SETUP);
-#endif
+	if(gData.bUseDryRun)
+	{
+		ShowWindow(SW_HIDE);
+		g_dlgSetup.Set_LoginUser(2);	// SI
+		pMainDlg->Set_CurrentMode(MODE_SETUP);
+	}
+	else
+	{
+		int nUser = 0;
+		if (g_objCommon.Show_Password(nUser) != IDOK) return;
+		g_dlgSetup.Set_LoginUser(nUser);
+
+		ShowWindow(SW_HIDE);
+		pMainDlg->Set_CurrentMode(MODE_SETUP);
+	}
+
 }
 
 void COperatorDlg::OnBnClickedBtnOperMonitor()
@@ -355,14 +370,19 @@ void COperatorDlg::OnBnClickedBtnOperExit()
 
 void COperatorDlg::OnBnClickedBtnOperEngineer()
 {
-#ifdef DRY_RUN_TEST
-	ShowWindow(SW_HIDE);
-	g_dlgSetup.Set_LoginUser(2);	// SI
-#else
-	int nUser = 0;
-	if (g_objCommon.Show_Password(nUser) != IDOK) return;
-	ShowWindow(SW_HIDE);
-#endif
+
+	if(gData.bUseDryRun)
+	{
+		ShowWindow(SW_HIDE);
+		g_dlgSetup.Set_LoginUser(2);	// SI
+	}
+	else
+	{
+		int nUser = 0;
+		if (g_objCommon.Show_Password(nUser) != IDOK) return;
+		ShowWindow(SW_HIDE);
+	}
+
 
 // 	int nUser = 0;
 // 	if (g_objCommon.Show_Password(nUser) != IDOK) return;

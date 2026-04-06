@@ -78,9 +78,9 @@
 
 #define MAIN_VERSION	_T("V 2.0.2.1")
 //
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -280,10 +280,12 @@ typedef struct
 	int			nInspectCmCheckTime;
 	CString		sInspectCmLotIDPrevious;
 	CString		sInspectCmLotIDLater;
+	
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 	
 	DWORD		dwInspectSkipTime;
 
+	BOOL    bUseDryRun;
 
 } GLOVAL_DATA;
 

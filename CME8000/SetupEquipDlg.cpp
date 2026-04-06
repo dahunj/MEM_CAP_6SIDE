@@ -12,6 +12,8 @@
 #include "MESInterface.h"
 #include "AviHandler.h"
 
+#include "CME8000Dlg.h"
+
 // CSetupEquipDlg ´ëÈ­ »óÀÚÀÔ´Ï´Ù.
 
 IMPLEMENT_DYNAMIC(CSetupEquipDlg, CDialogEx)
@@ -50,6 +52,7 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHK_INSPECT_NG_MIX, m_chkInspectNGMix);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_ALIGN_ALARM, m_chkUseVisionAlignAlarm);
 	
+	DDX_Control(pDX, IDC_CHK_USE_DRY_RUN, m_chkUseDryRun);
 
 	DDX_Control(pDX, IDC_CHK_USE_TRAY_PICKER_TURN, m_chkUseTrayPickerTurn);
 	DDX_Control(pDX, IDC_CHK_USE_CAP_PICKER_TURN, m_chkUseCapPickerTurn);
@@ -166,14 +169,12 @@ void CSetupEquipDlg::Initial_Controls()
 	m_stcDoorLockTime.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xF0, 0xE0, 0x00));
 
 	m_chkUseInlineMode.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
-
 	m_chkUseVisionCapDir.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x00, 0xF0, 0xF0), CCheckCS::emRed, 0);
-
 	m_chkInspectCMOption.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
 	m_chkInspectNGMix.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
-
 	m_chkUseVisionAlignAlarm.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
 	
+	m_chkUseDryRun.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
 
 	m_chkUseTrayPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
 	m_chkUseCapPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
@@ -267,6 +268,8 @@ void CSetupEquipDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	m_lblPasswordSi.ShowWindow(SW_HIDE);
 	m_edtPasswordSi.ShowWindow(SW_HIDE);
 
+	m_chkUseDryRun.ShowWindow(SW_HIDE);
+
 	m_grpResultTest.ShowWindow(SW_HIDE);
 	m_lblResultTest.ShowWindow(SW_HIDE);
 	m_chkResultTestUse.ShowWindow(SW_HIDE);
@@ -280,6 +283,8 @@ void CSetupEquipDlg::OnStnClickedStcEquipName()
 
 	m_stcEquipName.SetWindowText(strKey);
 }
+
+ 
 
 void CSetupEquipDlg::OnRdoModelClick(UINT nID)
 {
@@ -418,20 +423,26 @@ void CSetupEquipDlg::OnStnClickedStcShowHidden()
 		m_chkResultTestUse.ShowWindow(SW_HIDE);
 		m_edtResultTest.ShowWindow(SW_HIDE);
 
+		m_chkUseDryRun.ShowWindow(SW_HIDE);
+
 		m_grpHidden.ShowWindow(SW_HIDE);
 		m_lblPasswordMt.ShowWindow(SW_HIDE);
 		m_stcPasswordMt.ShowWindow(SW_HIDE);
 		if (g_dlgSetup.Get_LoginUser() != 2) return;
 		m_lblPasswordSi.ShowWindow(SW_HIDE);
 		m_edtPasswordSi.ShowWindow(SW_HIDE);
-	} else {
+	} 
+	else 
+	{
 		m_grpResultTest.ShowWindow(SW_SHOW);
 		m_lblResultTest.ShowWindow(SW_SHOW);
 		m_chkResultTestUse.ShowWindow(SW_SHOW);
 		m_edtResultTest.ShowWindow(SW_SHOW);
 
+		m_chkUseDryRun.ShowWindow(SW_SHOW);
 
 		m_grpHidden.ShowWindow(SW_SHOW);
+
 		m_lblPasswordMt.ShowWindow(SW_SHOW);
 		m_stcPasswordMt.ShowWindow(SW_SHOW);
 		if (g_dlgSetup.Get_LoginUser() != 2) return;
@@ -465,6 +476,9 @@ void CSetupEquipDlg::Display_EquipData()
 	m_rdoDoorLock[(int)pEquipData->bUseDoorLock].SetCheck(TRUE);
 	strData.Format("%d", gData.nDoorLockTime);	m_stcDoorLockTime.SetWindowText(strData);
 
+
+
+	m_chkUseDryRun.SetCheck(pEquipData->bUseDryRun);
 	
 	m_chkUseInlineMode.SetCheck(pEquipData->bUseInlineMode);
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
@@ -473,6 +487,8 @@ void CSetupEquipDlg::Display_EquipData()
 	m_chkInspectNGMix.SetCheck(pEquipData->bInspectNgMix);
 
 	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
+
+	
 	
 	strData.Format("%d", pEquipData->nInspectCmScanTimes); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
 	strData.Format("%d", pEquipData->nInspectCmLotTimes); m_stcCMVision[1].SetWindowTextA(strData);
@@ -521,7 +537,19 @@ void CSetupEquipDlg::Display_EquipData()
 	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSi);
 
 	strData.Format("%d", pEquipData->nResultTestNg); m_edtResultTest.SetWindowText(strData);
-
+	
+	m_chkUseDryRun.SetCheck(pEquipData->bUseDryRun);
+	CCME8000Dlg *pMainDlg = (CCME8000Dlg *)AfxGetApp()->GetMainWnd();
+	if(gData.bUseDryRun)
+	{
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));		
+	}
+	else
+	{
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
+	}
 }
 
 void CSetupEquipDlg::Save_EquipData()
@@ -543,6 +571,8 @@ void CSetupEquipDlg::Save_EquipData()
 	nData = m_cboAssyLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "ASSY_LOAD_CELL", nData + 8);
 	nData = m_cboUnloadLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "UNLOAD_LOAD_CELL", nData + 8);
 
+	INI.Set_Bool("OPTION", "DRY_RUN_MODE", m_chkUseDryRun.GetCheck()); 
+
 	m_stcMotionCheck.GetWindowText(strData); dData = atof(strData); INI.Set_Double("EQUIPMENT", "MOTION_CHECK", dData, "%0.3lf");
 	INI.Set_Bool("EQUIPMENT", "DOOR_LOCK", m_rdoDoorLock[1].GetCheck());
 	m_stcDoorLockTime.GetWindowText(strData);
@@ -552,11 +582,15 @@ void CSetupEquipDlg::Save_EquipData()
 	nData = m_cboMoveDataSelection.GetCurSel(); INI.Set_Integer("EQUIPMENT", "VENDOR_SELECTION", nData);
 
 	INI.Set_Bool("OPTION", "INLINE_MODE", m_chkUseInlineMode.GetCheck());
-#ifndef DRY_RUN_TEST
-	INI.Set_Bool("OPTION", "VISION_CAP_DIR", m_chkUseVisionCapDir.GetCheck());
-	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", m_chkInspectCMOption.GetCheck());
-	
-#endif
+
+	INI.Set_Bool("OPTION", "DRY_RUN", m_chkUseDryRun.GetCheck());
+
+	if(!gData.bUseDryRun)
+	{
+		INI.Set_Bool("OPTION", "VISION_CAP_DIR", m_chkUseVisionCapDir.GetCheck());
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", m_chkInspectCMOption.GetCheck());
+	}
+
 	INI.Set_Bool("OPTION", "VISION_NG_MIX", m_chkInspectNGMix.GetCheck());
 	INI.Set_Bool("OPTION", "VISION_ALIGN_ALARM", m_chkUseVisionAlignAlarm.GetCheck());
 	

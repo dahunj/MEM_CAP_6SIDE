@@ -335,12 +335,14 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		
 		m_pWorkInfoDlg->ShowWindow(SW_SHOW);
 
-#ifndef DRY_RUN_TEST
-		m_bmpEquipment.DeleteObject();
-		if (pEquipData->bUseDoorLock) m_bmpEquipment.LoadBitmap(IDB_EQUIP_WORK);
-		else m_bmpEquipment.LoadBitmap(IDB_EQUIP_DOOR);
-		m_imgEquipment.SetBitmap(m_bmpEquipment);
-#endif
+
+		if(!gData.bUseDryRun)
+		{
+			m_bmpEquipment.DeleteObject();
+			if (pEquipData->bUseDoorLock) m_bmpEquipment.LoadBitmap(IDB_EQUIP_WORK);
+			else m_bmpEquipment.LoadBitmap(IDB_EQUIP_DOOR);
+			m_imgEquipment.SetBitmap(m_bmpEquipment);
+		}
 
 		m_stcLotId[0].GetWindowText(strText);
 		if (strText.GetLength() < 1) {

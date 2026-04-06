@@ -454,11 +454,15 @@ int CInspector::Get_VisionStatus()
 BOOL CInspector::Check_LotReady()
 {
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-#ifdef DRY_RUN_TEST
-	m_bLotReady = TRUE;
-#else
-	if (!pEquipData->bUseVisionCapDir && !pEquipData->bUseVisionCmAlign) m_bLotReady = TRUE;
-#endif
+
+	if(gData.bUseDryRun)
+	{
+		m_bLotReady = TRUE;
+	}
+	else
+	{
+		if (!pEquipData->bUseVisionCapDir && !pEquipData->bUseVisionCmAlign) m_bLotReady = TRUE;
+	}
 	return m_bLotReady;
 }
 

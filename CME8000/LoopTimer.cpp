@@ -27,9 +27,12 @@ void CLoopTimer::Set_LoopTime(DWORD msec)
 
 BOOL CLoopTimer::Over_LoopTime()
 {
-#ifdef DRY_RUN_TEST
-	return FALSE;	// No Timeout Error
-#endif
+
+	if(gData.bUseDryRun)
+	{
+		return FALSE;		// Å×½ºÆ®
+	}
+
 	DWORD dwTerm = GetTickCount() - m_dwLoopStart;
 	if (dwTerm >= m_dwLoopTerm)
 		return TRUE;
