@@ -486,9 +486,10 @@ void CLogFile::Save_ECMLog(int nType, CString strLog)	//nType:1[Alarm], 2[Joblis
 	if (nType == 2) strFile.Format("%s%s_%04d%02d%02d%02d_CapJobList.csv", strPath, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
 	if (nType == 3) strFile.Format("%s%s_%04d%02d%02d%02d_Inspector.csv", strPath, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
 	if (nType == 4) strFile.Format("%s%s_%04d%02d%02d%02d_CapHandler.csv", strPath, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
-	if (nType == 5) { 
-		strFile.Format("%s%s_%04d%02d%02d%02d_Cap.csv", strPath, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
-		strFile2.Format("%s%s_%04d%02d%02d%02d_Cap.csv", strPath2, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
+	if (nType == 5)
+	{ 
+		strFile.Format("%s%s_%04d%02d%02d%02d_CapAttach.csv", strPath, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
+		strFile2.Format("%s%s_%04d%02d%02d%02d_CapAttach.csv", strPath2, gLot.sLotID[nNo], time.wYear, time.wMonth, time.wDay, time.wHour);
 	}
 
 	CFile file;
