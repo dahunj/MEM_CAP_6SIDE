@@ -300,14 +300,25 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 	BOOL bLoad2 = g_objSequenceMain.Get_LotLoadEnable(1);
 
 // 	if ((!bAuto || !bLoad) && pDX13->iDoor04Unlock) { Show_Alarm("Main 04번 Door(X1019) Unlocked."); return FALSE; }
+	if (!pEquipData->bUseDoorLock && gData.nLogInLevel != 9300)
+	{
+		Show_Alarm("Please Use Door Interlock.");
+		return FALSE;
+	}
 
-	if (pEquipData->bUseInlineMode && !pEquipData->bUseDoorLock) {
+
+	if (pEquipData->bUseInlineMode && !pEquipData->bUseDoorLock) 
+	{
 		// Inline 모드는 도어락 사용 안해도 무조건 Load Port쪽 확인한다.
 		if (pDX13->iDoor01Open) { Show_Alarm("Main 01번 Door(X1300) Opened."); return FALSE; }
 		if (pDX13->iDoor02Open) { Show_Alarm("Main 02번 Door(X1301) Opened."); return FALSE; }
-
-	} else {
-		if (!pEquipData->bUseDoorLock) return TRUE;
+	}
+	else
+	{
+		if (!pEquipData->bUseDoorLock)
+		{			
+			return TRUE;
+		}
 
 		// temp
 		if (pDX13->iDoor01Open && !bLoad1)					{ Show_Alarm("Main 01번 Door(X1300) Opened."); return FALSE; }

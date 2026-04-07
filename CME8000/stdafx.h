@@ -284,6 +284,7 @@ typedef struct
 	
 	DWORD		dwInspectSkipTime;
 
+	int			nLogInLevel;
 
 } GLOVAL_DATA;
 
