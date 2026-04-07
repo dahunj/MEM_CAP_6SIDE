@@ -280,13 +280,12 @@ typedef struct
 	int			nInspectCmCheckTime;
 	CString		sInspectCmLotIDPrevious;
 	CString		sInspectCmLotIDLater;
-	
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 	
 	DWORD		dwInspectSkipTime;
 
 	BOOL    bUseDryRun;
-
+	int			nLogInLevel;
 } GLOVAL_DATA;
 
 typedef struct {
