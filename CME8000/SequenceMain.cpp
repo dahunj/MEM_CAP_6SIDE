@@ -6647,3 +6647,12 @@ BOOL CSequenceMain::Run_Simulation()
 
 	return TRUE;
 }
+
+
+void CSequenceMain::Set_ThreadBeep()
+{
+	if (m_pThreadBeep == NULL ) 
+	{
+		m_pThreadBeep = AfxBeginThread(Thread_Beep, (LPVOID)(2000));		
+	}
+}

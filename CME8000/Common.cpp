@@ -296,18 +296,22 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
-#ifdef AJIN_BOARD_USE
-	DX_DATA_13 *pDX13 = g_objAJinAXL.Get_pDX13();
-	BOOL bLoad1 = g_objSequenceMain.Get_LotLoadEnable(0);
-	BOOL bLoad2 = g_objSequenceMain.Get_LotLoadEnable(1);
-
-// 	if ((!bAuto || !bLoad) && pDX13->iDoor04Unlock) { Show_Alarm("Main 04¹ø Door(X1019) Unlocked."); return FALSE; }
+	int nTempSy = atoi(pEquipData->sPasswordSi); 
 	if (!pEquipData->bUseDoorLock && gData.nLogInLevel != 9300)
 	{
 		Show_Alarm("Please Use Door Interlock.");
 		return FALSE;
 	}
 
+
+#ifdef AJIN_BOARD_USE
+	DX_DATA_13 *pDX13 = g_objAJinAXL.Get_pDX13();
+	BOOL bLoad1 = g_objSequenceMain.Get_LotLoadEnable(0);
+	BOOL bLoad2 = g_objSequenceMain.Get_LotLoadEnable(1);
+
+// 	if ((!bAuto || !bLoad) && pDX13->iDoor04Unlock) { Show_Alarm("Main 04¹ø Door(X1019) Unlocked."); return FALSE; }
+
+	
 
 	if (pEquipData->bUseInlineMode && !pEquipData->bUseDoorLock) 
 	{
