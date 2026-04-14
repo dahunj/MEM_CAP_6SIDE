@@ -367,7 +367,7 @@ void CLogFile::Save_LotError(CString sLog, int nPNo)
 	CFile file;
 	if (!file.Open(strFile1, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) return;
 
-	strTitle.Format("Time,Station,LotNum,Barcode,Model,Version,LotNum,Event,Error Code,event,ActionTime\r\n");
+	strTitle.Format("Time,Station,Model,Version,LotNum,Event,Error Code,event,ActionTime\r\n");
 
 	try {
 		file.SeekToEnd();
@@ -380,7 +380,7 @@ void CLogFile::Save_LotError(CString sLog, int nPNo)
 		DWORD dwNameSize = MAX_COMPUTERNAME_LENGTH + 1;
 		GetComputerName(szPcName, &dwNameSize);
 
-		strSave.Format("%s,%s,%s\r\n", strDateTime, szPcName,"","",sLog);
+		strSave.Format("%s,%s,%s\r\n", strDateTime, szPcName, sLog);
 
 		file.Write(strSave, strSave.GetLength());
 		file.Close();
@@ -477,9 +477,9 @@ void CLogFile::Save_ECMLog(int nType, CString strLog)	//nType:1[Alarm], 2[Joblis
 
 	
 	if (nType == 1) sTitle.Format("Time,Station,Type,LotNum,Error Code,Error,Start_Time,End_Time,Lead_Time,Barcode\r\n");
-	if (nType == 2) sTitle.Format("Time,Station,Type,LotNum,Start_Time,End_Time,Run_Time,Unload_Time,Tact(S-E),Tact(RunTime),Tact(Unload_Time),UPH(S-E),UPH(RunTime),UPH(Unload_Time),Alarm_Count,Stop_Time,Efficiency(RunTime), Efficiency(Unload),Tray_Count,CM_Count,NG_Count,Barcode\r\n");
+	if (nType == 2) sTitle.Format("Time,Station,Type,LotNum,Start_Time,End_Time,Run_Time,Unload_Time,Tact(S-E),Tact(RunTime),Tact(Unload_Time),UPH(S-E),UPH(RunTime),UPH(Unload_Time),Alarm_Count,Stop_Time,Efficiency(RunTime), Efficiency(Unload),Tray_Count,CM_Count,NG_Count\r\n");
 	if (nType == 3) sTitle.Format("Time,Station,Type,LotNum,Load_Pick,Inspect,Barcode,NG_Pick,Good_Pick,Trans_Pick\r\n");
-	if (nType == 4) sTitle.Format("Time,Station,Type,LotNum,Barcode\r\n");
+	if (nType == 4) sTitle.Format("Time,Station,Type\r\n");
 	if (nType == 5) sTitle.Format("Time,Station,SWversion,site,moduleConfig,LotNum,Barcode,Ship Lot Num,Cap Lot Num,Start,End,Cap Part No,Cap Qty,Cap Maker,Cap Program Info,Cap Tool Info,Year,Month,Day,Cap Serial No,Index No,Head No,Cap Picker Table X Pos,Turn Table Work Pos,Cap Picker Table Z Pos,Cap Attach Force,Alarm Code,Tact Time,UPH\r\n");
 
 	if (nType == 1) strFile.Format("%s%s_%04d%02d%02d%02d_CapAlarm.csv", strPath, gAlm.sLotID, time.wYear, time.wMonth, time.wDay, time.wHour);
@@ -501,8 +501,15 @@ void CLogFile::Save_ECMLog(int nType, CString strLog)	//nType:1[Alarm], 2[Joblis
 		if (file.GetLength() < 1) file.Write(sTitle, sTitle.GetLength());
 
 		if (nType == 5) { strSave.Format("%s,%s,%s\r\n", strTime, gData.sComName, strLog); }
-		else if (nType == 4) { strSave.Format("%s,%s,%s,%s,%s,%s\r\n", strTime, gData.sComName, gData.sRecipe, "","", strLog); }
-		else			{ strSave.Format("%s,%s,%s,%s,%s\r\n", strTime, gData.sComName, gData.sRecipe, strLog, ""); }
+		else if (nType == 4) { strSave.Format("%s,%s,%s,%s\r\n", strTime, gData.sComName, gData.sRecipe, strLog); }
+		else if (nType == 2)
+		{
+			strSave.Format("%s,%s,%s,%s\r\n", strTime, gData.sComName, gData.sRecipe, strLog);
+		}
+		else
+		{
+			strSave.Format("%s,%s,%s,%s,%s\r\n", strTime, gData.sComName, gData.sRecipe, strLog, "");
+		}
 
 		file.Write(strSave, strSave.GetLength());
 		file.Close();
