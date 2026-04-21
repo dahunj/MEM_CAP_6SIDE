@@ -131,6 +131,7 @@ BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_1, &CSetupEquipDlg::OnStnClickedStcCmVision1)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_2, &CSetupEquipDlg::OnStnClickedStcCmVision2)
 	ON_STN_CLICKED(IDC_STC_DOORLOCK_TIME, &CSetupEquipDlg::OnStnClickedStcDoorlockTime)
+	ON_BN_CLICKED(IDC_CHK_USE_DRY_RUN, &CSetupEquipDlg::OnBnClickedChkUseDryRun)
 END_MESSAGE_MAP()
 
 // CSetupEquipDlg 메시지 처리기입니다.
@@ -266,7 +267,7 @@ void CSetupEquipDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
 	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
 
-	int nTempSy = atoi(m_pEquipData->sPasswordSi);
+	int nTempSy = atoi(m_pEquipData->sPasswordSy);
 
 	if(gData.nLogInLevel == 9300)
 	{
@@ -562,8 +563,8 @@ void CSetupEquipDlg::Display_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) m_chkTower[i][j].SetCheck(pEquipData->bTower[i][j]);
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) m_chkBuzzer[i][j].SetCheck(pEquipData->bBuzzer[i][j]);
 
-	m_stcPasswordMt.SetWindowText(pEquipData->sPasswordMt);
-	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSi);
+	m_stcPasswordMt.SetWindowText(pEquipData->sPasswordOP);
+	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSy);
 
 	strData.Format("%d", pEquipData->nResultTestNg); m_edtResultTest.SetWindowText(strData);
 	
@@ -739,4 +740,50 @@ void CSetupEquipDlg::OnStnClickedStcDoorlockTime()
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
 	m_stcDoorLockTime.SetWindowText(strNew);
+}
+
+
+void CSetupEquipDlg::OnBnClickedChkUseDryRun()
+{
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+
+	if(m_chkUseDryRun.GetCheck())
+	{
+		pEquipData->bUseDryRun = TRUE;
+		INI.Set_Bool("OPTION", "DRY_RUN", TRUE);
+		
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+
+		pEquipData->bUseInlineMode = FALSE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", FALSE);
+
+		pEquipData->bUseVisionCmAlign = FALSE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
+
+		pEquipData->bInspectNgMix = FALSE;
+		INI.Set_Bool("OPTION", "VISION_NG_MIX", FALSE);
+	}
+	else
+	{
+		pEquipData->bUseDryRun = FALSE;
+		INI.Set_Bool("OPTION", "DRY_RUN", FALSE);
+
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+
+		pEquipData->bUseInlineMode = TRUE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", TRUE);
+
+		pEquipData->bUseVisionCmAlign = TRUE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", TRUE);
+
+		pEquipData->bInspectNgMix = FALSE;
+		INI.Set_Bool("OPTION", "VISION_NG_MIX", FALSE);
+	}
+
+	Cancel_EquipData();
 }

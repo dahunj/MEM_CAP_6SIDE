@@ -296,8 +296,21 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
-	int nTempSy = atoi(pEquipData->sPasswordSi); 
-	if (!pEquipData->bUseDoorLock && gData.nLogInLevel != 9300)
+	int nTempSy = atoi(pEquipData->sPasswordSy); 
+	int nTempOp = atoi(pEquipData->sPasswordOP);
+	if ( gData.nLogInLevel == 9300)
+	{
+		return TRUE;
+	}	
+	else if((!pEquipData->bUseDoorLock || pEquipData->bUseDoorLock) && gData.nLogInLevel == nTempSy && theApp.Get_MainMode() == MODE_MANUAL)
+	{
+		return TRUE;
+	}
+	else if(pEquipData->bUseDoorLock && gData.nLogInLevel == nTempOp && theApp.Get_MainMode() == MODE_MANUAL)
+	{
+		return TRUE;
+	}	
+	else if(!pEquipData->bUseDoorLock)
 	{
 		Show_Alarm("Please Use Door Interlock.");
 		return FALSE;

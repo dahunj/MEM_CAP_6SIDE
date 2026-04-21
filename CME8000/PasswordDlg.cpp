@@ -107,15 +107,15 @@ void CPasswordDlg::OnBnClickedBtnOk()
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
 	m_edtPassword.GetWindowText(strInput);
-	if (strInput == pEquipData->sPasswordMt)
+	if (strInput == pEquipData->sPasswordOP)
 	{
-		gData.nLogInLevel = atoi(pEquipData->sPasswordMt);
+		gData.nLogInLevel = atoi(pEquipData->sPasswordOP);
 		g_nLoginUser = 1;	// MT
 		EndDialog(IDOK);
 	} 
-	else if (strInput == pEquipData->sPasswordSi)
+	else if (strInput == pEquipData->sPasswordSy)
 	{
-		gData.nLogInLevel = atoi(pEquipData->sPasswordSi);
+		gData.nLogInLevel = atoi(pEquipData->sPasswordSy);
 		g_nLoginUser = 2;	// SI
 		EndDialog(IDOK);
 	} 

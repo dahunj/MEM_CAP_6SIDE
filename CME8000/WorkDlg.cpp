@@ -163,6 +163,7 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_UNLOAD1, &CWorkDlg::OnBnClickedBtnUnload1)
 	ON_BN_CLICKED(IDC_BTN_UNLOAD2, &CWorkDlg::OnBnClickedBtnUnload2)
 	ON_BN_CLICKED(IDC_BTN_UNLOADF1, &CWorkDlg::OnBnClickedBtnUnloadf1)
+	ON_BN_CLICKED(IDC_BTN_LIGHT, &CWorkDlg::OnBnClickedBtnLight)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -1899,4 +1900,24 @@ void CWorkDlg::OnBnClickedBtnUnload2()
 void CWorkDlg::OnBnClickedBtnUnloadf1()
 {
 	m_bUnloadSw1On = FALSE;
+}
+
+
+void CWorkDlg::OnBnClickedBtnLight()
+{
+	static int nOnOff = 0;
+
+	DY_DATA_13 *pDY13 = g_objAJinAXL.Get_pDY13();
+	
+	if(nOnOff == 0)
+	{
+		nOnOff = 1;
+		pDY13->oInsideLight = TRUE;
+	}
+	else
+	{
+		nOnOff = 0;
+		pDY13->oInsideLight = FALSE;
+	}
+	g_objAJinAXL.Write_Output(13);
 }

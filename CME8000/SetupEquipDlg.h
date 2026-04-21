@@ -131,6 +131,7 @@ public:
 	afx_msg void OnStnClickedStcCmVision1();
 	afx_msg void OnStnClickedStcCmVision2();
 	afx_msg void OnStnClickedStcDoorlockTime();
+	afx_msg void OnBnClickedChkUseDryRun();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
