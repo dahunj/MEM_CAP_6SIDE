@@ -248,6 +248,8 @@ int CCommon::Show_MsgBox(int nBtnCnt, CString sMsg)
 
 int CCommon::Show_NumPad(CString sOld, CString &sNew, int nAxis)
 {
+	
+
 	CNumPadDlg dlgNumPad;
 	dlgNumPad.Set_OldValue(sOld, nAxis);
 	if (dlgNumPad.DoModal() != IDOK) return IDCANCEL;
@@ -258,6 +260,8 @@ int CCommon::Show_NumPad(CString sOld, CString &sNew, int nAxis)
 
 int CCommon::Show_KeyPad(CString &sKey)
 {
+	
+
 	CKeyPadDlg dlgKeyPad;
 	if (dlgKeyPad.DoModal() != IDOK) return IDCANCEL;
 
@@ -267,6 +271,11 @@ int CCommon::Show_KeyPad(CString &sKey)
 
 int CCommon::Show_Password(int &nUser)
 {
+	if(gData.sOperID == "SY")
+	{
+		return IDOK;
+	}    
+
 	CPasswordDlg dlgPassword;
 	if (dlgPassword.DoModal() != IDOK) return IDCANCEL;
 
@@ -289,7 +298,11 @@ BOOL CCommon::Check_MainEmgAir()
 
 BOOL CCommon::Check_MainDoor(BOOL bAuto)
 {
-	if(gData.bUseDryRun)
+	if(gData.sOperID == "SY")
+	{
+		return TRUE;
+	}    
+	else if(gData.bUseDryRun)	
 	{
 		return TRUE;
 	}

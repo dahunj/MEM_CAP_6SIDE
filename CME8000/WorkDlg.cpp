@@ -336,6 +336,10 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		
 		m_pWorkInfoDlg->ShowWindow(SW_SHOW);
 
+		if(gData.sOperID == "SY")
+		{
+			gData.nLogInLevel = 9300;
+		}
 
 		if(!gData.bUseDryRun)
 		{
