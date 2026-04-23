@@ -36,9 +36,7 @@ public:
 	CCheckCS	m_chkInspectCMOption;
 	CCheckCS	m_chkInspectNGMix;
 	CCheckCS	m_chkUseVisionAlignAlarm;
-
 	
-
 	CCheckCS	m_chkUseTrayPickerTurn;
 	CCheckCS	m_chkUseCapPickerTurn;
 	CCheckCS	m_chkAssyPickerTilt;
@@ -123,6 +121,8 @@ private:
 	void Display_EquipData();
 
 public:
+	 void Set_Enable(BOOL bEnable);
+
 	void Save_EquipData();
 	void Cancel_EquipData();
 	afx_msg void OnBnClickedBtnAviConnect();

@@ -1921,3 +1921,48 @@ void CWorkDlg::OnBnClickedBtnLight()
 	}
 	g_objAJinAXL.Write_Output(13);
 }
+
+void CWorkDlg::Set_DryRun(BOOL bCheck)
+{
+	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
+
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+
+	if(bCheck)
+	{
+		pEquipData->bUseInlineMode = FALSE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
+		
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+		
+		m_chkMesUse.SetCheck(FALSE);
+		m_chkMesUse.EnableWindow(FALSE);
+	
+		g_objMES.Set_MESUse(FALSE);
+
+		pEquipData->bUseVisionCmAlign = FALSE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
+	}
+	else
+	{
+		pEquipData->bUseInlineMode = TRUE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
+
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+
+		m_chkMesUse.SetCheck(FALSE);
+		m_chkMesUse.EnableWindow(FALSE);
+
+		g_objMES.Set_MESUse(FALSE);
+
+		pEquipData->bUseVisionCmAlign = TRUE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", TRUE);
+	}
+
+	g_objDataManager.Read_EquipData();
+}
