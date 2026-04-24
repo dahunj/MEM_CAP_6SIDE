@@ -5920,7 +5920,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 30:	// Position Check
-		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist && m_pDX05->iUnloadStage1Exist2 && m_pDX05->iUnloadStage1Exist3 ) 
+		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && !m_pDX05->iUnloadStage1Exist && !m_pDX05->iUnloadStage1Exist2 && !m_pDX05->iUnloadStage1Exist3 ) 
 		{		
 			if (gData.bUnloadTrayLotEnd[0] && m_bUnloadLotEnd) {	// 도어락 오픈 후처리 확인.
 				m_pDY03->oUnloadPort2SlideLock = FALSE; m_pDY03->oUnloadPort2SlideUnlock = TRUE;

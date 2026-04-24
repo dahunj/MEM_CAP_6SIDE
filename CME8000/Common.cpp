@@ -315,14 +315,14 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 	{
 		return TRUE;
 	}	
-	else if((!pEquipData->bUseDoorLock || pEquipData->bUseDoorLock) && gData.nLogInLevel == nTempSy && theApp.Get_MainMode() == MODE_MANUAL)
+	else if((!pEquipData->bUseDoorLock) && gData.nLogInLevel == nTempSy && theApp.Get_MainMode() == MODE_MANUAL)
 	{
 		return TRUE;
 	}
-	else if(pEquipData->bUseDoorLock && gData.nLogInLevel == nTempOp && theApp.Get_MainMode() == MODE_MANUAL)
+	/*else if(pEquipData->bUseDoorLock && gData.nLogInLevel == nTempOp && theApp.Get_MainMode() == MODE_MANUAL)
 	{
 		return TRUE;
-	}	
+	}	*/
 	else if(!pEquipData->bUseDoorLock)
 	{
 		Show_Alarm("Please Use Door Interlock.");
