@@ -37,7 +37,6 @@ void CDataManager::Reset_EquipData()
 	m_EquipData.bUseInlineMode = FALSE;
 	m_EquipData.bUseVisionCapDir = FALSE;
 	m_EquipData.bUseVisionCmAlign = FALSE;
-	m_EquipData.bInspectNgMix	=	FALSE;
 	m_EquipData.bUseVisionAlignAlarm = FALSE;
 	m_EquipData.bUseVisionAlignOffset = FALSE;
 
@@ -67,16 +66,12 @@ void CDataManager::Reset_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) m_EquipData.bTower[i][j] = FALSE;
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) m_EquipData.bBuzzer[i][j] = FALSE;
 
-	m_EquipData.sPasswordOP = "";
-	m_EquipData.sPasswordSy = "";
+	m_EquipData.sPasswordMt = "";
+	m_EquipData.sPasswordSi = "";
 
 	m_EquipData.nCappingCnt = 0;
 	m_EquipData.nLoadCellChkCnt = 0;
 
-	m_EquipData.bResultTestUse = FALSE;
-	m_EquipData.nResultTestNg = 0;
-
-	m_EquipData.bUseDryRun = FALSE;
 
 	//m_EquipData.sVendor[0] = "DH";
 	//m_EquipData.sVendor[1] = "HS";
@@ -129,25 +124,8 @@ BOOL CDataManager::Read_EquipData()
 	CString strKey;
 	m_EquipData.sEquipName = INI.Get_String("EQUIPMENT", "NAME", "");
 	m_EquipData.sModel = INI.Get_String("EQUIPMENT", "MODEL", "");
-	gData.sRecipe = (m_EquipData.sModel == "" ? "R53B" : m_EquipData.sModel);	// Default(R53B)
+	gData.sRecipe = (m_EquipData.sModel == "" ? "R63B" : m_EquipData.sModel);	// Default(R53B)
 
-	m_EquipData.bUseDryRun = INI.Get_Bool("OPTION", "DRY_RUN", FALSE);
-	gData.bUseDryRun = m_EquipData.bUseDryRun ;
-
-	CCME8000Dlg *pMainDlg = (CCME8000Dlg *)AfxGetApp()->GetMainWnd();
-	if(gData.bUseDryRun)
-	{
-		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));
-		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));		
-	}
-	else
-	{
-		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
-		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
-	}
-
-
-	
 	m_EquipData.nLotBarcodePort = INI.Get_Integer("EQUIPMENT", "LOT_BARCODE", 1);
 	m_EquipData.nAssyLoadCellPort = INI.Get_Integer("EQUIPMENT", "ASSY_LOAD_CELL", 8);
 	m_EquipData.nUnloadLoadCellPort = INI.Get_Integer("EQUIPMENT", "UNLOAD_LOAD_CELL", 9);
@@ -163,22 +141,17 @@ BOOL CDataManager::Read_EquipData()
 	m_EquipData.sVendor[1]=INI.Get_String("VENDOR","1", "");
 	gData.sVendor = m_EquipData.sVendor[m_EquipData.nVendorSelection];
 
-	if(gData.bUseDryRun)
-	{
-		m_EquipData.bUseVisionCapDir = FALSE;
-		m_EquipData.bUseVisionCmAlign = FALSE;
-	}
-	else
-	{
-		m_EquipData.bUseVisionCapDir = INI.Get_Bool("OPTION", "VISION_CAP_DIR", FALSE);
-		m_EquipData.bUseVisionCmAlign = INI.Get_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
-	}
-
-	m_EquipData.bInspectNgMix = INI.Get_Bool("OPTION", "VISION_NG_MIX", FALSE);
+#ifdef DRY_RUN_TEST
+	m_EquipData.bUseVisionCapDir = FALSE;
+	m_EquipData.bUseVisionCmAlign = FALSE;
+#else
+	m_EquipData.bUseVisionCapDir = INI.Get_Bool("OPTION", "VISION_CAP_DIR", FALSE);
+	m_EquipData.bUseVisionCmAlign = INI.Get_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
+#endif
 	m_EquipData.bUseVisionAlignAlarm = INI.Get_Bool("OPTION", "VISION_ALIGN_ALARM", FALSE);
 	m_EquipData.bUseVisionAlignOffset = INI.Get_Bool("OPTION", "VISION_ALIGN_OFFSET", FALSE);
-		
-	m_EquipData.nInspectCmScanTimes = (ST_Y * ST_X) / 4;//INI.Get_Integer("OPTION", "SCAN_TIMES", 10000);	
+
+	m_EquipData.nInspectCmScanTimes = INI.Get_Integer("OPTION", "SCAN_TIMES", 10000);	
 	m_EquipData.nInspectCmLotTimes = INI.Get_Integer("OPTION", "LOT_TIMES", 10000);
 	m_EquipData.nInspectCmMinutes = INI.Get_Integer("OPTION", "MINUTES", 10000);
 		
@@ -210,8 +183,8 @@ BOOL CDataManager::Read_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) { strKey.Format("%d%d", i, j); m_EquipData.bTower[i][j] = INI.Get_Bool("TOWER", strKey, FALSE); }
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) { strKey.Format("%d%d", i, j); m_EquipData.bBuzzer[i][j] = INI.Get_Bool("BUZZER", strKey, FALSE); }
 
-	m_EquipData.sPasswordOP = INI.Get_String("HIDDEN", "PASSWORD_MT", "");
-	m_EquipData.sPasswordSy = INI.Get_String("HIDDEN", "PASSWORD_SI", "");
+	m_EquipData.sPasswordMt = INI.Get_String("HIDDEN", "PASSWORD_MT", "");
+	m_EquipData.sPasswordSi = INI.Get_String("HIDDEN", "PASSWORD_SI", "");
 
 	m_EquipData.nLoadCellChkCnt = INI.Get_Integer("LOAD_CELL", "CHECK_COUNT", 0);
 	for (int i = 0; i < PICK; i++) { strKey.Format("%d", i); gData.dAssyLoadCell[i] = INI.Get_Double("ASSY_LOAD_CELL", strKey, 0.0); }
@@ -221,8 +194,6 @@ BOOL CDataManager::Read_EquipData()
 	gData.nCapMaxCount = CT_Y * CT_X;	// Tray 배열 (4x7)
 	gData.STY =  ST_Y;
 	gData.nShipMaxCount = gData.STY * ST_X;	// Tray 배열 (3x7 or 3x6)
-	
-	m_EquipData.nResultTestNg = INI.Get_Integer("RESULT_TEST", "RESULT_NG", 0);
 
 	//doorinterlock log
 
@@ -231,7 +202,9 @@ BOOL CDataManager::Read_EquipData()
 	if (gDoorLock.nOpenStart == 1 && m_EquipData.bUseDoorLock == TRUE) 
 		g_objLogFile.Save_Interlock(3);
 
-		
+
+
+	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 	pMainDlg->Display_EquipName();
 
 	return TRUE;

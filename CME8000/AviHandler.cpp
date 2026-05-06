@@ -210,7 +210,7 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 
 	if (sModel != gData.sRecipe) 
 	{
-		if (sModel != "R53B" && sModel != "R54B") { AfxMessageBox("Invalid Model Name!!!"); return; }
+		if (sModel != "R63B" && sModel != "R64B") { AfxMessageBox("Invalid Model Name!!!"); return; }
 
 		CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
 		if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
@@ -285,11 +285,9 @@ void CAviHandler::Get_VisionAlarmOn()
 	pEquipData->bUseVisionCmAlign = TRUE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
-	pEquipData->bUseVisionAlignAlarm = FALSE;
+	pEquipData->bUseVisionAlignAlarm = TRUE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
 
-	g_objDataManager.Read_EquipData();
-	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_VIsionAlarmOff()
@@ -302,14 +300,11 @@ void CAviHandler::Get_VIsionAlarmOff()
 	pEquipData->bUseInlineMode = TRUE;
 	INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
 
-	pEquipData->bUseVisionCmAlign = FALSE;
+	pEquipData->bUseVisionCmAlign = TRUE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
 	pEquipData->bUseVisionAlignAlarm = FALSE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
-
-	g_objDataManager.Read_EquipData();
-	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_TimeUpdate(CString sTime)
@@ -399,16 +394,6 @@ void CAviHandler::Set_TrayUnload()
 
 	gData.bAviTrayLoad = FALSE;
 }
-
-void CAviHandler::Set_PullForceEnd()
-{
-	CString	strSendCmd;
-	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-
-	strSendCmd.Format("PULLFORCE,END,%s,%d", pEquipData->sAviIp, UDP_AVI_LPORT);
-	Send_Command(strSendCmd);	
-}
-
 
 void CAviHandler::Set_ApdReply()
 {

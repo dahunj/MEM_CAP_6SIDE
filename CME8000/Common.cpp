@@ -200,11 +200,7 @@ void CCommon::Move_Position(int nAxis, int nMoveIdx)
 void CCommon::Show_Error(int nErrNo)
 {
 	g_csShowError.Lock();
-	if (!g_dlgError.IsWindowVisible() && !g_dlgAlarm.IsWindowVisible()) 
-	{
-		gLot.nAlmCnt[0]++;
-		gLot.nAlmCnt[1]++;
-
+	if (!g_dlgError.IsWindowVisible() && !g_dlgAlarm.IsWindowVisible()) {
 		g_dlgError.Set_ErrorNumber(nErrNo);
 		g_dlgError.ShowWindow(SW_SHOW);
 	}
@@ -237,19 +233,12 @@ void CCommon::Show_Alarm(CString sMsg, int nState, BOOL bOn)
 int CCommon::Show_MsgBox(int nBtnCnt, CString sMsg)
 {
 	CMsgBoxDlg dlgMsgBox;
-	CString sLog;
-
-	sLog.Format("[Show MsgBox],%s", sMsg);
-	g_objLogFile.Save_HandlerLog(sLog);
-
 	dlgMsgBox.Set_Message(nBtnCnt, sMsg);
 	return dlgMsgBox.DoModal();
 }
 
 int CCommon::Show_NumPad(CString sOld, CString &sNew, int nAxis)
 {
-	
-
 	CNumPadDlg dlgNumPad;
 	dlgNumPad.Set_OldValue(sOld, nAxis);
 	if (dlgNumPad.DoModal() != IDOK) return IDCANCEL;
@@ -260,8 +249,6 @@ int CCommon::Show_NumPad(CString sOld, CString &sNew, int nAxis)
 
 int CCommon::Show_KeyPad(CString &sKey)
 {
-	
-
 	CKeyPadDlg dlgKeyPad;
 	if (dlgKeyPad.DoModal() != IDOK) return IDCANCEL;
 
@@ -271,11 +258,6 @@ int CCommon::Show_KeyPad(CString &sKey)
 
 int CCommon::Show_Password(int &nUser)
 {
-	if(gData.sOperID == "SY")
-	{
-		return IDOK;
-	}    
-
 	CPasswordDlg dlgPassword;
 	if (dlgPassword.DoModal() != IDOK) return IDCANCEL;
 
@@ -298,37 +280,10 @@ BOOL CCommon::Check_MainEmgAir()
 
 BOOL CCommon::Check_MainDoor(BOOL bAuto)
 {
-	if(gData.sOperID == "SY")
-	{
-		return TRUE;
-	}    
-	else if(gData.bUseDryRun)	
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-
-	int nTempSy = atoi(pEquipData->sPasswordSy); 
-	int nTempOp = atoi(pEquipData->sPasswordOP);
-	if ( gData.nLogInLevel == 9300)
-	{
-		return TRUE;
-	}	
-	else if((!pEquipData->bUseDoorLock) && gData.nLogInLevel == nTempSy && theApp.Get_MainMode() == MODE_MANUAL)
-	{
-		return TRUE;
-	}
-	/*else if(pEquipData->bUseDoorLock && gData.nLogInLevel == nTempOp && theApp.Get_MainMode() == MODE_MANUAL)
-	{
-		return TRUE;
-	}	*/
-	else if(!pEquipData->bUseDoorLock)
-	{
-		Show_Alarm("Please Use Door Interlock.");
-		return FALSE;
-	}
-
 
 #ifdef AJIN_BOARD_USE
 	DX_DATA_13 *pDX13 = g_objAJinAXL.Get_pDX13();
@@ -337,20 +292,13 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 
 // 	if ((!bAuto || !bLoad) && pDX13->iDoor04Unlock) { Show_Alarm("Main 04번 Door(X1019) Unlocked."); return FALSE; }
 
-	
-
-	if (pEquipData->bUseInlineMode && !pEquipData->bUseDoorLock) 
-	{
+	if (pEquipData->bUseInlineMode && !pEquipData->bUseDoorLock) {
 		// Inline 모드는 도어락 사용 안해도 무조건 Load Port쪽 확인한다.
 		if (pDX13->iDoor01Open) { Show_Alarm("Main 01번 Door(X1300) Opened."); return FALSE; }
 		if (pDX13->iDoor02Open) { Show_Alarm("Main 02번 Door(X1301) Opened."); return FALSE; }
-	}
-	else
-	{
-		if (!pEquipData->bUseDoorLock)
-		{			
-			return TRUE;
-		}
+
+	} else {
+		if (!pEquipData->bUseDoorLock) return TRUE;
 
 		// temp
 		if (pDX13->iDoor01Open && !bLoad1)					{ Show_Alarm("Main 01번 Door(X1300) Opened."); return FALSE; }
@@ -374,10 +322,10 @@ BOOL CCommon::Check_MainDoor(BOOL bAuto)
 BOOL CCommon::Check_PortArea(BOOL bAuto)
 {
 	// 슬라이드를 사용하지 않고 손을 장비안으로 넣어 트레이 적재 및 배출을 하기 때문에 사용하지 않는다.
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
+	return TRUE;
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 	if (!bAuto)	return TRUE;
 
@@ -430,7 +378,7 @@ BOOL CCommon::Check_PortArea(BOOL bAuto)
 
 BOOL CCommon::Check_TrayFull()
 {
-
+#ifdef AJIN_BOARD_USE
 	DX_DATA_01 *pDX01 = g_objAJinAXL.Get_pDX01();
 	DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
 	DX_DATA_03 *pDX03 = g_objAJinAXL.Get_pDX03();
@@ -465,7 +413,7 @@ BOOL CCommon::Check_TrayFull()
 		Show_Alarm("Unload Port2 Full Sensor Checked.", STATE_SHIPTRAY); 
 		return FALSE;
 	}
-
+#endif
 	return TRUE;
 }
 
@@ -1222,12 +1170,9 @@ BOOL CCommon::Get_CapPickerDownMulti(int nNo, int nCnt)
 
 void CCommon::Set_CapPickerVacOnMulti(int nNo, int nCnt)
 {
-	if(gData.bUseDryRun)
-	{
-		return;
-	}
-
-
+#ifdef DRY_RUN_TEST
+	return;
+#endif
 	DY_DATA_07 *pDY07 = g_objAJinAXL.Get_pDY07();
 
 	if (nNo == 1) {
@@ -1254,11 +1199,9 @@ void CCommon::Set_CapPickerVacOnMulti(int nNo, int nCnt)
 
 BOOL CCommon::Get_CapPickerVacOnMulti(int nNo, int nCnt)
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_07 *pDX07 = g_objAJinAXL.Get_pDX07();
 
 	if (nNo == 1) {
@@ -1613,11 +1556,9 @@ BOOL CCommon::Get_UnloadPickerUp(int nNo)
 
 void CCommon::Set_UnloadPickerVacOff(int nNo)
 {
-	if(gData.bUseDryRun)
-	{
-		return;
-	}
-
+#ifdef DRY_RUN_TEST
+	return;
+#endif
 	DY_DATA_10 *pDY10 = g_objAJinAXL.Get_pDY10();
 	if (nNo == 0 || nNo == 1) { pDY10->oUnloadPickerVac01 = FALSE; pDY10->oUnloadPickerAir01 = TRUE; }
 	if (nNo == 0 || nNo == 2) { pDY10->oUnloadPickerVac02 = FALSE; pDY10->oUnloadPickerAir02 = TRUE; }
@@ -1704,11 +1645,9 @@ BOOL CCommon::Get_UnloadPickerDownMulti(int nNo, int nCnt)
 
 void CCommon::Set_UnloadPickerVacOffMulti(int nNo, int nCnt)
 {
-	if(gData.bUseDryRun)
-	{
-		return;
-	}
-
+#ifdef DRY_RUN_TEST
+	return;
+#endif
 	DY_DATA_10 *pDY10 = g_objAJinAXL.Get_pDY10();
 
 	if (nNo == 1) {
@@ -1991,11 +1930,9 @@ BOOL CCommon::Get_InfoLoadPickerGripOpen()
 
 BOOL CCommon::Get_InfoLoadPickerCmCheck()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_06 *pDX06 = g_objAJinAXL.Get_pDX06();
 	int *pInfo = gData.InfoLoadPick;
 
@@ -2020,11 +1957,9 @@ int CCommon::Get_InfoLoadPickerDownCnt(int nTrayX, int nTrayY, int nCnt)
 // 2. Info Main Index I/O 함수
 BOOL CCommon::Get_InfoIndexLoadVacuumOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;	// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;	// 테스트
+#endif
 	DX_DATA_11 *pDX11 = g_objAJinAXL.Get_pDX11();
 	int *pInfo = gData.InfoIndex[0];
 
@@ -2038,11 +1973,9 @@ BOOL CCommon::Get_InfoIndexLoadVacuumOn()
 
 void CCommon::Set_InfoIndexLoadVacuumOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_11 *pDY11 = g_objAJinAXL.Get_pDY11();
 	int *pInfo = gData.InfoIndex[0];
 
@@ -2056,11 +1989,9 @@ void CCommon::Set_InfoIndexLoadVacuumOn()
 
 BOOL CCommon::Get_InfoIndexAssyVacuumOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;	// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;	// 테스트
+#endif
 	DX_DATA_11 *pDX11 = g_objAJinAXL.Get_pDX11();
 	int *pInfo = gData.InfoIndex[1];
 
@@ -2074,11 +2005,9 @@ BOOL CCommon::Get_InfoIndexAssyVacuumOn()
 
 void CCommon::Set_InfoIndexAssyVacuumOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_11 *pDY11 = g_objAJinAXL.Get_pDY11();
 	int *pInfo = gData.InfoIndex[1];
 
@@ -2155,11 +2084,9 @@ BOOL CCommon::Get_InfoCapPickerDown()
 
 BOOL CCommon::Get_InfoCapPickerVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_07 *pDX07 = g_objAJinAXL.Get_pDX07();
 	int *pInfo = gData.InfoCapPick;
 
@@ -2173,11 +2100,9 @@ BOOL CCommon::Get_InfoCapPickerVacOn()
 
 void CCommon::Set_InfoCapPickerVacOff()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_07 *pDY07 = g_objAJinAXL.Get_pDY07();
 	int *pInfo = gData.InfoCapPick;
 
@@ -2191,11 +2116,9 @@ void CCommon::Set_InfoCapPickerVacOff()
 
 BOOL CCommon::Get_InfoCapPickerVacOff()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_07 *pDX07 = g_objAJinAXL.Get_pDX07();
 	int *pInfo = gData.InfoCapPick;
 
@@ -2326,11 +2249,9 @@ BOOL CCommon::Get_InfoAssyPickerGoodDown()
 
 void CCommon::Set_InfoAssyPickerVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_08 *pDY08 = g_objAJinAXL.Get_pDY08();
 	int *pInfo = gData.InfoAssyPick;
 
@@ -2344,11 +2265,9 @@ void CCommon::Set_InfoAssyPickerVacOn()
 
 BOOL CCommon::Get_InfoAssyPickerVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_08 *pDX08 = g_objAJinAXL.Get_pDX08();
 	int *pInfo = gData.InfoAssyPick;
 
@@ -2438,11 +2357,9 @@ void CCommon::Set_InfoAssyPickerGoodAirOff()
 // 5. Info Trans Stage I/O 함수
 void CCommon::Set_InfoTransStageVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;
+#endif
 	DY_DATA_05 *pDY05 = g_objAJinAXL.Get_pDY05();
 	int *pInfo = gData.InfoIndex[2];
 
@@ -2456,11 +2373,9 @@ void CCommon::Set_InfoTransStageVacOn()
 
 BOOL CCommon::Get_InfoTransStageVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_05 *pDX05 = g_objAJinAXL.Get_pDX05();
 	int *pInfo = gData.InfoTransStage;
 
@@ -2501,11 +2416,9 @@ BOOL CCommon::Get_InfoUnloadPickerDown()
 
 void CCommon::Set_InfoUnloadPickerVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_10 *pDY10 = g_objAJinAXL.Get_pDY10();
 	int *pInfo = gData.InfoUnloadPick;
 
@@ -2519,11 +2432,9 @@ void CCommon::Set_InfoUnloadPickerVacOn()
 
 BOOL CCommon::Get_InfoUnloadPickerVacOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_10 *pDX10 = g_objAJinAXL.Get_pDX10();
 	int *pInfo = gData.InfoUnloadPick;
 
@@ -2537,11 +2448,9 @@ BOOL CCommon::Get_InfoUnloadPickerVacOn()
 
 BOOL CCommon::Get_InfoUnloadPickerVacOff()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 	DX_DATA_10 *pDX10 = g_objAJinAXL.Get_pDX10();
 	int *pInfo = gData.InfoUnloadPick;
 
@@ -2555,11 +2464,9 @@ BOOL CCommon::Get_InfoUnloadPickerVacOff()
 
 BOOL CCommon::Get_InfoUnloadPickerCapCheck()
 {
-	if(gData.bUseDryRun)
-	{
-		return TRUE;
-	}
-
+#ifdef DRY_RUN_TEST
+	return TRUE;
+#endif
 
 #ifndef AJIN_BOARD_USE
 	return TRUE;
@@ -2578,11 +2485,9 @@ BOOL CCommon::Get_InfoUnloadPickerCapCheck()
 //7. Info Cap Clean I/O
 void CCommon::Set_InfoCapCleanAirOn()
 {
-	if(gData.bUseDryRun)
-	{
-		return;		// 테스트
-	}
-
+#ifdef DRY_RUN_TEST
+	return;		// 테스트
+#endif
 	DY_DATA_09 *pDY09 = g_objAJinAXL.Get_pDY09();
 	DX_DATA_07 *pDX07 = g_objAJinAXL.Get_pDX07();
 

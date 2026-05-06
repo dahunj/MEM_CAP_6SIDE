@@ -37,7 +37,7 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_GROUP_0 + i, m_Group[i]);
-	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_LABEL_0 + i, m_Label[i]);
+	for (int i = 0; i < 3; i++) DDX_Control(pDX, IDC_LABEL_0 + i, m_Label[i]);
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_GRP_LOT_0 + i, m_grpLot[i]);
 	for (int i = 0; i < 6; i++) DDX_Control(pDX, IDC_LBL_LOT_0 + i, m_lblLot[i]);
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_STC_LOT_ID_0 + i, m_stcLotId[i]);
@@ -88,17 +88,15 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LED_LOT_LOAD_ENABLE, m_ledLotLoadEnable);
 	DDX_Control(pDX, IDC_CHK_CYCLE_STOP, m_chkCycleStop);
 	DDX_Control(pDX, IDC_CHK_MES_USE, m_chkMesUse);
-	for (int i = 0; i < 4; i++) DDX_Control(pDX, IDC_PIC_TRAY_BACK_0 + i, m_picTrayBack[i]);
+	for (int i = 0; i < 3; i++) DDX_Control(pDX, IDC_PIC_TRAY_BACK_0 + i, m_picTrayBack[i]);
 
 	DDX_Control(pDX, IDC_STC_LOAD_TRAY_COUNT, m_stcLoadTrayCount);
 	DDX_Control(pDX, IDC_STC_CAP_TRAY_COUNT, m_stcCapTrayCount);
 	DDX_Control(pDX, IDC_STC_SHIP_TRAY_COUNT, m_stcShipTrayCount);
-	DDX_Control(pDX, IDC_STC_SHIP_TRAY_COUNT_NG, m_stcNGTrayCount);
 
 	DDX_Control(pDX, IDC_GRD_LOAD_TRAY, m_grdLoadTray);
 	DDX_Control(pDX, IDC_GRD_CAP_TRAY, m_grdCapTray);
 	DDX_Control(pDX, IDC_GRD_SHIP_TRAY , m_grdShipTray);
-	DDX_Control(pDX, IDC_GRD_SHIP_TRAY_NG , m_grdNGTray);
 
 	for (int i = 0; i < 16; i++) DDX_Control(pDX, IDC_STC_WORK_CASE_0 + i, m_stcWorkCase[i]);
 	for (int i = 0; i < 12; i++) DDX_Control(pDX, IDC_STC_PORT_NO_0 + i, m_stcPortNo[i]);
@@ -163,7 +161,6 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_UNLOAD1, &CWorkDlg::OnBnClickedBtnUnload1)
 	ON_BN_CLICKED(IDC_BTN_UNLOAD2, &CWorkDlg::OnBnClickedBtnUnload2)
 	ON_BN_CLICKED(IDC_BTN_UNLOADF1, &CWorkDlg::OnBnClickedBtnUnloadf1)
-	ON_BN_CLICKED(IDC_BTN_LIGHT, &CWorkDlg::OnBnClickedBtnLight)
 END_MESSAGE_MAP()
 
 // CWorkDlg 메시지 처리기입니다.
@@ -174,7 +171,7 @@ void CWorkDlg::Initial_Controls()
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
 	for (int i = 0; i < 10; i++) m_Group[i].Init_Ctrl("바탕", 12, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
-	for (int i = 0; i < 4; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x80, 0x80, 0x80));
+	for (int i = 0; i < 3; i++) m_Label[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x80, 0x80, 0x80));
 
 	for (int i = 0; i < 2; i++) m_grpLot[i].Init_Ctrl("바탕", 12, TRUE, COLOR_DEFAULT, COLOR_DEFAULT);
 	for (int i = 0; i < 3; i++) m_lblLot[i].Init_Ctrl("바탕", 11, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x20, 0x20, 0x80));
@@ -220,17 +217,13 @@ void CWorkDlg::Initial_Controls()
 	m_ledLotLoadEnable.Init_Ctrl("바탕", 10, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	m_chkCycleStop.Init_Ctrl("바탕", 11, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	m_chkMesUse.Init_Ctrl("Arial", 12, TRUE, RGB(0xFF, 0xFF, 0x00), RGB(0xC0, 0x10, 0x30), CCheckCS::emRed, CCheckCS::emRight);
-	for (int i = 0; i < 4; i++) m_picTrayBack[i].Set_Color(COLOR_DEFAULT, RGB(0xF0, 0xF0, 0x80));
-	
+	for (int i = 0; i < 3; i++) m_picTrayBack[i].Set_Color(COLOR_DEFAULT, RGB(0xF0, 0xF0, 0x80));
 	m_stcLoadTrayCount.Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
 	m_stcCapTrayCount.Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
 	m_stcShipTrayCount.Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
-	m_stcNGTrayCount.Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x00, 0x00, 0x00));
-
 	Initial_Grid(&m_grdLoadTray, LT_Y, LT_X);
 	Initial_Grid(&m_grdCapTray, CT_Y, CT_X);
 	Initial_Grid(&m_grdShipTray, ST_Y, ST_X);
-	Initial_Grid(&m_grdNGTray, ST_Y, ST_X);
 	for (int i = 0; i < 16; i++) m_stcWorkCase[i].Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
 	for (int i = 0; i < 12; i++) m_stcPortNo[i].Init_Ctrl("바탕", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
 	for (int i = 0; i < 4; i++) m_stcTakt[i].Init_Ctrl("Arial", 9, FALSE, RGB(0xFF, 0xFF, 0xFF), RGB(0x40, 0x40, 0x40));
@@ -336,18 +329,12 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		
 		m_pWorkInfoDlg->ShowWindow(SW_SHOW);
 
-		if(gData.sOperID == "SY")
-		{
-			gData.nLogInLevel = 9300;
-		}
-
-		if(!gData.bUseDryRun)
-		{
-			m_bmpEquipment.DeleteObject();
-			if (pEquipData->bUseDoorLock) m_bmpEquipment.LoadBitmap(IDB_EQUIP_WORK);
-			else m_bmpEquipment.LoadBitmap(IDB_EQUIP_DOOR);
-			m_imgEquipment.SetBitmap(m_bmpEquipment);
-		}
+#ifndef DRY_RUN_TEST
+		m_bmpEquipment.DeleteObject();
+		if (pEquipData->bUseDoorLock) m_bmpEquipment.LoadBitmap(IDB_EQUIP_WORK);
+		else m_bmpEquipment.LoadBitmap(IDB_EQUIP_DOOR);
+		m_imgEquipment.SetBitmap(m_bmpEquipment);
+#endif
 
 		m_stcLotId[0].GetWindowText(strText);
 		if (strText.GetLength() < 1) {
@@ -409,7 +396,6 @@ void CWorkDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	KillTimer(0);
-	KillTimer(1);
 	
 	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
@@ -420,20 +406,15 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 		if (pEquipData->bUseVisionCmAlign) g_objInspector.Set_StatusRequest();
 	}
 	DX_DATA_12 *pDX12 = g_objAJinAXL.Get_pDX12();
-	
-	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) 
-	{
+	if (pDX12->iStartSw && !m_rdoWorkStart.GetCheck()) {
 		g_objLogFile.Save_HandlerLog("[Work Mode] START S/W push");
 		m_rdoWorkStart.SetCheck(TRUE);
 		pMainDlg->Set_LotErrorLog("START", 903, "Start");
-		
-	} 
-	else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) 
-	{
+	} else if (pDX12->iStopSw && !m_rdoWorkStop.GetCheck()) {
 		g_objLogFile.Save_HandlerLog("[Work Mode] STOP S/W push");
 		MachineStopLog("STOP_BUTTON_PUSH");
 		m_rdoWorkStop.SetCheck(TRUE);
-		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");		
+		pMainDlg->Set_LotErrorLog("STOP", 904, "Stop");
 	}
 
 	if (pDX12->iResetSw) g_objCommon.Show_Alarm("", STATE_ALARM, FALSE);	// Alarm Off
@@ -499,6 +480,7 @@ void CWorkDlg::OnTimer(UINT_PTR nIDEvent)
 			if (nState != STATE_ERROR) g_objCommon.Check_MainEmgAir();
 		}
 	}
+
 
 	SetTimer(0, 100, NULL);
 	SetTimer(1, 5000, NULL);
@@ -885,8 +867,8 @@ BOOL CWorkDlg::Work_Start()
 	if (!pDX01->iLoadPort3SlideClose)	{ g_objCommon.Show_MsgBox(1, "Load Port 3번 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
 	if (!pDX02->iCapPort1SlideClose)	{ g_objCommon.Show_MsgBox(1, "Cap Port1 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
 	if (!pDX02->iCapPort2SlideClose)	{ g_objCommon.Show_MsgBox(1, "Cap Port2 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
-	if (!pDX03->iUnloadPort1SlideClose)	{ g_objCommon.Show_MsgBox(1, "Ship Port1 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
-	if (!pDX03->iUnloadPort2SlideClose)	{ g_objCommon.Show_MsgBox(1, "Ship Port2 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
+	if (!pDX03->iUnloadPort1SlideClose)	{ g_objCommon.Show_MsgBox(1, "Unload Port1 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
+	if (!pDX03->iUnloadPort2SlideClose)	{ g_objCommon.Show_MsgBox(1, "Unload Port2 Slide Close 센서가 감지 되지 않습니다. Slide를 끝까지 밀어주십시오."); return FALSE; }
 
 	int nMotionNo = g_objCommon.Check_MotionPos();
 	if (nMotionNo < 99) {
@@ -1027,7 +1009,6 @@ void CWorkDlg::Check_Lamp()
 					g_objCommon.Show_MsgBox(1, "Port1 Lot 정보를 확인해 주십시오.");
 				}
 			}
-			g_objLogFile.Save_HandlerLog("[Load 1 Switch Clicked]");
 		}
 		// Load Port2
 		if (pDX12->iLoad2Sw && bLoad2) {
@@ -1054,15 +1035,11 @@ void CWorkDlg::Check_Lamp()
 					g_objCommon.Show_MsgBox(1, "Port2 Lot 정보를 확인해 주십시오.");
 				}
 			}
-			g_objLogFile.Save_HandlerLog("[Load 2 Switch Clicked]");
 		}
 		// Load Port3
-		if (pDX12->iLoad3Sw) 
-		{
-			if (pDX01->iLoadPort3SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor04Open)) 
-			{	// 안전 확인.
-				if (!gData.bLoadPort3Wait && !m_bLoadSw3On) 
-				{
+		if (pDX12->iLoad3Sw) {
+			if (pDX01->iLoadPort3SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor04Open)) {	// 안전 확인.
+				if (!gData.bLoadPort3Wait && !m_bLoadSw3On) {
 					pMainDlg->Set_LampFlicker_Load3(TRUE);
 					pDY01->oLoadPort3SlideLock = FALSE; pDY01->oLoadPort3SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(1);
@@ -1072,9 +1049,7 @@ void CWorkDlg::Check_Lamp()
 					gData.bLoadPort3Wait = TRUE;
 					m_bLoadSw3On = TRUE;
 
-				} 
-				else if (gData.bLoadPort3Wait && !m_bLoadSw3On) 
-				{
+				} else if (gData.bLoadPort3Wait && !m_bLoadSw3On) {
 					pMainDlg->Set_LampFlicker_Load3(FALSE);
 					pDY01->oLoadPort3SlideLock = TRUE; pDY01->oLoadPort3SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(1);
@@ -1085,19 +1060,13 @@ void CWorkDlg::Check_Lamp()
 					m_bLoadSw3On = TRUE;
 				}
 			}
-			g_objLogFile.Save_HandlerLog("[Load 3 Switch Clicked]");
-		}
-		else
-		{
+		} else {
 			m_bLoadSw3On = FALSE;
 		}
 		// Cap Port
-		if (pDX12->iCap1Sw) 
-		{
-			if (pDX02->iCapPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor11Open)) 
-			{	// 안전 확인.
-				if (!gData.bCapPort1Wait && !m_bCapSw1On) 
-				{
+		if (pDX12->iCap1Sw) {
+			if (pDX02->iCapPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor11Open)) {	// 안전 확인.
+				if (!gData.bCapPort1Wait && !m_bCapSw1On) {
 					pMainDlg->Set_LampFlicker_Cap1(TRUE);
 					pDY02->oCapPort1SlideLock = FALSE; pDY02->oCapPort1SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(2);
@@ -1107,9 +1076,7 @@ void CWorkDlg::Check_Lamp()
 					gData.bCapPort1Wait = TRUE;
 					m_bCapSw1On = TRUE;
 
-				} 
-				else if (gData.bCapPort1Wait && !m_bCapSw1On) 
-				{
+				} else if (gData.bCapPort1Wait && !m_bCapSw1On) {
 					pMainDlg->Set_LampFlicker_Cap1(FALSE);
 					pDY02->oCapPort1SlideLock = TRUE; pDY02->oCapPort1SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(2);
@@ -1120,17 +1087,12 @@ void CWorkDlg::Check_Lamp()
 					m_bCapSw1On = TRUE;
 				}
 			}
-			g_objLogFile.Save_HandlerLog("[Cap 1 Switch Clicked]");
-		} 
-		else 
-		{
+		} else {
 			m_bCapSw1On = FALSE;
 		}
 
-		if (pDX12->iCap2Sw)
-		{
-			if (pDX02->iCapPort2SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor12Open)) 
-			{	// 안전 확인.
+		if (pDX12->iCap2Sw) {
+			if (pDX02->iCapPort2SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor12Open)) {	// 안전 확인.
 				if (!gData.bCapPort2Wait && !m_bCapSw2On) {
 					pMainDlg->Set_LampFlicker_Cap2(TRUE);
 					pDY02->oCapPort2SlideLock = FALSE; pDY02->oCapPort2SlideUnlock = TRUE;
@@ -1152,20 +1114,13 @@ void CWorkDlg::Check_Lamp()
 					m_bCapSw2On = TRUE;
 				}
 			}
-
-			g_objLogFile.Save_HandlerLog("[Cap 2 Switch Clicked]");
-		} 
-		else 
-		{
+		} else {
 			m_bCapSw2On = FALSE;
 		}
 		// Unload Tray
-		if (pDX12->iUnload1Sw) 
-		{
-			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) 
-			{
-				if (!gData.bUnloadPort1Wait && !m_bUnloadSw1On) 
-				{
+		if (pDX12->iUnload1Sw) {
+			if (pDX03->iUnloadPort1SlideClose && (!pEquipData->bUseDoorLock || !pDX13->iDoor10Open)) {
+				if (!gData.bUnloadPort1Wait && !m_bUnloadSw1On) {
 					pMainDlg->Set_LampFlicker_Unload1(TRUE);
 					pDY03->oUnloadPort1SlideLock = FALSE; pDY03->oUnloadPort1SlideUnlock = TRUE;
 					g_objAJinAXL.Write_Output(3);
@@ -1175,8 +1130,7 @@ void CWorkDlg::Check_Lamp()
 					gData.bUnloadPort1Wait = TRUE;
 					m_bUnloadSw1On = TRUE;
 				}
-				else if (gData.bUnloadPort1Wait && !m_bUnloadSw1On) 
-				{
+				else if (gData.bUnloadPort1Wait && !m_bUnloadSw1On) {
 					pMainDlg->Set_LampFlicker_Unload1(FALSE);
 					pDY03->oUnloadPort1SlideLock = TRUE; pDY03->oUnloadPort1SlideUnlock = FALSE;
 					g_objAJinAXL.Write_Output(3);
@@ -1187,34 +1141,26 @@ void CWorkDlg::Check_Lamp()
 					m_bUnloadSw1On = TRUE;
 				}
 			}
-			g_objLogFile.Save_HandlerLog("[Unload 1 Switch Clicked]");
-		} 
-		else 
-		{
+		} else {
 			m_bUnloadSw1On = FALSE;
 		}
 
-		if (pDX12->iUnload2Sw && gData.bUnloadPort2Wait) 
-		{
+		if (pDX12->iUnload2Sw && gData.bUnloadPort2Wait) {
 			if (pDX03->iUnloadPort2SlideClose && (!pEquipData->bUseDoorLock || (!pDX13->iDoor05Open && !pDX13->iDoor06Open))) {	// 안전 확인.
 				pMainDlg->Set_LampFlicker_Unload2(FALSE);
 				pDY03->oUnloadPort2SlideLock = TRUE; pDY03->oUnloadPort2SlideUnlock = FALSE;
 				g_objAJinAXL.Write_Output(3);
-				if (pEquipData->bUseDoorLock) 
-				{
+				if (pEquipData->bUseDoorLock) {
 					pDY13->oDoor05Unlock = FALSE; pDY13->oDoor06Unlock = FALSE;
 					g_objAJinAXL.Write_Output(13);
 				}
 				gData.nPNoUnloadPort = 0;
 				gData.bUnloadPort2Wait = FALSE;
 				gData.bUnloadTrayLotEnd[0] = FALSE;
-				gData.bUnloadTrayLotEnd[1] = FALSE;								
-				
+				gData.bUnloadTrayLotEnd[1] = FALSE;
 				//gData.nGoodTrayCount = 0;
 			}
-			g_objLogFile.Save_HandlerLog("[Unload 2 Switch Clicked]");
 		}
-
 	}
 	//Cap Port1, 2, Unload Port1 버튼 누르면 도어락 풀리고 작업중 Flag Set
 	//Flag Set 상태에서 버튼 누르면 도어락 걸리고 Flag Clear
@@ -1567,37 +1513,16 @@ LRESULT CWorkDlg::OnUpdateTrayInfo(WPARAM nTray, LPARAM lParam)
 		g_dlgOperator.Update_TrayInfo(nTray, nNo);
 	}
 
-	
-
-	if (nTray == 0 || nTray == 3) {		// NG Tray
+	if (nTray == 0 || nTray == 3) {		// Unload Tray
 		strText.Format("%d", gData.nTNoUnloadTray);
 		m_stcShipTrayCount.SetWindowText(strText);
-
+		
 		for (int i = 0; i < gData.STY; i++) {
 			for (int j = 0; j < ST_X; j++) {
 				if		(gData.InfoShipTray[i][j] >  1) m_grdShipTray.Set_CellBackClr(i, j, RGB(0x70, 0x70, 0x70));	// Not Use
 				else if	(gData.InfoShipTray[i][j] == 1) m_grdShipTray.Set_CellBackClr(i, j, RGB(0x00, 0xFF, 0x00));	// Good
 				else if (gData.InfoShipTray[i][j] == 0) m_grdShipTray.Set_CellBackClr(i, j, RGB(0xFF, 0xFF, 0xFF));	// Empty
 				else									m_grdShipTray.Set_CellBackClr(i, j, RGB(0x80, 0x80, 0x80));	// Error
-			}
-		}
-		g_dlgOperator.Update_TrayInfo(nTray, nNo);
-	}
-
-
-	if (nTray == 0 || nTray == 4)  // Unload Tray
-	{		
-		strText.Format("%d", gData.nTNoUnloadTray);
-		m_stcNGTrayCount.SetWindowText(strText);
-
-		for (int i = 0; i < gData.STY; i++) 
-		{
-			for (int j = 0; j < ST_X; j++)
-			{
-				if		(gData.InfoNgTray[i][j] >  1) m_grdNGTray.Set_CellBackClr(i, j, RGB(0x70, 0x70, 0x70));	// Not Use
-				else if	(gData.InfoNgTray[i][j] == 1) m_grdNGTray.Set_CellBackClr(i, j, RGB(0x00, 0xFF, 0x00));	// Good
-				else if (gData.InfoNgTray[i][j] == 0) m_grdNGTray.Set_CellBackClr(i, j, RGB(0xFF, 0xFF, 0xFF));	// Empty
-				else									m_grdNGTray.Set_CellBackClr(i, j, RGB(0x80, 0x80, 0x80));	// Error
 			}
 		}
 		g_dlgOperator.Update_TrayInfo(nTray, nNo);
@@ -1839,11 +1764,7 @@ void CWorkDlg::OnBnClickedButton2()
 
 void CWorkDlg::OnBnClickedBtnLotstart1()
 {
-	DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
-
-	pDX02->iCapPort2HighCheck = TRUE;
-	//g_objInspector.Set_LotStart(gData.sLotID[0], 1);
-	
+	g_objInspector.Set_LotStart(gData.sLotID[0], 1);
 }
 
 
@@ -1904,69 +1825,4 @@ void CWorkDlg::OnBnClickedBtnUnload2()
 void CWorkDlg::OnBnClickedBtnUnloadf1()
 {
 	m_bUnloadSw1On = FALSE;
-}
-
-
-void CWorkDlg::OnBnClickedBtnLight()
-{
-	static int nOnOff = 0;
-
-	DY_DATA_13 *pDY13 = g_objAJinAXL.Get_pDY13();
-	
-	if(nOnOff == 0)
-	{
-		nOnOff = 1;
-		pDY13->oInsideLight = TRUE;
-	}
-	else
-	{
-		nOnOff = 0;
-		pDY13->oInsideLight = FALSE;
-	}
-	g_objAJinAXL.Write_Output(13);
-}
-
-void CWorkDlg::Set_DryRun(BOOL bCheck)
-{
-	CCME8000Dlg *pMainDlg = (CCME8000Dlg*)AfxGetApp()->GetMainWnd();
-
-	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-
-	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
-	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
-
-	if(bCheck)
-	{
-		pEquipData->bUseInlineMode = FALSE;
-		INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
-		
-		pEquipData->bUseMES = FALSE;
-		INI.Set_Bool("OPTION", "MES_USE", FALSE);
-		
-		m_chkMesUse.SetCheck(FALSE);
-		m_chkMesUse.EnableWindow(FALSE);
-	
-		g_objMES.Set_MESUse(FALSE);
-
-		pEquipData->bUseVisionCmAlign = FALSE;
-		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
-	}
-	else
-	{
-		pEquipData->bUseInlineMode = TRUE;
-		INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
-
-		pEquipData->bUseMES = FALSE;
-		INI.Set_Bool("OPTION", "MES_USE", FALSE);
-
-		m_chkMesUse.SetCheck(FALSE);
-		m_chkMesUse.EnableWindow(FALSE);
-
-		g_objMES.Set_MESUse(FALSE);
-
-		pEquipData->bUseVisionCmAlign = TRUE;
-		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", TRUE);
-	}
-
-	g_objDataManager.Read_EquipData();
 }

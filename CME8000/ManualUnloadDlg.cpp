@@ -43,11 +43,11 @@ void CManualUnloadDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE1_Y_0		+ i, m_btnUnloadStage1Y[i]);
 	for (int i = 0; i <  6; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE1_Z_0		+ i, m_btnUnloadStage1Z[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE1_IO_0	+ i, m_btnUnloadStage1Io[i]);
-	for (int i = 0; i <  7; i++) DDX_Control(pDX, IDC_LED_UNLOAD_STAGE1_IO_0	+ i, m_ledUnloadStage1Io[i]);
+	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_LED_UNLOAD_STAGE1_IO_0	+ i, m_ledUnloadStage1Io[i]);
 	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE2_Y_0		+ i, m_btnUnloadStage2Y[i]);
 	for (int i = 0; i <  6; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE2_Z_0		+ i, m_btnUnloadStage2Z[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_STAGE2_IO_0	+ i, m_btnUnloadStage2Io[i]);
-	for (int i = 0; i <  7; i++) DDX_Control(pDX, IDC_LED_UNLOAD_STAGE2_IO_0	+ i, m_ledUnloadStage2Io[i]);
+	for (int i = 0; i <  5; i++) DDX_Control(pDX, IDC_LED_UNLOAD_STAGE2_IO_0	+ i, m_ledUnloadStage2Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT1_IO_0		+ i, m_btnUnloadPort1Io[i]);
 	for (int i = 0; i < 10; i++) DDX_Control(pDX, IDC_LED_UNLOAD_PORT1_IO_0		+ i, m_ledUnloadPort1Io[i]);
 	for (int i = 0; i <  4; i++) DDX_Control(pDX, IDC_BTN_UNLOAD_PORT2_IO_0		+ i, m_btnUnloadPort2Io[i]);
@@ -98,11 +98,11 @@ void CManualUnloadDlg::Initial_Controls()
 	for (int i = 0; i <  5; i++) m_btnUnloadStage1Y[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i <  6; i++) m_btnUnloadStage1Z[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i <  4; i++) m_btnUnloadStage1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
-	for (int i = 0; i <  7; i++) m_ledUnloadStage1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
+	for (int i = 0; i <  5; i++) m_ledUnloadStage1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  5; i++) m_btnUnloadStage2Y[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i <  6; i++) m_btnUnloadStage2Z[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i <  4; i++) m_btnUnloadStage2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
-	for (int i = 0; i <  7; i++) m_ledUnloadStage2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
+	for (int i = 0; i <  5; i++) m_ledUnloadStage2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  4; i++) m_btnUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	for (int i = 0; i < 10; i++) m_ledUnloadPort1Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, CLedCS::emGreen, CLedCS::em16);
 	for (int i = 0; i <  4; i++) m_btnUnloadPort2Io[i].Init_Ctrl("Arial", 10, FALSE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
@@ -203,16 +203,12 @@ void CManualUnloadDlg::Display_Status()
 	m_ledUnloadStage1Io[2].Set_On(pDX05->iUnloadStage1SlaveIn);
 	m_ledUnloadStage1Io[3].Set_On(pDX05->iUnloadStage1SlaveOut);
 	m_ledUnloadStage1Io[4].Set_On(pDX05->iUnloadStage1Exist);
-	m_ledUnloadStage1Io[5].Set_On(pDX05->iUnloadStage1Exist2);
-	m_ledUnloadStage1Io[6].Set_On(pDX05->iUnloadStage1Exist3);
 
 	m_ledUnloadStage2Io[0].Set_On(pDX05->iUnloadStage2MasterIn);
 	m_ledUnloadStage2Io[1].Set_On(pDX05->iUnloadStage2MasterOut);
 	m_ledUnloadStage2Io[2].Set_On(pDX05->iUnloadStage2SlaveIn);
 	m_ledUnloadStage2Io[3].Set_On(pDX05->iUnloadStage2SlaveOut);
 	m_ledUnloadStage2Io[4].Set_On(pDX05->iUnloadStage2Exist);
-	m_ledUnloadStage2Io[5].Set_On(pDX05->iUnloadStage2Exist2);
-	m_ledUnloadStage2Io[6].Set_On(pDX05->iUnloadStage2Exist3);
 
 	m_ledUnloadPort1Io[0].Set_On(pDX03->iUnlaodPort1LowCheck);
 	m_ledUnloadPort1Io[1].Set_On(pDX03->iUnloadPort1SlideOpen);
@@ -473,11 +469,11 @@ void CManualUnloadDlg::OnBtnUnloadStage1YClick(UINT nID)
 	int nIndex = nID - IDC_BTN_UNLOAD_STAGE1_Y_0;
 
 	if (!g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 1) && !g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 3) && !g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0)) {
-		AfxMessageBox("Ship Picker Ready Up 위치가 아닙니다. 확인 후 진행하세요."); return;
+		AfxMessageBox("Unload Picker Ready Up 위치가 아닙니다. 확인 후 진행하세요."); return;
 	}
 	if ((g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 0)) ||
 		(g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1))) {
-			AfxMessageBox("Ship Stage1, 2 Z축 높이가 같습니다. 확인 후 진행하세요."); return;
+			AfxMessageBox("Unload Stage1, 2 Z축 높이가 같습니다. 확인 후 진행하세요."); return;
 	}
 
 	if ((g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1)) ||
@@ -512,7 +508,7 @@ void CManualUnloadDlg::OnBtnUnloadStage1ZClick(UINT nID)
 	double dStage1 = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE1_Y);
 	double dStage2 = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE2_Y);
 	double dDiff = fabs(dStage1 - dStage2);
-	if (dDiff < 300.0) { AfxMessageBox("Ship Stage1, 2 충돌 위험!!! Y축 위치 확인 후 진행하세요."); return; }
+	if (dDiff < 300.0) { AfxMessageBox("Unload Stage1, 2 충돌 위험!!! Y축 위치 확인 후 진행하세요."); return; }
 
 	if (nIndex == 2 || nIndex == 3) {
 		if (!g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0)) {	// Tray Load Position
@@ -527,7 +523,7 @@ void CManualUnloadDlg::OnBtnUnloadStage1ZClick(UINT nID)
 
 	g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, nIndex);
 
-	m_strLog.Format("[Manual Unload] Ship Stage1 Z (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Stage1 Z (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -545,7 +541,7 @@ void CManualUnloadDlg::OnBtnUnloadStage1IoClick(UINT nID)
 
 	g_objAJinAXL.Write_Output(5);
 
-	m_strLog.Format("[Manual Unload] Ship Stage1 IO (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Stage1 IO (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -559,11 +555,11 @@ void CManualUnloadDlg::OnBtnUnloadStage2YClick(UINT nID)
 	int nIndex = nID - IDC_BTN_UNLOAD_STAGE2_Y_0;
 
 	if (!g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 1) && !g_objCommon.Check_Position(AX_UNLOAD_PICKER_X, 3) && !g_objCommon.Check_Position(AX_UNLOAD_PICKER_Z, 0)) {
-		AfxMessageBox("Ship Picker Ready Up 위치가 아닙니다. 확인 후 진행하세요."); return;
+		AfxMessageBox("Unload Picker Ready Up 위치가 아닙니다. 확인 후 진행하세요."); return;
 	}
 	if ((g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 0)) ||
 		(g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1))) {
-			AfxMessageBox("Ship Stage1, 2 Z축 높이가 같습니다. 확인 후 진행하세요."); return;
+			AfxMessageBox("Unload Stage1, 2 Z축 높이가 같습니다. 확인 후 진행하세요."); return;
 	}
 
 	if ((g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1)) ||
@@ -580,10 +576,10 @@ void CManualUnloadDlg::OnBtnUnloadStage2YClick(UINT nID)
 			}
 
 	} else {
-		AfxMessageBox("Ship Stage1, 2 Z축 높이 확인 후 진행하세요."); return;
+		AfxMessageBox("Unload Stage1, 2 Z축 높이 확인 후 진행하세요."); return;
 	}
 
-	m_strLog.Format("[Manual Unload] Ship Stage2 Y (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Stage2 Y (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -599,7 +595,7 @@ void CManualUnloadDlg::OnBtnUnloadStage2ZClick(UINT nID)
 	double dStage1 = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE1_Y);
 	double dStage2 = g_objAJinAXL.Get_Position(AX_UNLOAD_STAGE2_Y);
 	double dDiff = fabs(dStage1 - dStage2);
-	if (dDiff < 300.0) { AfxMessageBox("Ship Stage1, 2 충돌 위험!!! Y축 위치 확인 후 진행하세요."); return; }
+	if (dDiff < 300.0) { AfxMessageBox("Unload Stage1, 2 충돌 위험!!! Y축 위치 확인 후 진행하세요."); return; }
 
 	if (nIndex == 2 || nIndex == 3) {
 		if (!g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 0)) {	// Tray Load Position
@@ -614,7 +610,7 @@ void CManualUnloadDlg::OnBtnUnloadStage2ZClick(UINT nID)
 
 	g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, nIndex);
 
-	m_strLog.Format("[Manual Unload] Ship Stage2 Z (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Stage2 Z (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -632,7 +628,7 @@ void CManualUnloadDlg::OnBtnUnloadStage2IoClick(UINT nID)
 
 	g_objAJinAXL.Write_Output(5);
 
-	m_strLog.Format("[Manual Unload] Ship Stage2 IO (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Stage2 IO (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -650,7 +646,7 @@ void CManualUnloadDlg::OnBtnUnloadPort1IoClick(UINT nID)
 
 	g_objAJinAXL.Write_Output(3);
 
-	m_strLog.Format("[Manual Unload] Ship Port1 IO (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Port1 IO (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 
@@ -668,7 +664,7 @@ void CManualUnloadDlg::OnBtnUnloadPort2IoClick(UINT nID)
 
 	g_objAJinAXL.Write_Output(3);
 
-	m_strLog.Format("[Manual Unload] Ship Port1 IO (%d) Click", nIndex);
+	m_strLog.Format("[Manual Unload] Unload Port1 IO (%d) Click", nIndex);
 	g_objLogFile.Save_HandlerLog(m_strLog);
 }
 

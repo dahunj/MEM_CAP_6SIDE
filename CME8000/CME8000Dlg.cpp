@@ -105,12 +105,10 @@ void CCME8000Dlg::Initial_Controls()
 	m_stcMainTime.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
 	m_stcMainVer.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
 	for (int i = 0; i < 3; i++) m_stcMainTower[i].Init_Ctrl("Segoe UI", 14, TRUE, COLOR_DEFAULT, RGB(0xFF, 0xFF, 0xFF));
-	
 
-	
-
-	
-
+#ifdef DRY_RUN_TEST
+	m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));
+#endif
 	m_picModeBack.Init_Ctrl(COLOR_DEFAULT, COLOR_DEFAULT);
 	m_btnMainOperator.Init_Ctrl("Segoe UI", 14, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
 	m_rdoMainParm.Init_Ctrl("Segoe UI", 14, TRUE, COLOR_DEFAULT, COLOR_DEFAULT, 0, 0);
@@ -171,12 +169,6 @@ BOOL CCME8000Dlg::OnInitDialog()
 
 	gData.sInspectCmLotIDLater = "";
 	gData.sInspectCmLotIDPrevious = "";
-
-	Save_EquipCappingCnt();
-
-	gData.nLogInLevel = 0;
-	SetTimer(TIMER_DOOR_LOCK_UNUSE, 10000, NULL);
-
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
 
@@ -308,17 +300,7 @@ void CCME8000Dlg::OnShowWindow(BOOL bShow, UINT nStatus)
 
 void CCME8000Dlg::OnTimer(UINT_PTR nIDEvent)
 {
-	switch (nIDEvent) 
-	{
-	case TIMER_DOOR_LOCK_UNUSE:
-		{
-			EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-			if(!pEquipData->bUseDoorLock)
-			{
-				g_objSequenceMain.Set_ThreadBeep();
-			}            
-		}        
-		break;
+	switch (nIDEvent) {
 	case TIMER_DATE_TIME:
 		Display_DateTime();
 		Set_InsideLight();
@@ -361,53 +343,42 @@ void CCME8000Dlg::OnTimer(UINT_PTR nIDEvent)
 
 void CCME8000Dlg::OnBnClickedBtnMainOperator()
 {
-	int nUser = 0;
 	int nMode = theApp.Get_MainMode();
-	if (nMode == MODE_OPERATOR) 
-	{
-		if(gData.bUseDryRun)
-		{
-			g_dlgSetup.Set_LoginUser(2);	// SI
-			Set_CurrentMode(MODE_WORK);
-		}
-		else
-		{		
-			if (g_objCommon.Show_Password(nUser) != IDOK) return;
-			g_dlgSetup.Set_LoginUser(nUser);
-			Set_CurrentMode(MODE_WORK);
-		}
-
+	if (nMode == MODE_OPERATOR) {
+#ifdef DRY_RUN_TEST
+		g_dlgSetup.Set_LoginUser(2);	// SI
+		Set_CurrentMode(MODE_WORK);
+#else
+		int nUser = 0;
+		if (g_objCommon.Show_Password(nUser) != IDOK) return;
+		g_dlgSetup.Set_LoginUser(nUser);
+		Set_CurrentMode(MODE_WORK);
+#endif
 	}
 	else Set_CurrentMode(MODE_OPERATOR);
 }
 
 void CCME8000Dlg::OnBnClickedRdoMainParam()
 {
+#ifdef DRY_RUN_TEST
+	g_dlgSetup.Set_LoginUser(2);	// SI
+	Set_CurrentMode(MODE_SETUP);
+#else
 	int nUser = 0;
-	if(gData.bUseDryRun)
-	{
-		g_dlgSetup.Set_LoginUser(2);	// SI
-		Set_CurrentMode(MODE_SETUP);
-	}
-	else
-	{
-		if (g_objCommon.Show_Password(nUser) == IDOK) 
-		{
-			theApp.bParamMode = TRUE;
-			g_dlgSetup.Set_LoginUser(nUser);
-			Set_CurrentMode(MODE_PARAM);
+	if (g_objCommon.Show_Password(nUser) == IDOK) {
+		theApp.bParamMode = TRUE;
+		g_dlgSetup.Set_LoginUser(nUser);
+		Set_CurrentMode(MODE_PARAM);
 
-		} 
-		else
-		{
-			int nMode = theApp.Get_MainMode();
-			if (nMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
-			if (nMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
-			if (nMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
-			if (nMode == MODE_PROHIBIT) m_rdoMainProhibit.SetCheck(TRUE);
-			if (nMode == MODE_PARAM) m_rdoMainParm.SetCheck(TRUE);
-		}
+	} else {
+		int nMode = theApp.Get_MainMode();
+		if (nMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
+		if (nMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
+		if (nMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
+		if (nMode == MODE_PROHIBIT) m_rdoMainProhibit.SetCheck(TRUE);
+		if (nMode == MODE_PARAM) m_rdoMainParm.SetCheck(TRUE);
 	}
+#endif
 }
 
 void CCME8000Dlg::OnBnClickedRdoMainWork()
@@ -422,31 +393,25 @@ void CCME8000Dlg::OnBnClickedRdoMainManual()
 
 void CCME8000Dlg::OnBnClickedRdoMainSetup()
 {
+#ifdef DRY_RUN_TEST
+	g_dlgSetup.Set_LoginUser(2);	// SI
+	Set_CurrentMode(MODE_SETUP);
+#else
 	int nUser = 0;
-	if(gData.bUseDryRun)
-	{
-		g_dlgSetup.Set_LoginUser(2);	// SI
+	if (g_objCommon.Show_Password(nUser) == IDOK) {
+		theApp.bParamMode = FALSE;
+		g_dlgSetup.Set_LoginUser(nUser);
 		Set_CurrentMode(MODE_SETUP);
-	}
-	else
-	{
-		if (g_objCommon.Show_Password(nUser) == IDOK) 
-		{
-			theApp.bParamMode = FALSE;
-			g_dlgSetup.Set_LoginUser(nUser);
-			Set_CurrentMode(MODE_SETUP);
 
-		} 
-		else 
-		{
-			int nMode = theApp.Get_MainMode();
-			if (nMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
-			if (nMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
-			if (nMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
-			if (nMode == MODE_PROHIBIT) m_rdoMainProhibit.SetCheck(TRUE);
-			if (nMode == MODE_PARAM) m_rdoMainParm.SetCheck(TRUE);
-		}
+	} else {
+		int nMode = theApp.Get_MainMode();
+		if (nMode == MODE_WORK) m_rdoMainWork.SetCheck(TRUE);
+		if (nMode == MODE_MANUAL) m_rdoMainManual.SetCheck(TRUE);
+		if (nMode == MODE_SETUP) m_rdoMainSetup.SetCheck(TRUE);
+		if (nMode == MODE_PROHIBIT) m_rdoMainProhibit.SetCheck(TRUE);
+		if (nMode == MODE_PARAM) m_rdoMainParm.SetCheck(TRUE);
 	}
+#endif
 }
 
 void CCME8000Dlg::OnBnClickedRdoMainProhibit()
@@ -688,28 +653,23 @@ void CCME8000Dlg::Set_CurrentState(int nState)
 	if (nState == STATE_ALARM || nState == STATE_ERROR ||
 		nState == STATE_LOTEND || nState == STATE_CAPTRAY || nState == STATE_SHIPTRAY) {
 		m_bBuzzerOn = TRUE;
-
-
+#ifndef DRY_RUN_TEST	// 시끄러워서 막음
 		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-		if(!gData.bUseDryRun)
-		{
-
-			// temp
-			// 		if (gData.bEmptyFull) {
-			// 			pDY12->oBuzzerBit0 = TRUE;	//pEquipData->bBuzzer[1][0];
-			// 			pDY12->oBuzzerBit1 = TRUE;	//pEquipData->bBuzzer[1][1];
-			// 			pDY12->oBuzzerBit2 = FALSE;	//pEquipData->bBuzzer[1][2];
-			// 			pDY12->oBuzzerBit3 = FALSE;	//pEquipData->bBuzzer[1][3];
-			// 			pDY12->oBuzzerBit4 = FALSE;	//pEquipData->bBuzzer[1][4];
-			// 		} else {
+// temp
+// 		if (gData.bEmptyFull) {
+// 			pDY12->oBuzzerBit0 = TRUE;	//pEquipData->bBuzzer[1][0];
+// 			pDY12->oBuzzerBit1 = TRUE;	//pEquipData->bBuzzer[1][1];
+// 			pDY12->oBuzzerBit2 = FALSE;	//pEquipData->bBuzzer[1][2];
+// 			pDY12->oBuzzerBit3 = FALSE;	//pEquipData->bBuzzer[1][3];
+// 			pDY12->oBuzzerBit4 = FALSE;	//pEquipData->bBuzzer[1][4];
+// 		} else {
 			pDY12->oBuzzerBit0 = pEquipData->bBuzzer[nState - STATE_ALARM][0];
 			pDY12->oBuzzerBit1 = pEquipData->bBuzzer[nState - STATE_ALARM][1];
 			pDY12->oBuzzerBit2 = pEquipData->bBuzzer[nState - STATE_ALARM][2];
 			pDY12->oBuzzerBit3 = pEquipData->bBuzzer[nState - STATE_ALARM][3];
 			pDY12->oBuzzerBit4 = pEquipData->bBuzzer[nState - STATE_ALARM][4];
-			//		}
-		}
-
+//		}
+#endif
 		// Buzzer Flicker
 		if (pEquipData->bBuzzer[nState - STATE_ALARM][5]) SetTimer(TIMER_BUZZER_FLKR, 500, NULL);
 	}
@@ -787,21 +747,16 @@ void CCME8000Dlg::Set_BuzzerFlicker(BOOL bEnable)
 		pDY12->oBuzzerBit4 = FALSE;
 		if (!bEnable) KillTimer(TIMER_BUZZER_FLKR);
 
-	} 
-	else 
-	{
+	} else {
 		m_bBuzzerOn = TRUE;
-
+#ifndef DRY_RUN_TEST	// 시끄러워서 막음
 		int nState = theApp.Get_MainState();
-		if(!gData.bUseDryRun) // 시끄러워서 막음
-		{
-			
-			pDY12->oBuzzerBit0 = pEquipData->bBuzzer[nState-STATE_ALARM][0];
-			pDY12->oBuzzerBit1 = pEquipData->bBuzzer[nState-STATE_ALARM][1];
-			pDY12->oBuzzerBit2 = pEquipData->bBuzzer[nState-STATE_ALARM][2];
-			pDY12->oBuzzerBit3 = pEquipData->bBuzzer[nState-STATE_ALARM][3];
-			pDY12->oBuzzerBit4 = pEquipData->bBuzzer[nState-STATE_ALARM][4];	
-		}
+		pDY12->oBuzzerBit0 = pEquipData->bBuzzer[nState-STATE_ALARM][0];
+		pDY12->oBuzzerBit1 = pEquipData->bBuzzer[nState-STATE_ALARM][1];
+		pDY12->oBuzzerBit2 = pEquipData->bBuzzer[nState-STATE_ALARM][2];
+		pDY12->oBuzzerBit3 = pEquipData->bBuzzer[nState-STATE_ALARM][3];
+		pDY12->oBuzzerBit4 = pEquipData->bBuzzer[nState-STATE_ALARM][4];
+#endif
 	}
 	g_objAJinAXL.Write_Output(12);
 }
@@ -810,15 +765,12 @@ void CCME8000Dlg::Set_LampFlicker_Load1(BOOL bEnable)
 {
 	DY_DATA_12 *pDY12 = g_objAJinAXL.Get_pDY12();
 
-	if (m_bLampOnLoad1 || !bEnable) 
-	{
+	if (m_bLampOnLoad1 || !bEnable) {
 		m_bLampOnLoad1 = FALSE;
 		pDY12->oLoad1Lamp = FALSE;
 //		if (!bEnable) KillTimer(TIMER_LOAD1_LAMP_FLKR);
 
-	}
-	else 
-	{
+	} else {
 		m_bLampOnLoad1 = TRUE;
 		pDY12->oLoad1Lamp = TRUE;
 	}
@@ -988,7 +940,6 @@ void CCME8000Dlg::Exit_System(int nExitNo)
 	KillTimer(TIMER_EMPTY_LAMP_FLKR);
 	KillTimer(TIMER_DOOR_LOCK);
 
-	
 	Save_EquipCappingCnt();	// Capping한 수량 저장
 	g_objLogFile.Save_HandlerLog("[Main Dialog] Program Exit");
 	g_dlgWork.MachineStopLog("PROGRAM_EXIT");
@@ -1124,12 +1075,7 @@ void CCME8000Dlg::Set_LotStateTime()
 		/*gLot.dwErrorTime += dwTime;	gLot.nErrorCount++; break;*/
 		break;
 	default:
-		if (!gAlm.bBegin) 
-		{
-			gLot.dwStopTime[0] += dwTime;
-			gLot.dwStopTime[1] += dwTime;
-			break;
-		}
+		if (!gAlm.bBegin) gLot.dwStopTime += dwTime; break;
 	}
 	m_dwSetTimer = GetTickCount();
 }

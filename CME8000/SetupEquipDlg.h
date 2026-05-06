@@ -32,11 +32,10 @@ public:
 
 	CCheckCS	m_chkUseInlineMode;
 	CCheckCS	m_chkUseVisionCapDir;
-
-	CCheckCS	m_chkInspectCMOption;
-	CCheckCS	m_chkInspectNGMix;
+	CCheckCS	m_chkUseVisionCmAlign;
 	CCheckCS	m_chkUseVisionAlignAlarm;
-	
+	CCheckCS	m_chkUseVisionAlignOffset;
+
 	CCheckCS	m_chkUseTrayPickerTurn;
 	CCheckCS	m_chkUseCapPickerTurn;
 	CCheckCS	m_chkAssyPickerTilt;
@@ -82,13 +81,6 @@ public:
 	CLabelCS	m_lblCMVision[3];
 	CStaticCS	m_stcCMVision[3];
 
-	CGroupCS	m_grpResultTest;
-	CLabelCS	m_lblResultTest;
-	CCheckCS	m_chkResultTestUse;
-	CEditCS		m_edtResultTest;
-
-	CCheckCS	m_chkUseDryRun;
-
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -121,8 +113,6 @@ private:
 	void Display_EquipData();
 
 public:
-	 void Set_Enable(BOOL bEnable);
-
 	void Save_EquipData();
 	void Cancel_EquipData();
 	afx_msg void OnBnClickedBtnAviConnect();
@@ -131,7 +121,6 @@ public:
 	afx_msg void OnStnClickedStcCmVision1();
 	afx_msg void OnStnClickedStcCmVision2();
 	afx_msg void OnStnClickedStcDoorlockTime();
-	afx_msg void OnBnClickedChkUseDryRun();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

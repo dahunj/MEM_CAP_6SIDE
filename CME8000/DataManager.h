@@ -18,7 +18,9 @@ typedef struct tag_EQUIP_DATA {
 	BOOL	bUseMES;
 	BOOL	bUseInlineMode;
 	BOOL	bUseVisionCapDir;
+
 	
+
 	BOOL	bUseTrayPickerTurn;
 	BOOL	bUseCapPickerTurn;
 	BOOL	bChkAssyPickerTilt;
@@ -46,27 +48,20 @@ typedef struct tag_EQUIP_DATA {
 
 	BOOL	bTower[6][4];		// [0:None,1:Init,2:Ready,3:Run,4:Alarm,5:Error][0:Green,1:Yellow,2:Red,3:Flicker]
 	BOOL	bBuzzer[5][6];		// [0::Alarm,1:Error,2:LotEnd,3:CapTray,4:ShipTray][0:Bit0,1:Bit1,2:Bit2,3:Bit3,4:Bit4,5:Flicker]
-	CString	sPasswordOP;
-	CString	sPasswordSy;
+	CString	sPasswordMt;
+	CString	sPasswordSi;
 
 	int		nCappingCnt;		// Load Cell 측정을 위해 Capping한 Cap 수량 저장
 	int		nLoadCellChkCnt;	// Assy Picker Load Cell 측정 주기
 
 
 	BOOL	bUseVisionCmAlign;
-	BOOL	bInspectNgMix;
-
 	BOOL	bUseVisionAlignAlarm;
 	BOOL	bUseVisionAlignOffset;
 
 	int		nInspectCmScanTimes;	// 랏 당 CM 검사 최대 횟수
 	int		nInspectCmLotTimes; 	// 시간당 랏 개수 
 	int		nInspectCmMinutes;		// 몇분 간격으로 설정 할지 	
-
-	BOOL	bResultTestUse;		// Result Test Use
-	int		nResultTestNg;		// Result Test Ng Ratio (0~100)
-
-	BOOL    bUseDryRun;
 
 } EQUIP_DATA;
 

@@ -73,16 +73,12 @@ public:
 	CCheckCS		m_chkCycleStop;
 	CCheckCS		m_chkMesUse;
 	CPictureCS		m_picTrayBack[6];
-
 	CStaticCS		m_stcLoadTrayCount;
 	CStaticCS		m_stcCapTrayCount;
 	CStaticCS		m_stcShipTrayCount;
-	CStaticCS		m_stcNGTrayCount;
-
 	CGridCS			m_grdLoadTray;
 	CGridCS			m_grdCapTray;
 	CGridCS			m_grdShipTray;
-	CGridCS			m_grdNGTray;
 	CStaticCS		m_stcWorkCase[16];
 	CStaticCS		m_stcPortNo[12];
 	CStaticCS		m_stcTakt[4];
@@ -181,8 +177,6 @@ public:
 
 	int  Check_CapShipLotID(int nType, CString sBarID);
 
-	void Set_DryRun(BOOL bCheck);
-
 
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
@@ -205,7 +199,6 @@ public:
 	CButton m_BtnUnloadSW2;
 	CButton m_BtnUnloadSWF1;
 	CButton m_BtnUnloadSWF2;
-	afx_msg void OnBnClickedBtnLight();
 };
 
 extern CWorkDlg g_dlgWork;

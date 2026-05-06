@@ -56,7 +56,7 @@ public:
 	void Set_StatusUpdate(int nStatus);
 	void Set_TrayUnload();
 	void Set_ApdReply();
-	void Set_PullForceEnd();
+
 
 	void Set_ConnectStatus(BOOL isConnected) { m_bConnected = isConnected; }
 	void Set_NotifyCmAlignAlarm();

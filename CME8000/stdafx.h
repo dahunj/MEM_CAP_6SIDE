@@ -55,11 +55,6 @@
 
 #include <math.h>
 
-#include <dbghelp.h>
-#include <stdio.h>
-#include <time.h>
-#pragma comment(lib, "Dbghelp.lib")
-
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
@@ -76,11 +71,11 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.0.2.3")
+#define MAIN_VERSION	_T("V 2.1.0.5")
 //
-//#define AJIN_BOARD_USE
-//#define LOT_BARCODE_USE
-//#define LOAD_CELL_USE
+#define AJIN_BOARD_USE
+#define LOT_BARCODE_USE
+#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -93,14 +88,13 @@
 
 // R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
 // R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
-const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 5, PICK = 4;
+const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 6, PICK = 4;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 extern CString gsCurrentDir;	// 현재 프로젝트 폴더
 
-typedef struct
-{
+typedef struct {
 	CString	sLotID[2];
 	CString	sOperID;		// Operator
 	CString	sRecipe;		// Recipe Item
@@ -133,7 +127,6 @@ typedef struct
 	int		InfoCapTray[CT_Y][CT_X];	// Cap Tray 정보 표시 (0:Not Use, 9:Use)
 	int		STY;						// Ship Tray 라인수 (R53B:7, R54B:7)
 	int		InfoShipTray[ST_Y][ST_X];	// Ship Tray 정보 표시 (0:Not Use, 1:Exist)
-	int		InfoNgTray[ST_Y][ST_X];		// NG Tray 정보 표시 (0:Empty, 2:NG)
 
 	int		InfoIndex[3][PICK];			// Index 정보 표시 0: 좌측	(0:Not Use, 1:Exist)
 	int		InfoCapBuffer[PICK];		// Cap Buffer 정보 표시 0:상단	(0:Not Use, 9:Use)
@@ -181,8 +174,7 @@ typedef struct
 	BOOL	bScanDone[2];			// 0:CM Align, 1:Cap Align
 	int		nInspCmNo[2][2];		// 0:CM Align, 1:Cap Align, 0:CmNo1, 1:CmNo2
 	// Port 별로 저장해야함.
-	int		nInspectInfo[2][50][12];	// 검사결과 (0:Empty, 1:Good, 2:NG, 3:NoResult, 7:Request, 8:NG, 9:Init)
-	
+	int		nCmInspectInfo[2][50][12];	// CM Align 검사결과 (0:Empty, 1:Good, 2:Normal)
 	int		nCapInspectInfo[2][50][28];	// Cap Align 검사결과 (0:Empty, 1:Good, 2:Normal)
 
 	BOOL	bCycleStop;				// Run 중간에 멈출때 (초기화 필요)
@@ -204,7 +196,9 @@ typedef struct
 	int		nCmInspPickNo2;
 	int		nCapInspPickNo1;
 	int		nCapInspPickNo2;
+
 	
+
 	BOOL	bAviTrayLoad;
 	int		nCmCntAviPort;
 	int		nCmCntTrayPick;
@@ -282,10 +276,6 @@ typedef struct
 	CString		sInspectCmLotIDLater;
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 	
-	DWORD		dwInspectSkipTime;
-
-	BOOL		bUseDryRun;
-	int			nLogInLevel;
 } GLOVAL_DATA;
 
 typedef struct {
@@ -295,15 +285,8 @@ typedef struct {
 	DWORD	dwLotStart[2];
 	DWORD	dwLotEnd[2];
 	int		nTrayCount[2];
-	int		nCmCount[2];	
-
-	double  dTactTime_StoE;
-	double  dTactTime_RunTime;
-	double  dTactTime_Unload; //Start to End 
-	int		nAlmCnt[2];
-
-	DWORD	dwFirstUnload[2];
-
+	int		nCmCount[2];
+	double  dTackTime;
 	int		nGoodCount[2];
 	int		nNgCount[2];
 	int		nCapFailCount[2];			// Cap Tilt Error Count
@@ -312,7 +295,7 @@ typedef struct {
 
 	int		nErrorCount;
 	DWORD	dwRunTime;
-	DWORD	dwStopTime[2]; // port 1, 2
+	DWORD	dwStopTime;
 	DWORD	dwErrorTime;
 
 	BOOL	bLotEndComplete[2];
@@ -321,7 +304,6 @@ typedef struct {
 
 	DWORD	dwTaktData[4];	// 0:Load, 1:Assembly, 2:Unload, 3:Index
 	BOOL	bTaktDone[3];	// 0:Load, 1:Assembly, 2:Unload
-
 } GLOVAL_LOT;
 
 typedef struct {
@@ -337,8 +319,6 @@ typedef struct {
 
 	double  dMotionChkPos;
 	double  dMotionPos[35];
-
-
 } GLOVAL_ALM;
 
 typedef struct {
@@ -400,30 +380,3 @@ extern GLOVAL_UPH	gUph;
 extern GLOVAL_MES	gMes;
 extern GLOBAL_DOORLOCK gDoorLock;
 extern GLOVAL_PART		gPart;
-
-
-const int UNLOADSTAGE1_Z_MOVEDOWN				= 0;
-const int UNLOADSTAGE1_Z_MOVEUP					= 1;
-const int UNLOADSTAGE1_Z_LOADSUPPORTUP			= 2;
-const int UNLOADSTAGE1_Z_LOADSUPPORTDOWN		= 3;
-const int UNLOADSTAGE1_Z_UNLOADSUPPORTUP		= 4;
-const int UNLOADSTAGE1_Z_UNLOADSUPPORTDOWN		= 5;
-
-const int UNLOADSTAGE2_Z_MOVEDOWN				= 0;
-const int UNLOADSTAGE2_Z_MOVEUP					= 1;
-const int UNLOADSTAGE2_Z_LOADSUPPORTUP			= 2;
-const int UNLOADSTAGE2_Z_LOADSUPPORTDOWN		= 3;
-const int UNLOADSTAGE2_Z_UNLOADSUPPORTUP		= 4;
-const int UNLOADSTAGE2_Z_UNLOADSUPPORTDOWN		= 5;
-
-
-
-const int UNLOADSTAGE1_Y_WORKPOS = 1;
-
-#define UL_STG1_Z_MOVE_DOWN 0
-#define UL_STG1_Z_MOVE_UP 1
-
-#define UL_STG1_Y_WORK_POS 1
-
-
-

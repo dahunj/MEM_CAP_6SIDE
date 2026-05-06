@@ -8,13 +8,11 @@
 #define new DEBUG_NEW
 #endif
 
-
 // CCME8000App
 
 BEGIN_MESSAGE_MAP(CCME8000App, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
-
 
 // CCME8000App 생성
 CCME8000App::CCME8000App()
@@ -77,14 +75,11 @@ BOOL CCME8000App::InitInstance()
 	gDoorLock.nOpenStart = -1;//start with nothing
 	gDoorLock.bFirst = TRUE;
 
-	InstallCrashHandler();
-
 	CCME8000Dlg dlg;
 	m_pMainWnd = &dlg;
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
-
 		// TODO: 여기에 [확인]을 클릭하여 대화 상자가 없어질 때 처리할
 		//  코드를 배치합니다.
 	}
@@ -122,17 +117,6 @@ void CCME8000App::uSleep(int msec)
 		dwTerm = (int)(GetTickCount() - dwStart);
 		DoEvents();
 	} while (dwTerm < msec);
-}
-
-
-
-
-void CCME8000App::InstallCrashHandler()
-{
-	SetUnhandledExceptionFilter(MyUnhandledExceptionFilter);
-
-	// (선택) OS가 WER로 덮어쓰는 경우를 줄이기 위해 우선순위 올리는 팁이 있지만
-	// 환경마다/정책마다 달라서 여기서는 안전하게 기본만.
 }
 
 ///////////////////////////////////////////////////////////////////////////////

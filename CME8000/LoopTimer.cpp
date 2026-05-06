@@ -27,12 +27,9 @@ void CLoopTimer::Set_LoopTime(DWORD msec)
 
 BOOL CLoopTimer::Over_LoopTime()
 {
-
-	if(gData.bUseDryRun)
-	{
-		return FALSE;		// Å×½ºÆ®
-	}
-
+#ifdef DRY_RUN_TEST
+	return FALSE;	// No Timeout Error
+#endif
 	DWORD dwTerm = GetTickCount() - m_dwLoopStart;
 	if (dwTerm >= m_dwLoopTerm)
 		return TRUE;
@@ -68,11 +65,10 @@ void CLoopTimer::Takt_Start()
 	m_dwTakt = GetTickCount();
 }
 
-void CLoopTimer::Takt_Save(int nFun, int nId, CString sLog)
+void CLoopTimer::Takt_Save(int nFun, int nId)
 {
 	CString strFun, strLog, strMsg;
-	switch (nFun)
-	{
+	switch (nFun) {
 	case 1:		// Tray Picker
 		strFun = "TrayPicker";
 		switch (nId) {
@@ -302,11 +298,6 @@ void CLoopTimer::Takt_Save(int nFun, int nId, CString sLog)
 	if (strMsg != "") {
 		gLot.dAverageCycle[nFun-1][0][nId-1]++;
 		gLot.dAverageCycle[nFun-1][1][nId-1] += (GetTickCount() - m_dwTakt) / 1000.0;
-	}
-
-	if(sLog != "")
-	{
-		strMsg = sLog;
 	}
 
 	strLog.Format("MCC,(%02d) %s,(%02d) %s,%0.3lf", nFun, strFun, nId, strMsg, (GetTickCount() - m_dwTakt) / 1000.0);
