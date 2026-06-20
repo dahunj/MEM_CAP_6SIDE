@@ -90,6 +90,11 @@ public:
 	CStaticCS		m_stcLoadCellCnt;
 	CButtonCS		m_btnLoadCellChkEdit;
 
+	CLabelCS		m_lblOperId;
+	CStaticCS		m_stcOperId;
+	CStaticCS		m_stcMesConnect;
+	CStaticCS		m_stcMesOnline;
+
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -180,6 +185,18 @@ public:
 
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
+
+	afx_msg void OnStnClickedStcOperId();
+	afx_msg void OnBnClickedBtnMesOnline();
+	afx_msg void OnBnClickedBtnMesOffline();
+
+	afx_msg void OnBnClickedBtnMesConnect();
+	afx_msg void OnBnClickedBtnMesDisconnect();
+	afx_msg void OnBnClickedBtnMesAbort();
+	afx_msg void OnBnClickedBtnIdleReport();
+
+
+
 	afx_msg void OnBnClickedBtnLotstart1();
 	afx_msg void OnBnClickedBtnLotstart2();
 	afx_msg void OnBnClickedBtnCapsw1();

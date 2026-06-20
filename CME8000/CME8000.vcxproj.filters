@@ -285,9 +285,6 @@
     <ClInclude Include="LoadCell.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="MESInterface.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="AviHandler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -295,6 +292,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="FifoTaskProcessor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="MesAgent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -440,9 +440,6 @@
     <ClCompile Include="LoadCell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="MESInterface.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="AviHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -450,6 +447,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FifoTaskProcessor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MesAgent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

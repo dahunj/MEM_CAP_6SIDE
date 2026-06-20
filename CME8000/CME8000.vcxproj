@@ -166,7 +166,7 @@
     <ClInclude Include="ManualLoadDlg.h" />
     <ClInclude Include="ManualRepeatRunDlg.h" />
     <ClInclude Include="ManualUnloadDlg.h" />
-    <ClInclude Include="MESInterface.h" />
+    <ClInclude Include="MesAgent.h" />
     <ClInclude Include="MonitorDlg.h" />
     <ClInclude Include="MonitorInOutDlg.h" />
     <ClInclude Include="MonitorInOutTabDlg.h" />
@@ -221,7 +221,7 @@
     <ClCompile Include="ManualLoadDlg.cpp" />
     <ClCompile Include="ManualRepeatRunDlg.cpp" />
     <ClCompile Include="ManualUnloadDlg.cpp" />
-    <ClCompile Include="MESInterface.cpp" />
+    <ClCompile Include="MesAgent.cpp" />
     <ClCompile Include="MonitorDlg.cpp" />
     <ClCompile Include="MonitorInOutDlg.cpp" />
     <ClCompile Include="MonitorInOutTabDlg.cpp" />

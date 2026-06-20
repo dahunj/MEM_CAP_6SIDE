@@ -8,7 +8,6 @@
 #include "LogFile.h"
 #include "Common.h"
 
-#include "MESInterface.h"
 #include "SequenceInit.h"
 #include "SequenceMain.h"
 
@@ -256,19 +255,19 @@ void CErrorDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 // 		if (m_nErrNo == 3606 || m_nErrNo == 3706 || m_nErrNo == 6220) m_btnErrToManual.SetWindowText("Skip");
 // 		else m_btnErrToManual.SetWindowText("To Manual");
 
-		if (m_nErrNo == 3804 || m_nErrNo == 3904) {	// Cap 자재등록 실패
-			strErrPick.Format("#==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
-			if (m_nErrNo == 3804) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE1, 3);	// Cap 자재등록하는 Case로 다시 보내준다.
-			if (m_nErrNo == 3904) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE2, 3);	// Cap 자재등록하는 Case로 다시 보내준다.
-		}
+		//if (m_nErrNo == 3804 || m_nErrNo == 3904) {	// Cap 자재등록 실패
+		//	strErrPick.Format("#==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
+		//	if (m_nErrNo == 3804) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE1, 3);	// Cap 자재등록하는 Case로 다시 보내준다.
+		//	if (m_nErrNo == 3904) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE2, 3);	// Cap 자재등록하는 Case로 다시 보내준다.
+		//}
 
-		if (m_nErrNo == 4516 || m_nErrNo == 4616) {	// Ship 자재등록 실패
-			strErrPick.Format("#==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
-			if (m_nErrNo == 4516) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE1, 15);	// Ship 자재등록하는 Case로 다시 보내준다.
-			if (m_nErrNo == 4616) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE2, 15);	// Ship 자재등록하는 Case로 다시 보내준다.
-		}
+		//if (m_nErrNo == 4516 || m_nErrNo == 4616) {	// Ship 자재등록 실패
+		//	strErrPick.Format("#==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
+		//	if (m_nErrNo == 4516) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE1, 15);	// Ship 자재등록하는 Case로 다시 보내준다.
+		//	if (m_nErrNo == 4616) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE2, 15);	// Ship 자재등록하는 Case로 다시 보내준다.
+		//}
 
-		if (m_nErrNo == 9012 || m_nErrNo == 9022) strMes.Format("==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
+		//if (m_nErrNo == 9012 || m_nErrNo == 9022) strMes.Format("==> Reason[%s] Text[%s]..", g_objMES.m_sReasonCode, g_objMES.m_sReasonText);
 
 		if (m_nErrNo > 2 && m_nErrNo < 7) g_objSequenceInit.Set_InitComplete(FALSE);	// 3,4,5,6
 

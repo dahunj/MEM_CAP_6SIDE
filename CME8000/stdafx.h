@@ -86,6 +86,8 @@
 #define SIM_WAITTIMEM	 1		//
 #define	VELOCITY_WEIGHT	 8
 
+#define	MES_WAITTIME	1000000
+
 // R53B (VR-L) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x7),  Picker(4) => AllPicker(1,2,3,4)
 // R54B (VR-R) : LoadTray(3x4), CapTray(4x7),  ShipTray(3x6),  Picker(4) => AllPicker(1,2,3,4)
 const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 6, PICK = 4;
@@ -275,6 +277,8 @@ typedef struct {
 	CString		sInspectCmLotIDPrevious;
 	CString		sInspectCmLotIDLater;
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
+
+	int			nSelectNo;
 	
 } GLOVAL_DATA;
 
@@ -344,6 +348,8 @@ typedef struct {
 	CString		sBarID[2][50][12];		//Barcode ID(장비) [50]:Tray, [12]:Pocket
 	CString		sJudge[2][50][12];		//N:NG, H:Special NG, M:성능불량(MES NG)
 	CString		sNGCode[2][50][12];		//대표NG Code
+
+	DWORD		dwMesTime;
 } GLOVAL_MES;
 
 typedef struct{

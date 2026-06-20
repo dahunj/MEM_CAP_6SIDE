@@ -8,7 +8,7 @@
 #include "LogFile.h"
 #include "DataManager.h"
 #include "Common.h"
-#include "MESInterface.h"
+
 
 #include "AJinDefine.h"
 
@@ -323,10 +323,7 @@ void CSetupMoveTab2Dlg::Save_MoveData()
 	for (int i = 0; i <  7; i++) {
 		strKey.Format("%02d", i);	m_stcAssyPickerZ[i].GetWindowText(strData);		dData = atof(strData);	INI.Set_Double("24_ASSEMBLY_PICKER_Z", strKey, dData, "%0.3lf");
 
-		// RMS 항목 저장
-		if (i == 3) g_objMES.Save_AviRmsData("Cap-Assembly Picker Z Assembly Down Position", strData);
-		if (i == 4) g_objMES.Save_AviRmsData("Cap-Assembly Picker Z Cap Press Position", strData);
-		if (i == 4) g_objMES.Save_AviRmsData("Cap Attach Z-Pos", strData);
+	
 	}
 
 	g_objLogFile.Save_HandlerLog("[Setup - MoveTab Dialog 2] save");

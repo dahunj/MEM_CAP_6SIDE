@@ -9,7 +9,6 @@
 #include "DataManager.h"
 
 #include "SequenceMain.h"
-#include "MESInterface.h"
 #include "AviHandler.h"
 
 #define UDP_VPC_HOST_IP	"192.168.25.23"

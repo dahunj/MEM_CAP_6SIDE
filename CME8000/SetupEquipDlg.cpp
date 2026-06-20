@@ -9,7 +9,7 @@
 #include "DataManager.h"
 #include "Common.h"
 #include "SetupDlg.h"
-#include "MESInterface.h"
+
 #include "AviHandler.h"
 
 // CSetupEquipDlg 대화 상자입니다.
@@ -561,7 +561,7 @@ void CSetupEquipDlg::Save_EquipData()
 	m_edtPasswordSi.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_SI", strData);
 
 	m_stcVacOffDelay[0].GetWindowText(strData);
-	g_objMES.Save_AviRmsData("Cap Clean Blowing Time", strData);
+
 
 	g_objLogFile.Save_HandlerLog("[Setup Equip] Save Click");
 

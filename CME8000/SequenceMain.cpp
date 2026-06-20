@@ -9,7 +9,6 @@
 #include "LogFile.h"
 #include "Common.h"
 #include "Inspector.h"
-#include "MESInterface.h"
 #include "AviHandler.h"
 #include "WorkDlg.h"
 #include "LoadCell.h"
@@ -2943,9 +2942,9 @@ BOOL CSequenceMain::CapStage1_Run()
 	case 3:		// Cap 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_CapLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg) {	// MES Cap 자재등록 사용
-				g_objMES.m_nMESCapSequence = 0;
+				//g_objMES.m_nMESCapSequence = 0;
 				g_dlgWork.Get_CapLotId();
-				g_objMES.Set_CapLotChangeRequest(gData.sCapLotID, gData.sOperID);	// 자재 등록 요청
+				//g_objMES.Set_CapLotChangeRequest(gData.sCapLotID, gData.sOperID);	// 자재 등록 요청
 			}
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(30000);
 		} 
@@ -2956,10 +2955,10 @@ BOOL CSequenceMain::CapStage1_Run()
 		}
 		break;
 	case 4:		// MES 결과 확인.
-		if (g_objMES.m_nMESCapSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesCapReg) {
+		//if (g_objMES.m_nMESCapSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesCapReg) {
 			g_dlgWork.Change_CapLotId();	// 정보 이동.
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(5000);
-		}
+		//}
 		break;
 	case 5:		// Z Move to Support Up
 		if (g_objCommon.Check_Position(AX_CAP_STAGE1_X, 0) && g_objCommon.Check_Position(AX_CAP_STAGE1_Z, 1) && g_objCommon.Get_CapStageMasterSlaveOut(1)) {
@@ -3211,9 +3210,9 @@ BOOL CSequenceMain::CapStage2_Run()
 	case 3:		// Cap 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_CapLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg) {	// MES Cap 자재등록 사용
-				g_objMES.m_nMESCapSequence = 0;
+				//g_objMES.m_nMESCapSequence = 0;
 				g_dlgWork.Get_CapLotId();
-				g_objMES.Set_CapLotChangeRequest(gData.sCapLotID, gData.sOperID);	// 자재 등록 요청
+				//g_objMES.Set_CapLotChangeRequest(gData.sCapLotID, gData.sOperID);	// 자재 등록 요청
 			}
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(30000);
 		} else {
@@ -3222,10 +3221,10 @@ BOOL CSequenceMain::CapStage2_Run()
 		}
 		break;
 	case 4:		// MES 결과 확인.
-		if (g_objMES.m_nMESCapSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesCapReg) {
+		//if (g_objMES.m_nMESCapSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesCapReg) {
 			g_dlgWork.Change_CapLotId();	// 정보 이동.
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
-		}
+		//}
 		break;
 	case 5:		// Z Move to Support Up
 		if (g_objCommon.Check_Position(AX_CAP_STAGE2_X, 0) && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 1) && g_objCommon.Get_CapStageMasterSlaveOut(2)) {
@@ -5005,9 +5004,9 @@ BOOL CSequenceMain::UnloadStage1_Run()
 	case 15:	// Ship 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_ShipLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesShipReg) {	// MES Ship 자재등록 사용
-				g_objMES.m_nMESShipSequence = 0;
+				//g_objMES.m_nMESShipSequence = 0;
 				g_dlgWork.Get_ShipLotId();
-				g_objMES.Set_ShipLotChangeRequest(gData.sShipLotID, gData.sOperID);	// 자재 등록 요청
+				//g_objMES.Set_ShipLotChangeRequest(gData.sShipLotID, gData.sOperID);	// 자재 등록 요청
 			}
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(30000);
 		} else {
@@ -5016,10 +5015,10 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		}
 		break;
 	case 16:	// MES 결과 확인.
-		if (g_objMES.m_nMESShipSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesShipReg) {
+		//if (g_objMES.m_nMESShipSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesShipReg) {
 			g_dlgWork.Change_ShipLotId();	// 정보 이동.
 			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
-		}
+		//}
 		break;
 	case 17:
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Y, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE1_Z, 1) &&
@@ -5363,9 +5362,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	case 15:	// Ship 정보 확인 및 MES 자재 등록.
 		if (g_dlgWork.Check_ShipLotId()) {
 			if (m_pEquipData->bUseMES && m_pEquipData->bUseMesShipReg) {	// MES Ship 자재등록 사용
-				g_objMES.m_nMESShipSequence = 0;
+				//g_objMES.m_nMESShipSequence = 0;
 				g_dlgWork.Get_ShipLotId();
-				g_objMES.Set_ShipLotChangeRequest(gData.sShipLotID, gData.sOperID);	// 자재 등록 요청
+				//g_objMES.Set_ShipLotChangeRequest(gData.sShipLotID, gData.sOperID);	// 자재 등록 요청
 			}
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(30000);
 		} else {
@@ -5374,10 +5373,10 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		}
 		break;
 	case 16:	// MES 결과 확인.
-		if (g_objMES.m_nMESShipSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesShipReg) {
+		//if (g_objMES.m_nMESShipSequence == 2 || !m_pEquipData->bUseMES || !m_pEquipData->bUseMesShipReg) {
 			g_dlgWork.Change_ShipLotId();	// 정보 이동.
 			m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
-		}
+		//}
 		break;
 	case 17:
 		if (g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Y, 0) && g_objCommon.Check_Position(AX_UNLOAD_STAGE2_Z, 1) &&

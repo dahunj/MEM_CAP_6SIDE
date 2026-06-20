@@ -26,7 +26,6 @@
 #include "Inspector.h"
 #include "BarcodeLot.h"
 #include "LoadCell.h"
-#include "MESInterface.h"
 #include "AviHandler.h"
 
 #include "SequenceInit.h"
@@ -268,7 +267,6 @@ void CCME8000Dlg::OnShowWindow(BOOL bShow, UINT nStatus)
 	
 	
 	gData.sOperID = "";
-	g_objMES.Initialize(pEquipData->bUseMES);
 
 	if (!g_objLoadCell.Initialize()) { AfxMessageBox("LoadCell Connect Fail!!!"); }
 	if (!g_objBarcodeLot.Initialize()) { Exit_System(EXIT_SYSTEM_BARCODE); return; }

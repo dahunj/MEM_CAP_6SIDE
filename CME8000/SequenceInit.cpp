@@ -8,7 +8,7 @@
 #include "LogFile.h"
 #include "Common.h"
 #include "SequenceMain.h"
-#include "MESInterface.h"
+
 #include "WorkDlg.h"
 
 CSequenceInit g_objSequenceInit;
@@ -311,8 +311,6 @@ BOOL CSequenceInit::Initial_MainInit()
 		g_objSequenceMain.Reset_MainRunCase();
 		g_objSequenceMain.Set_ClearRunData(0);
 		if (gData.bCycleStop) g_dlgWork.PostMessage(UM_RESET_CYCLE_STOP, NULL, NULL);
-
-		g_objMES.Initialize(m_pEquipData->bUseMES);
 
 		g_objLogFile.Save_HandlerLog("[Initial Sequence] MainInit Complete");
 		m_niMainInitCase = 0;
