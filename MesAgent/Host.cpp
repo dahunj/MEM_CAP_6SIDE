@@ -240,23 +240,9 @@ BOOL CHost::Extract_Xml(CString sXmlData)
 			gMes.sFailCode = nodeE.GetChild("CODE")->GetAttribute("VALUE");
 			gMes.sFailText = nodeE.GetChild("TEXT")->GetAttribute("VALUE");
 
-		} else if (m_strRcmd == "RETEST_LOT_DATA") {
-			CXmlNodes nodes = m_xml.GetRoot()->GetChild("ITEM")->GetChild("RCMDCP")->GetChild("CPLIST")->GetChildren();
-			int nCount = nodes.GetCount();
-
-			for (int i = 0; i < nCount; i++) {
-				CString strName = nodes[i]->GetChild("CPNAME")->GetAttribute("VALUE");
-				CString strData = nodes[i]->GetChild("CPVAL")->GetAttribute("VALUE");
-
-				if (strName == "LOTID")     gMes.sHostLotId = strData;
-				if (strName == "RECIPEID")  gMes.sHostRecipe = strData;
-				if (strName == "TOTALQTY")  gMes.nHostCmCount = atoi(strData);
-				if (strName == "RTSTID")    gMes.sHostRtstId = strData;
-				if (strName == "LABELTYPE") gMes.sHostLabel = strData;
-				gMes.nHostType = 0;		// 0:Lot
-			}
-
-		} else if (m_strRcmd == "MATERIAL_ID_CONFIRM") {
+		}
+		else if (m_strRcmd == "MATERIAL_ID_CONFIRM") 
+		{
 			CXmlNodes nodes = m_xml.GetRoot()->GetChild("ITEM")->GetChild("RCMDCP")->GetChild("CPLIST")->GetChildren();
 			int nCount = nodes.GetCount();
 
@@ -268,7 +254,9 @@ BOOL CHost::Extract_Xml(CString sXmlData)
 				if (strName == "MOUNTLOCATION") gMes.nHostType = atoi(strData);	// 1:Cap, 2:Ship
 			}
 
-		} else if (m_strRcmd == "MATERIAL_ID_FAIL") {
+		} 
+		else if (m_strRcmd == "MATERIAL_ID_FAIL") 
+		{
 			CXmlNodes nodes = m_xml.GetRoot()->GetChild("ITEM")->GetChild("RCMDCP")->GetChild("CPLIST")->GetChildren();
 			int nCount = nodes.GetCount();
 
