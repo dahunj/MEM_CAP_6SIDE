@@ -293,7 +293,7 @@ void CHandler::Get_CmEnd(CString sLotId, CString sTray, CString sPocket, CString
 
 void CHandler::Get_LotIdRequest(CString sSite, CString sEqNo, CString sLabel, CString sRtstId, int nTotal, int nCount)
 {
-	g_objHost.Set_S6F11_RetestLotRequest(sSite, sEqNo, sLabel, sRtstId, nTotal, nCount);
+	
 }
 
 void CHandler::Get_CapIdRequest(CString sCapId)

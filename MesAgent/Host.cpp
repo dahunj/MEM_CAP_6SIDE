@@ -734,7 +734,7 @@ void CHost::Set_S6F11_LotAbort(CString sLotId, CString sRecipe)
 
 void CHost::Set_S6F11_IdleSet()
 {
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -754,7 +754,7 @@ void CHost::Set_S6F11_IdleSet()
 	strSend += "    <DVLIST COUNT=\"4\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"REASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"IDLEREASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"UNITNO\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
@@ -765,7 +765,7 @@ void CHost::Set_S6F11_IdleSet()
 
 void CHost::Set_S6F11_IdleReset()
 {
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -785,7 +785,7 @@ void CHost::Set_S6F11_IdleReset()
 	strSend += "    <DVLIST COUNT=\"4\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"REASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"IDLEREASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"UNITNO\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
@@ -796,7 +796,7 @@ void CHost::Set_S6F11_IdleReset()
 
 void CHost::Set_S6F11_IdleReport()
 {
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -816,7 +816,7 @@ void CHost::Set_S6F11_IdleReport()
 	strSend += "    <DVLIST COUNT=\"7\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"REASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"IDLEREASONCODE\" VALUE=\"" + gIdle.sIdleCode + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"REASONTEXT\" VALUE=\"" + gIdle.sIdleText + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"STARTTIME\" VALUE=\"" + gIdle.sIdleSTime + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"ENDTIME\" VALUE=\"" + gIdle.sIdleETime + "\" />" + CRLF;
@@ -834,7 +834,7 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 	strTray.Format("%d", nTray);
 	strPocket.Format("%d", nPocket);
 
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -869,47 +869,6 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 	Send_Command(strSend, FALSE, "S6F11", "20401");
 }
 
-void CHost::Set_S6F11_RetestLotRequest(CString sSite, CString sEqNo, CString sLabel, CString sRtstId, int nTotal, int nCount)
-{
-	CString strTotal, strCount, strList, strNo;
-	strTotal.Format("%d", nTotal);
-	strCount.Format("%d", nCount);
-	strList.Format("%d", nCount + 8);
-
-	SYSTEMTIME time;
-	GetLocalTime(&time);
-
-	CString strTime;
-	strTime.Format("%04d%02d%02d%02d%02d%02d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
-
-	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
-
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
-	strSend += "  <ELEMENT>" + CRLF;
-	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
-	strSend += "  </ELEMENT>" + CRLF;
-	strSend += "  <ITEM>" + CRLF;
-	strSend += "    <CEID NAME=\"CEID\" VALUE=\"20108\" />" + CRLF;
-	strSend += "    <RPTID NAME=\"RPTID\" VALUE=\"20108\" />" + CRLF;
-	strSend += "    <DVLIST COUNT=\"" + strList + "\">" + CRLF;
-	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"SHOPEQPTNAME\" VALUE=\"" + sSite + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"EQPTUNIT\" VALUE=\"" + sEqNo + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"LABELTYPE\" VALUE=\"" + sLabel + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"RTSTID\" VALUE=\"" + sRtstId + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"RTSTQTY\" VALUE=\"" + strTotal + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"MODULEQTY\" VALUE=\"" + strCount + "\" />" + CRLF;
-	for (int i = 0; i < nCount; i++) {
-		strNo.Format("%d", i + 1);
-		strSend += "      <DV NAME=\"MODULEID" + strNo + "\" VALUE=\"" + gData.sReCmId[i] + "\" />" + CRLF;
-	}
-	strSend += "    </DVLIST>" + CRLF;
-	strSend += "  </ITEM>" + CRLF;
-	strSend += "</EIF>";
-
-	Send_Command(strSend, FALSE, "S6F11", "20108");
-}
 
 void CHost::Set_S6F11_MaterialReport(int nType, CString sId)
 {
@@ -934,10 +893,10 @@ void CHost::Set_S6F11_MaterialReport(int nType, CString sId)
 	strSend += "    <DVLIST COUNT=\"6\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"TYPE\" VALUE=\"M\" />" + CRLF;
-	strSend += "      <DV NAME=\"ID\" VALUE=\"" + sId + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"CODE\" VALUE=\"" + strCode + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"LOCATION\" VALUE=\"" + strLocation + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALTYPE\" VALUE=\"M\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALID\" VALUE=\"" + sId + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALCODE\" VALUE=\"" + strCode + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALMOUNTLOCATIONID\" VALUE=\"" + strLocation + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
 	strSend += "</EIF>";
@@ -968,10 +927,10 @@ void CHost::Set_S6F11_MaterialComplete(int nType, CString sId)
 	strSend += "    <DVLIST COUNT=\"6\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"TYPE\" VALUE=\"M\" />" + CRLF;
-	strSend += "      <DV NAME=\"ID\" VALUE=\"" + sId + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"CODE\" VALUE=\"" + strCode + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"LOCATION\" VALUE=\"" + strLocation + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALTYPE\" VALUE=\"M\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALID\" VALUE=\"" + sId + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALCODE\" VALUE=\"" + strCode + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"MATERIALMOUNTLOCATIONID\" VALUE=\"" + strLocation + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
 	strSend += "</EIF>";

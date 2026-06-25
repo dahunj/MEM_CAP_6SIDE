@@ -84,7 +84,7 @@ public:
 	void Set_S6F11_IdleReset();
 	void Set_S6F11_IdleReport();
 	void Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sResult, CString sNgCode, CString sCmId);
-	void Set_S6F11_RetestLotRequest(CString sSite, CString sEqNo, CString sLabel, CString sRtstId, int nTotal, int nCount);
+	
 	void Set_S6F11_MaterialReport(int nType, CString sId);
 	void Set_S6F11_MaterialComplete(int nType, CString sId);
 	void Set_S6F11_PPSelected(CString sLotId, CString sRecipeId);
