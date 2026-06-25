@@ -27,6 +27,7 @@ public:
 	CRadioCS	m_rdoDoorLock[2];
 	CLabelCS	m_lblDoorLock2;
 	CStaticCS	m_stcDoorLockTime;
+	CStaticCS	m_stcNoWorkTime;
 
 	CComboCS	m_cboMoveDataSelection;
 
@@ -121,6 +122,7 @@ public:
 	afx_msg void OnStnClickedStcCmVision1();
 	afx_msg void OnStnClickedStcCmVision2();
 	afx_msg void OnStnClickedStcDoorlockTime();
+	afx_msg void OnStnClickedStcNoWorkTime();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

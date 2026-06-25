@@ -19,7 +19,7 @@ typedef struct tag_EQUIP_DATA {
 	BOOL	bUseInlineMode;
 	BOOL	bUseVisionCapDir;
 
-	
+	int		nNoWorkTime;
 
 	BOOL	bUseTrayPickerTurn;
 	BOOL	bUseCapPickerTurn;
@@ -62,6 +62,7 @@ typedef struct tag_EQUIP_DATA {
 	int		nInspectCmScanTimes;	// 랏 당 CM 검사 최대 횟수
 	int		nInspectCmLotTimes; 	// 시간당 랏 개수 
 	int		nInspectCmMinutes;		// 몇분 간격으로 설정 할지 	
+
 
 } EQUIP_DATA;
 

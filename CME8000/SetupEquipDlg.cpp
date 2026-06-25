@@ -40,6 +40,7 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LBL_DOOR_LOCK, m_lblDoorLock);	
 	DDX_Control(pDX, IDC_LBL_DOOR_LOCK2, m_lblDoorLock2);
 	DDX_Control(pDX, IDC_STC_DOORLOCK_TIME, m_stcDoorLockTime);
+	DDX_Control(pDX, IDC_STC_NO_WORK_TIME, m_stcNoWorkTime);
 
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_RDO_DOOR_LOCK_0 + i, m_rdoDoorLock[i]);
 	DDX_Control(pDX, IDC_CBO_MOVE_DATA_SEL, m_cboMoveDataSelection);
@@ -122,6 +123,7 @@ BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_1, &CSetupEquipDlg::OnStnClickedStcCmVision1)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_2, &CSetupEquipDlg::OnStnClickedStcCmVision2)
 	ON_STN_CLICKED(IDC_STC_DOORLOCK_TIME, &CSetupEquipDlg::OnStnClickedStcDoorlockTime)
+	ON_STN_CLICKED(IDC_STC_NO_WORK_TIME, &CSetupEquipDlg::OnStnClickedStcNoWorkTime)
 END_MESSAGE_MAP()
 
 // CSetupEquipDlg ¸Þ½ÃÁö Ã³¸®±âÀÔ´Ï´Ù.
@@ -142,7 +144,7 @@ void CSetupEquipDlg::Initial_Controls()
 
 	m_cboMoveDataSelection.Init_Ctrl("¹ÙÅÁ", 12, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xF0, 0xE0, 0x00));
 
-
+	m_stcNoWorkTime.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xF0, 0xE0, 0x00));
 
 	m_stcEquipName.Init_Ctrl("¹ÙÅÁ", 15, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xE0, 0xFF, 0xE0));
 	for (int i = 0; i < 2; i++) m_rdoModel[i].Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xF0, 0xE0, 0x00), CRadioCS::emRed, 0);
@@ -435,6 +437,7 @@ void CSetupEquipDlg::Display_EquipData()
 	m_rdoDoorLock[(int)pEquipData->bUseDoorLock].SetCheck(TRUE);
 	strData.Format("%d", gData.nDoorLockTime);	m_stcDoorLockTime.SetWindowText(strData);
 
+	strData.Format("%d", pEquipData->nNoWorkTime); m_stcNoWorkTime.SetWindowText(strData);
 	
 	m_chkUseInlineMode.SetCheck(pEquipData->bUseInlineMode);
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
@@ -510,6 +513,8 @@ void CSetupEquipDlg::Save_EquipData()
 	m_stcDoorLockTime.GetWindowText(strData);
 	gData.nDoorLockTime = atoi(strData);
 	INI.Set_Integer("EQUIPMENT", "DOOR_LOCK_TIME", gData.nDoorLockTime);
+
+	m_stcNoWorkTime.GetWindowText(strData); nData = atoi(strData); INI.Set_Integer("EQUIPMENT", "NO_WORK_TIME", nData);
 
 	nData = m_cboMoveDataSelection.GetCurSel(); INI.Set_Integer("EQUIPMENT", "VENDOR_SELECTION", nData);
 
@@ -633,4 +638,13 @@ void CSetupEquipDlg::OnStnClickedStcDoorlockTime()
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
 	m_stcDoorLockTime.SetWindowText(strNew);
+}
+
+
+void CSetupEquipDlg::OnStnClickedStcNoWorkTime()
+{
+	CString strOld, strNew;
+	m_stcNoWorkTime.GetWindowText(strOld);
+	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
+	m_stcNoWorkTime.SetWindowText(strNew);
 }

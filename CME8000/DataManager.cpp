@@ -31,7 +31,7 @@ void CDataManager::Reset_EquipData()
 	m_EquipData.nUnloadLoadCellPort = 0;
 	m_EquipData.bUseDoorLock = FALSE;
 	m_EquipData.nVendorSelection = 0;
-
+	m_EquipData.nNoWorkTime = 0;
 
 	m_EquipData.bUseMES = FALSE;
 	m_EquipData.bUseInlineMode = FALSE;
@@ -132,6 +132,8 @@ BOOL CDataManager::Read_EquipData()
 	m_EquipData.bUseDoorLock = INI.Get_Bool("EQUIPMENT", "DOOR_LOCK", FALSE);
 	gData.nDoorLockTime = INI.Get_Integer("EQUIPMENT", "DOOR_LOCK_TIME", 0);
 	gAlm.dMotionChkPos		= INI.Get_Double("EQUIPMENT", "MOTION_CHECK", 0.0);
+
+	m_EquipData.nNoWorkTime = INI.Get_Integer("EQUIPMENT", "NO_WORK_TIME", 0);
 
 	m_EquipData.bUseMES = INI.Get_Bool("OPTION", "MES_USE", FALSE);
 	m_EquipData.bUseInlineMode = INI.Get_Bool("OPTION", "INLINE_MODE", FALSE);

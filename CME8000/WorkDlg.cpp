@@ -18,6 +18,7 @@
 
 #include "OperatorDlg.h"
 #include "CME8000Dlg.h"
+#include "NoWorkDlg.h"
 
 // CWorkDlg 대화 상자입니다.
 CWorkDlg g_dlgWork;
@@ -1954,6 +1955,7 @@ void CWorkDlg::OnBnClickedBtnIdleReport()
 		 AfxMessageBox(_T("장비 Stop 상태에서 진행이 가능합니다....."));		
 	}
 
-	/*if (g_dlgNoWork.IsWindowVisible()) g_dlgNoWork.ShowWindow(SW_HIDE);
-	else g_dlgNoWork.ShowWindow(SW_SHOW);	*/
+	if (g_dlgNoWork.IsWindowVisible()) return;
+	g_dlgNoWork.Set_NoWorkAuto(FALSE);
+	g_dlgNoWork.ShowWindow(SW_SHOW);
 }
