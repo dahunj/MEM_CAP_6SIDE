@@ -7,6 +7,8 @@
 
 #include "LogFile.h"
 #include "Common.h"
+#include "MesAgent.h"
+
 #include "SequenceInit.h"
 #include "SequenceMain.h"
 
@@ -197,6 +199,8 @@ void COperatorDlg::OnStnClickedStcOperOperId()
 
 	gData.sOperID = strKey;
 	m_stcOperOperId.SetWindowText(strKey);
+
+	g_objMesAgent.Set_OperUpdate(gData.sOperID);
 
 	CString sLog;
 	sLog.Format("[Operator] Operator ID Input....  OperID[%s]", gData.sOperID);

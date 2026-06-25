@@ -84,7 +84,7 @@ LRESULT CMesAgent::OnClientConnect(WPARAM wConnect, LPARAM lParam)
 	if (!m_bConnected) return 0;
 
 	Set_OperUpdate(gData.sOperID);
-	Set_EquipState(2);	//Idle
+	Set_EquipState(4);	//Idle
 	g_objLogFile.Save_MesAgentLog("MesAgent Connected");
 	return 0;
 }
@@ -134,27 +134,30 @@ LRESULT CMesAgent::OnClientReceive(WPARAM wParam, LPARAM lParam)
 		AfxExtractSubString(strCmd, strRecv, 0, chSep);
 		AfxExtractSubString(strOp, strRecv, 1, chSep);
 				
-		
-
 		CString strArg[10];
 		for (int i = 0; i < 5; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
 
 		if (strCmd == "CONTROL") {
 			if (strOp == "STATE") Get_ControlState(strArg[0]);
 
-		} else if (strCmd == "LOT") {
-			if (strOp == "START")  Get_LotStart(strArg[0], strArg[1], strArg[2]);
-			if (strOp == "FAIL") Get_LotIDFail(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4]);
+		} else if (strCmd == "ERROR") {
+			if (strOp == "REPLY") Get_ErrorReply();
+
+		} 
+		else if (strCmd == "TERMINAL")
+		{
+			if (strOp == "DISPLAY") Get_TerminalDisplay(strArg[0]);
 
 		} else if (strCmd == "TIME") {
 			if (strOp == "UPDATE") Get_TimeSync();
 
-		} 
-		else if(strCmd == "PP")
-		{
-			if (strOp == "SELECT")	Get_PPSelect(strArg[0], strArg[1], strArg[2]);
-			//if (strOp == "CONFIRM") Get_PPUpload_Confirm(strArg[0]);
-			//if (strOp == "FAIL") Get_PPUpload_Fail(strArg[0], strArg[1], strArg[2]);
+		} else if (strCmd == "CAPID") {
+			if (strOp == "SUCESS") Get_CapIdSucess(strArg[0]);
+			if (strOp == "FAIL")   Get_CapIdFail(strArg[0], strArg[1], strArg[2]);
+
+		} else if (strCmd == "SHIPID") {
+			if (strOp == "SUCESS") Get_ShipIdSucess(strArg[0]);
+			if (strOp == "FAIL")   Get_ShipIdFail(strArg[0], strArg[1], strArg[2]);
 		}
 		
 	}
@@ -202,10 +205,7 @@ void CMesAgent::OnTimer(UINT_PTR nIDEvent)
 
 //get
 
-void CMesAgent::Get_TimeSync()
-{
-	//g_objInspector.Set_TimeUpdate(VISION_PC1);
-}
+
 
 void CMesAgent::Get_ControlState(CString sFlag)
 {
@@ -215,57 +215,53 @@ void CMesAgent::Get_ControlState(CString sFlag)
 	m_bHostOnline = (nOnline == 1 ? TRUE : FALSE);
 }
 
-void CMesAgent::Get_LotStart(CString sLotId, CString sRecipe, CString sCMCount)
+void CMesAgent::Get_ErrorReply()
 {
-	//gMes.bPPSelected = TRUE;
-	gMes.sHostLotID = sLotId;
-	gMes.sHostRecipe = sRecipe;
-	gMes.nHostCount = atoi(sCMCount);
+	// 상태정보 전송은 MesAgent에서 한다. 로그만 기록하자.
+	CString strLog = gAlm.bBegin ? "[->] : EQUIP,STATE,5" : "[->] : EQUIP,STATE,1";	// 1:Run, 5:Down
+	g_objLogFile.Save_MesAgentLog(strLog);
 }
 
-void CMesAgent::Get_LotIDFail(CString sLotId, CString sRTSTID, CString sLabelType, CString sCode, CString sText)
+void CMesAgent::Get_TerminalDisplay(CString sDisplay)
 {
+	CString strMsg = "MES Terminal Display\r\n" + sDisplay;
+	g_objCommon.Show_MsgBox(1, strMsg);
 
-	//gMes.sRTSTID = sRTSTID;
-	//gMes.sLabelType = sLabelType;
-
-	
-	g_objCommon.Show_Error(9032);
+	g_objLogFile.Save_TerminalLog("MES Terminal Display : " + sDisplay);
 }
 
-
-void CMesAgent::Get_PPSelect(CString sLotId, CString sRecipe, CString sOperID)
+void CMesAgent::Get_TimeSync()
 {
-	gMes.sHostLotID = sLotId;
-	gMes.sHostRecipe = sRecipe;
-
-	if (gMes.sHostLotID.GetLength() < 5 || gMes.sHostRecipe.GetLength() < 1) 
-	{
-		g_objCommon.Show_Error(9004); return;
-	}	
-	//gMes.bLotReported = TRUE;	
 }
 
 
+void CMesAgent::Get_CapIdSucess(CString sCapId)
+{
+	m_nMesCapStatus = 2;
+}
 
-//
-//void CMesAgent::Get_PPUpload_Confirm(CString sRecipeID)
-//{
-//	gMes.sHostRecipe[gMes.nElevPos] = sRecipeID;
-//	gMes.bPPConfirm = TRUE;
-//}
+void CMesAgent::Get_CapIdFail(CString sCapId, CString sCode, CString sText)
+{
+	m_nMesCapStatus = 0;
+	gMes.sHostFailCode = sCode;
+	gMes.sHostFailText = sText;
+	// 	g_objCommon.Show_Error(9011);
+}
 
-//void CMesAgent::Get_PPUpload_Fail(CString sRecipeID, CString sFailCode, CString sFailText)
-//{
-//	gMes.sHostRecipe[gMes.nElevPos] = sRecipeID;
-//	gMes.bPPConfirm = FALSE;
-//	gMes.sHostCancelCode = sFailCode;
-//	gMes.sHostCancelText = sFailText;
-//	g_objCommon.Show_Error(9031);
-//}
+void CMesAgent::Get_ShipIdSucess(CString sShipId)
+{
+	m_nMesShipStatus = 2;
+}
 
+void CMesAgent::Get_ShipIdFail(CString sShipId, CString sCode, CString sText)
+{
+	m_nMesShipStatus = 0;
+	gMes.sHostFailCode = sCode;
+	gMes.sHostFailText = sText;
+	// 	g_objCommon.Show_Error(9012);
+}
 
-
+//---------------------------------------------------------
 //Set
 
 void CMesAgent::Set_EquipState(int nFlag)
@@ -276,10 +272,10 @@ void CMesAgent::Set_EquipState(int nFlag)
 	Send_Command(strSend);
 }
 
-void CMesAgent::Set_ErrorUpdate(int nFlag, CString sErrNo)
+void CMesAgent::Set_ErrorUpdate(int nFlag, int nErrNo, int nCategory)
 {
 	CString strSend;
-	strSend.Format("ERROR,UPDATE,%d,%s", nFlag, sErrNo);
+	strSend.Format("ERROR,UPDATE,%d,%04d,%d", nFlag, nErrNo, nCategory);
 	Send_Command(strSend);
 }
 
@@ -299,50 +295,138 @@ void CMesAgent::Set_OperUpdate(CString sOperId)
 	Send_Command(strSend);
 }
 
-void CMesAgent::Set_IdleReport(CString sOperId, CString sSTime, CString sETime, CString sCode, CString sType)
+void CMesAgent::Set_LotAbort(CString sLotId, CString sRecipe)
 {
 	CString strSend;
-	strSend.Format("IDLE,REPORT,%s,%s,%s,%s,%s", sOperId, sSTime, sETime, sCode, sType);
+	strSend.Format("LOT,ABORT,%s,%s", sLotId, sRecipe);
+	Send_Command(strSend);
+}
+
+void CMesAgent::Set_IdleSet(CString sOperId, CString sCode)
+{
+	CString strSend;
+	strSend.Format("IDLE,SET,%s,%s", sOperId, sCode);
+	Send_Command(strSend);
+}
+
+void CMesAgent::Set_IdleReset(CString sOperId, CString sCode)
+{
+	CString strSend;
+	strSend.Format("IDLE,RESET,%s,%s", sOperId, sCode);
+	Send_Command(strSend);
+}
+
+void CMesAgent::Set_IdleReport(CString sOperId, CString sCode, CString sText, CString sSTime, CString sETime)
+{
+	CString strSend;
+	strSend.Format("IDLE,REPORT,%s,%s,%s,%s,%s", sOperId, sCode, sText, sSTime, sETime);
 	Send_Command(strSend);
 }
 
 
-void CMesAgent::Set_LotIDReport(int nType, CString sLotID, int nPortNo, CString sRecipe)
+
+void CMesAgent::Set_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg)
 {
-	CString strSend; 
-	strSend.Format("LOT,REPORT,%d,%s,%d,%s", nType, sLotID, nPortNo, gData.sRecipe);
+	CString strSend;
+	strSend.Format("LOT,END,%s,%s,%d,%d,%d,%d,%s", sLotId, sRecipe, nCount, nOk, nNg, nBNg);
 	Send_Command(strSend);
 }
 
 
-void CMesAgent::Set_PPSelectedReport(CString sLotId, CString sRecipeId)
+
+
+void CMesAgent::Set_CmEnd(CString sOut, int nTrayCnt, int nPosX, int nPosY, int nLotNo, int nTrayNo, int nCmNo)
 {
-	CString strSend; 
-	strSend.Format("PP,SELECTED,%s,%s", sLotId, sRecipeId);
-	Send_Command(strSend);
-}
+	int nLx = nLotNo - 1;
+	int nTx = nTrayNo - 1;
+	int nCx = nCmNo - 1;
+	if (nLx < 0 || nLx > 4 || nTx < 0 || nTx > 50-1 || nCx < 0 || nCx > 12-1) return; //50: Max Tray, 12 : Max CM in One Tray 
 
-//void CMesAgent::Set_PPUploadCompletedReport(CString sLotId, CString sMGZId, CString sRecipeId)
-//{
-//	CString strSend; 
-//	strSend.Format("PP,COMPLETED,%s,%s,%s", sLotId, sMGZId, sRecipeId);
-//	Send_Command(strSend);
-//}
+	CString strLotId = gData.sLotID[nLx];
+	int nPocket = nPosY * ST_X + nPosX + 1;
+	CString strNgCode = (sOut == "OK") ? "00" : "CAP_NG";
+	CString	strCmId = gMes.sBarID[nLx][nTx][nCx];
 
-
-void CMesAgent::Set_LotStartedReport(CString sOperID, CString sLotId, CString sRecipe, CString sCMCount)
-{
-	CString strSend, strLogID;
-	
-	strSend.Format("LOT,START,%s,%s,%s,%s", sOperID, sLotId, sRecipe, sCMCount);
+	CString strSend;
+	strSend.Format("CM,END,%s,%d,%d,%s,%s,%s", strLotId, nTrayCnt, nPocket, sOut, strNgCode, strCmId);
 	Send_Command(strSend);
 }
 
 
-void CMesAgent::Set_ProductCompletedReport(CString sOperID, CString sLotID, int nTrayNo, int nCMNo,  CString sResult, CString sReasonCode, CString sCMBarcode, int UnitNo)
-{
-	CString strSend, strLogID;
 
-	strSend.Format("PRODUCT,COMPLETED,%s,%s,%d,%d,%s,%s,%s,%d", sOperID, sLotID,nTrayNo,nCMNo,sResult,sReasonCode,sCMBarcode, UnitNo);
+void CMesAgent::Set_CapChangeRequest(CString sBarcode)
+{
+	CString strSend;
+	strSend.Format("CAPID,REQUEST,%s", sBarcode);
 	Send_Command(strSend);
+	m_nMesCapStatus = 1;	// Send
+}
+
+void CMesAgent::Set_ShipChangeRequest(CString sBarcode)
+{
+	CString strSend;
+	strSend.Format("SHIPID,REQUEST,%s", sBarcode);
+	Send_Command(strSend);
+	m_nMesShipStatus = 1;	// Send
+}
+
+void CMesAgent::Set_CapChangeComplete(CString sBarcode)
+{
+	CString strSend;
+	strSend.Format("CAPID,COMPLETE,%s", sBarcode);
+	Send_Command(strSend);
+	m_nMesCapStatus = 0;	// Reset
+}
+
+void CMesAgent::Set_ShipChangeComplete(CString sBarcode)
+{
+	CString strSend;
+	strSend.Format("SHIPID,COMPLETE,%s", sBarcode);
+	Send_Command(strSend);
+	m_nMesShipStatus = 0;	// Reset
+}
+
+
+
+void CMesAgent::Set_AlarmLog(int nErrNo, CString sErrMsg, int nCategory)
+{
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+
+	int nPx = gData.nULPNo - 1;
+	if (nPx < 0) nPx = gData.nLPNo - 1;
+	if (nPx < 0) nPx = 0;
+
+	gAlm.bBegin = TRUE;
+	gAlm.sLotID = (gData.sLotID[nPx] == "") ? "LOT-ID" : gData.sLotID[nPx];
+	gAlm.nAlmNo = nErrNo;
+	gAlm.sAlmMsg = sErrMsg;
+	gAlm.nCategory = nCategory;
+	gAlm.dwStartTime = GetTickCount();
+	gAlm.sStartTime.Format("%04d%02d%02d_%02d%02d%02d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+
+	CString strLog;
+	strLog.Format("%s,%d,%s", gAlm.sLotID, gAlm.nAlmNo, gAlm.sAlmMsg);
+	g_objLogFile.Save_AlarmLog(strLog);
+
+	Set_ErrorUpdate(1, gAlm.nAlmNo, gAlm.nCategory);	// Error Set
+}
+
+void CMesAgent::Reset_AlarmLog()
+{
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+
+	gAlm.bBegin = FALSE;
+	gAlm.dwEndTime = GetTickCount();
+	gAlm.sEndTime.Format("%04d%02d%02d_%02d%02d%02d", time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
+	gAlm.dwProcTime = gAlm.dwEndTime - gAlm.dwStartTime;
+
+	CString strLog;
+	strLog.Format("%s,%04d,%s,%s,%s,%d", gAlm.sLotID, gAlm.nAlmNo, gAlm.sAlmMsg, gAlm.sStartTime, gAlm.sEndTime, gAlm.dwProcTime);
+	g_objLogFile.Save_AlarmLog(strLog);
+
+	Set_ErrorUpdate(0, gAlm.nAlmNo, gAlm.nCategory);	// Error Reset
+
+	g_objLogFile.Save_ECMLog(1, strLog);
 }

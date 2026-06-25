@@ -7,6 +7,7 @@
 
 #include "LogFile.h"
 #include "Common.h"
+#include "MesAgent.h"
 
 #include "SequenceInit.h"
 #include "SequenceMain.h"
@@ -288,7 +289,9 @@ void CErrorDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		strLog.Format("%s,%s,%s", gData.sLotID[nNo], strErrNo, m_strErrMsg);
 		g_objLogFile.Save_AlarmLog(strLog);
 		
-		Set_AlarmLog(m_nErrCode, m_strErrMsg);
+		//Set_AlarmLog(m_nErrCode, m_strErrMsg);
+		int nCategory = 33;	// 11:비가동중 알람, 21:경알람, 31:품질관련, 32:생산관련, 33:설비문제
+		g_objMesAgent.Set_AlarmLog(m_nErrNo, m_strErrMsg, nCategory);
 
 		strLog.Format("[Error Mode] Error No ==> %s", strErrNo);
 		g_objLogFile.Save_HandlerLog(strLog);

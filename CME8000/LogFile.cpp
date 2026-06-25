@@ -24,6 +24,7 @@ CCriticalSection g_csMachineStopLog;
 CCriticalSection g_csMesAgentLog;
 CCriticalSection g_csCmTrackingLog;
 CCriticalSection g_csBarcodeLog;
+CCriticalSection g_csTerminalLog;
 
 CLogFile::CLogFile()
 {
@@ -1499,4 +1500,35 @@ void CLogFile::Save_PCLog(int nPNo, CString sLog)
 	}
 
 
+}
+
+
+void CLogFile::Save_TerminalLog(CString sLog)
+{
+	g_csTerminalLog.Lock();
+	CString strPath = gsCurrentDir + "\\LOG\\Terminal";
+	Create_Folder(strPath);
+
+	SYSTEMTIME time;
+	GetLocalTime(&time);
+
+	CString strFile, strSave;
+	strFile.Format("%s\\%04d%02d%02d_Terminal.txt", strPath, time.wYear, time.wMonth, time.wDay);
+
+	CFile file;
+	if (file.Open(strFile, CFile::modeCreate | CFile::modeNoTruncate | CFile::modeWrite)) 
+	{
+		try
+		{
+			file.SeekToEnd();
+			strSave.Format("[%02d:%02d:%02d.%03d] %s\r\n", time.wHour, time.wMinute, time.wSecond, time.wMilliseconds, sLog);
+			file.Write(strSave, strSave.GetLength());
+			file.Close();
+		} 
+		catch (CFileException *pEx)
+		{
+			pEx->Delete();
+		}
+	}
+	g_csTerminalLog.Unlock();
 }

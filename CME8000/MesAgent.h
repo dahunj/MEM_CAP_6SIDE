@@ -23,25 +23,30 @@ private:
 
 	BOOL	m_bConnected;
 	BOOL	m_bHostOnline;
+
 	CString m_strRecvCmd;
 
 
 private:
-	void Get_ReciveData();
+	
 	void Get_ControlState(CString sFlag);	// 1:Online, 2:Offline
-	void Get_TimeSync();
+	void Get_ErrorReply();
 
-	//new 
-	void Get_PPSelect(CString sLotId, CString sRecipe, CString sOperID);
-	void Get_LotIDFail(CString sLotId, CString sRTSTID, CString sLabelType, CString sCode, CString sText);
+	
+	void Get_TerminalDisplay(CString sDisplay);
+	void Get_TimeSync();
 		
-	void Get_LotStart(CString sLotId, CString sRecipe, CString sCMCount);
-			
-	//old 
-	//void Get_PPUpload_Confirm(CString sRecipeID);
-	//void Get_PPUpload_Fail(CString sRecipeID, CString sFailCode, CString sFailText);
+
+	void Get_CapIdSucess(CString sCapId);
+	void Get_CapIdFail(CString sCapId, CString sCode, CString sText);
+	void Get_ShipIdSucess(CString sShipId);
+	void Get_ShipIdFail(CString sShipId, CString sCode, CString sText);
 	
 	void Send_Command(CString sSend);
+public:
+	int		m_nMesCapStatus;	// 0:None, 1:Send, 2:Receive
+	int		m_nMesShipStatus;	// 0:None, 1:Send, 2:Receive
+
 
 public:
 	void Initialize();
@@ -49,25 +54,29 @@ public:
 
 	BOOL Is_Connected() { return m_bConnected; }
 	BOOL Is_HostOnline() { return m_bHostOnline; }
-	BOOL Exist_Recipe(CString sRecipe);
+	
 
 	void Set_OperUpdate(CString sOperId);				// Operator ID 변경시 보고
 	void Set_ControlState(int nFlag, CString sOperId);	// 1:Onine, 2:Offline
 	void Set_EquipState(int nFlag);						// 
-	void Set_ErrorUpdate(int nFlag, CString sErrNo);	// 0:해제, 1:발생
+	void Set_ErrorUpdate(int nFlag, int nErrNo, int nCategory);	// nFlag(0:해제, 1:발생)
 		
-	void Set_IdleReport(CString sOperId, CString sSTime, CString sETime, CString sCode, CString sType);	//1:Start, 2:End
+	void Set_LotAbort(CString sLotId, CString sRecipe);
+	void Set_IdleSet(CString sOperId, CString sCode);	// 비가동 집계 Set
+	void Set_IdleReset(CString sOperId, CString sCode);	// 비가동 집계 Reset
+	void Set_IdleReport(CString sOperId, CString sCode, CString sText, CString sSTime, CString sETime);
 
-	//new
-	void Set_LotIDReport(int nType, CString sLotID, int nPortNo, CString sRecipe);	
-	void Set_PPSelectedReport(CString sLotId, CString sRecipeId);
-
-	void Set_LotStartedReport(CString sOperID, CString sLotId, CString sRecipe, CString sCMCount);
-	void Set_ProductCompletedReport(CString sOperID, CString sLotID, int nTrayNo, int nCMNo,  CString sResult, CString sReasonCode, CString sCMBarcode, int UnitNo);
+	void Set_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg);
+	void Set_CmEnd(CString sOut, int nTrayCnt, int nPosX, int nPosY, int nLotNo, int nTrayNo, int nCmNo);
 	
-	//void Set_LotCompleteReport(CString sLotID, int nPortNo, CString sRecipe, int nCmTotal, int nRealTotal, int nGoodCnt, int nBadCnt);
-	//old 
-	//void Set_PPUploadCompletedReport(CString sLotId, CString sMGZId, CString sRecipeId);
+	void Set_CapChangeRequest(CString sBarcode);
+	void Set_ShipChangeRequest(CString sBarcode);
+	void Set_CapChangeComplete(CString sBarcode);
+	void Set_ShipChangeComplete(CString sBarcode);
+
+	void Set_AlarmLog(int nErrNo, CString sErrMsg, int nCategory);
+	void Reset_AlarmLog();
+;
 			
 };
 

@@ -10,6 +10,8 @@
 #include "Common.h"
 #include "Inspector.h"
 #include "AviHandler.h"
+#include "MesAgent.h"
+
 #include "WorkDlg.h"
 #include "LoadCell.h"
 
@@ -1043,6 +1045,9 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	m_strLog.Format("%s,%s,%s,%d,%02d,%04d,%0.7lf,%d",
 		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.dTackTime, gLot.nCapFailCount[nLPNo]);
 	g_objLogFile.Save_JobListLog(m_strLog, TRUE);
+
+	g_objMesAgent.Set_LotEnd(gData.sLotID[nLPNo], gData.sRecipe, gData.nAviTotal[nLPNo], gData.nAviOkCnt[nLPNo], gData.nAviNgCnt[nLPNo], gData.nAviBNgCnt[nLPNo]);
+
 
 	g_dlgWork.PostMessage(UM_LOT_START_END, (WPARAM)2, nPortNo);	// LotEnd
 
@@ -4731,6 +4736,7 @@ BOOL CSequenceMain::UnloadPicker_Run()
 				gData.nCmJigNo[nPNo][nTNo][nCNo][UNLOAD_PICK] = nUpStart + i + 1;	// Unload Pick
 				g_objLogFile.Save_CmTrackingLog("GOOD", nUpWorkTray, nUpPosX + i + 1, nUpPosY + 1, gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i]);
 				g_objLogFile.Save_CapLasLog(gData.sShipLotID, gData.sCIDUnloadPicker[i], gData.nPNoUnloadPick, gData.nTNoUnloadPick[nUpStart+i], gData.nCNoUnloadPick[nUpStart+i], nUpStart+i+1);
+				g_objMesAgent.Set_CmEnd("OK", gData.nShipTrayLoad, nUpPosX + i, nUpPosY, nPNo+1, nTNo+1, nCNo+1);
 
 				gData.InfoShipTray[nUpPosY][nUpPosX+i] = gData.InfoUnloadPick[nUpStart+i]; gData.InfoUnloadPick[nUpStart+i] = 0;
 				gData.nTNoUnloadTray = gData.nTNoUnloadPick[nUpStart+i];

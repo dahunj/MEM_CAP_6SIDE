@@ -33,7 +33,7 @@ private:
 	void Get_StatusUpdate(CString sStatus);
 	void Get_TimeUpdate(CString sTime);
 	void Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt, CString sCmCnt, CString sModel);
-	void Get_LotEnd(CString sLotID, CString sPortNo);
+	void Get_LotEnd(CString sLotId, CString sPortNo, CString sTotal, CString sOkCnt, CString sNgCnt, CString sBNgCnt);
 	void Get_TrayLoad(CString sLotID, CString sTrayNo, CString sCmCnt, CString sPortNo);
 	void Get_TrayEnd(CString sLastTrayNo, CString sPortNo);
 	void Get_BarcodeUpdate(CString sPortNo, CString sTrayNo, CString sCmNo, CString sBarcode);

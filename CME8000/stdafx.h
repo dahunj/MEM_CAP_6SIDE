@@ -198,7 +198,6 @@ typedef struct {
 	int		nCmInspPickNo2;
 	int		nCapInspPickNo1;
 	int		nCapInspPickNo2;
-
 	
 
 	BOOL	bAviTrayLoad;
@@ -279,6 +278,14 @@ typedef struct {
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
 
 	int			nSelectNo;
+
+
+	int		nAviTrayUse[2];
+	int		nAviTotal[2];
+	int		nAviOkCnt[2];
+	int		nAviNgCnt[2];
+	int		nAviBNgCnt[2];	
+	BOOL	bAviLotEnd[2];	// AVI Lot End 수신 여부
 	
 } GLOVAL_DATA;
 
@@ -315,6 +322,7 @@ typedef struct {
 	CString	sLotID;
 	int		nAlmNo;
 	CString sAlmMsg;
+	int		nCategory;
 	CString sStartTime;
 	CString sEndTime;
 	DWORD	dwStartTime;
@@ -343,6 +351,9 @@ typedef struct {
 	int			nHostCount;			//Host 수신 CM 총갯수
 	CString		sHostCancelCode;	//Host Cancel 수신 code
 	CString		sHostCancelText;	//Host Cancel 수신 내용
+	
+	CString	sHostFailCode;				// Host 수신 Fail Code
+	CString	sHostFailText;				// Host 수신 Fail Text
 
 	// 장비 실적 Data	// LJH Port별로 관리해야할지 정해야한다.
 	CString		sBarID[2][50][12];		//Barcode ID(장비) [50]:Tray, [12]:Pocket

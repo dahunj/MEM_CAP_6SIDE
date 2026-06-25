@@ -140,7 +140,7 @@ LRESULT CAviHandler::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 
 		} else if (strCmd == "LOT") {
 			if (strOp == "START")	Get_LotStart(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4]);
-			if (strOp == "END")		Get_LotEnd(strArg[0], strArg[1]);
+			if (strOp == "END")		Get_LotEnd(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4], strArg[5]);
 
 		} else if (strCmd == "TRAY") {
 			if (strOp == "LOAD")	Get_TrayLoad(strArg[0], strArg[1], strArg[2], strArg[3]);
@@ -226,9 +226,19 @@ void CAviHandler::Get_LotStart(CString sLotID, CString sPortNo, CString sTrayCnt
 	g_dlgWork.Set_LotInfo(nPx);
 }
 
-void CAviHandler::Get_LotEnd(CString sLotID, CString sPortNo)
+void CAviHandler::Get_LotEnd(CString sLotId, CString sPortNo, CString sTotal, CString sOkCnt, CString sNgCnt, CString sBNgCnt)
 {
-	
+	int nPNo = atoi(sPortNo);
+
+	if (nPNo < 1 || nPNo > 5) { g_objCommon.Show_Error(7002); return; }
+	if (sLotId != gData.sLotID[nPNo-1]) { g_objCommon.Show_Error(7003); return; }
+
+	gData.nAviTotal[nPNo-1] = atoi(sTotal);
+	gData.nAviOkCnt[nPNo-1] = atoi(sOkCnt);
+	gData.nAviNgCnt[nPNo-1] = atoi(sNgCnt);
+	gData.nAviBNgCnt[nPNo-1] = atoi(sBNgCnt);
+
+	gData.bAviLotEnd[nPNo-1] = TRUE;
 }
 
 void CAviHandler::Get_TrayLoad(CString sLotID, CString sTrayNo, CString sCmCnt, CString sPortNo)
