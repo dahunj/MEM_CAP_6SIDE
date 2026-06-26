@@ -35,7 +35,7 @@ private:
 
 	void Get_LotReady(CString sLotId);
 	void Get_LotStarted(CString sLotId, CString nCmCnt);
-	void Get_LotEnd(CString sLotId, CString sRecipe, CString sCount, CString sOk, CString sNg, CString sBNg, CString sFlag);
+	void Get_LotEnd(CString sLotId, CString sRecipe, CString sCount, CString sOk, CString sNg, CString sBNg);
 	void Get_LotAbort(CString sLotId, CString sRecipe);
 	void Get_IdleSet(CString sOperId, CString sCode);
 	void Get_IdleReset(CString sOperId, CString sCode);

@@ -28,6 +28,7 @@
 #include "BarcodeLot.h"
 #include "LoadCell.h"
 #include "AviHandler.h"
+#include "MesAgent.h"
 
 #include "SequenceInit.h"
 #include "SequenceMain.h"
@@ -148,6 +149,8 @@ BOOL CCME8000Dlg::OnInitDialog()
 	g_objBarcodeLot.Create(NULL, NULL, WS_CHILD, CRect(0,0,0,0), this, 0);
 	g_objLoadCell.Create(NULL, NULL, WS_CHILD, CRect(0,0,0,0), this, 0);
 	g_objAviHandler.Create(NULL, NULL, WS_CHILD, CRect(0,0,0,0), this, 0);
+	g_objMesAgent.Create(NULL, NULL, WS_CHILD, CRect(0,0,0,0), this, 0);
+
 
 	g_dlgOperator.Create(COperatorDlg::IDD, this);
 	g_dlgInitial.Create(CInitialDlg::IDD, this);
@@ -160,6 +163,7 @@ BOOL CCME8000Dlg::OnInitDialog()
 	g_dlgAlarm.Create(CAlarmDlg::IDD, this);
 	g_dlgVersion.Create(CVersionDlg::IDD, this);
 	g_dlgNoWork.Create(CNoWorkDlg::IDD, this);
+	
 
 	CString strLog;
 	strLog.Format("[Main Dialog] Program Begin [%s]", MAIN_VERSION);
@@ -238,6 +242,7 @@ void CCME8000Dlg::OnDestroy()
 	g_objLoadCell.DestroyWindow();
 	g_objAviHandler.DestroyWindow();
 	g_objCommon.DestroyWindow();
+	g_objMesAgent.DestroyWindow();
 	
 		
 }

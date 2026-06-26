@@ -28,15 +28,12 @@ private:
 
 
 private:
-	
 	void Get_ControlState(CString sFlag);	// 1:Online, 2:Offline
 	void Get_ErrorReply();
-
-	
+		
 	void Get_TerminalDisplay(CString sDisplay);
 	void Get_TimeSync();
-		
-
+	
 	void Get_CapIdSucess(CString sCapId);
 	void Get_CapIdFail(CString sCapId, CString sCode, CString sText);
 	void Get_ShipIdSucess(CString sShipId);
@@ -55,7 +52,6 @@ public:
 	BOOL Is_Connected() { return m_bConnected; }
 	BOOL Is_HostOnline() { return m_bHostOnline; }
 	
-
 	void Set_OperUpdate(CString sOperId);				// Operator ID 변경시 보고
 	void Set_ControlState(int nFlag, CString sOperId);	// 1:Onine, 2:Offline
 	void Set_EquipState(int nFlag);						// 

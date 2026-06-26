@@ -137,7 +137,7 @@ LRESULT CHandler::OnServerReceive(WPARAM wLocalPort, LPARAM lClientIdx)
 		} else if (strCmd == "LOT") {
 			if (strOp == "READY")   Get_LotReady(strA[0]);
 			if (strOp == "STARTED") Get_LotStarted(strA[0], strA[1]);
-			if (strOp == "END")     Get_LotEnd(strA[0], strA[1], strA[2], strA[3], strA[4], strA[5], strA[6]);
+			if (strOp == "END")     Get_LotEnd(strA[0], strA[1], strA[2], strA[3], strA[4], strA[5]);
 			if (strOp == "ABORT")   Get_LotAbort(strA[0], strA[1]);
 
 		} else if (strCmd == "IDLE") {
@@ -246,13 +246,13 @@ void CHandler::Get_LotStarted(CString sLotId, CString sCmCnt)
 	g_objHost.Set_S6F11_LotStarted(sLotId, nCount);
 }
 
-void CHandler::Get_LotEnd(CString sLotId, CString sRecipe, CString sCount, CString sOk, CString sNg, CString sBNg, CString sFlag)
+void CHandler::Get_LotEnd(CString sLotId, CString sRecipe, CString sCount, CString sOk, CString sNg, CString sBNg)
 {
 	int nCnt = atoi(sCount);
 	int nOk = atoi(sOk);
 	int nNg = atoi(sNg);
 	int nBNg = atoi(sBNg);
-	g_objHost.Set_S6F11_LotEnd(sLotId, sRecipe, nCnt, nOk, nNg, nBNg, sFlag);
+	g_objHost.Set_S6F11_LotEnd(sLotId, sRecipe, nCnt, nOk, nNg, nBNg);
 }
 
 void CHandler::Get_LotAbort(CString sLotId, CString sRecipe)

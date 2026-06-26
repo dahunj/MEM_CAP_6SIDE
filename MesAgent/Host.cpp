@@ -305,7 +305,7 @@ void CHost::Get_S1F1_Ready()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S1F2\" NAME=\"Are You There Data\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S1F2\" NAME=\"Are You There Data\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -326,7 +326,7 @@ void CHost::Get_S1F3_State()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S1F4\" NAME=\"Selected Equipment Status Data\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S1F4\" NAME=\"Selected Equipment Status Data\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -346,7 +346,7 @@ void CHost::Get_S2F3_Link()
 {
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S2F4\" NAME=\"Link Test Response\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S2F4\" NAME=\"Link Test Response\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -378,7 +378,7 @@ void CHost::Get_S2F31_Time()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S2F32\" NAME=\"Date and Time Set Acknowledge\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S2F32\" NAME=\"Date and Time Set Acknowledge\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -440,7 +440,7 @@ void CHost::Get_S10F3_Display()
 {
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S10F4\" NAME=\"Terminal Display,Single Acknowledge\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S10F4\" NAME=\"Terminal Display,Single Acknowledge\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -461,7 +461,7 @@ void CHost::Set_S1F1_Ready()
 {
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S1F1\" NAME=\"Are You There Request\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S1F1\" NAME=\"Are You There Request\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -480,7 +480,7 @@ void CHost::Set_S5F1_AlarmReport(int nFlag, CString sErrNo, CString sErrMsg)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S5F1\" NAME=\"Alarm Report Send\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S5F1\" NAME=\"Alarm Report Send\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -509,7 +509,7 @@ void CHost::Set_S6F11_ControlState(int nState)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -550,7 +550,7 @@ void CHost::Set_S6F11_EquipState(int nState, CString sErrNo, CString sCategory, 
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -588,7 +588,7 @@ void CHost::Set_S6F11_LotReady(CString sLotId)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -620,7 +620,7 @@ void CHost::Set_S6F11_LotStarted(CString sLotId, int nCount)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -640,18 +640,17 @@ void CHost::Set_S6F11_LotStarted(CString sLotId, int nCount)
 	Send_Command(strSend, FALSE, "S6F11", "20101");
 }
 
-void CHost::Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg, CString sFlag)
+void CHost::Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg)
 {
 	CString strTotal, strReal, strGood, strBad, strVNg, strBNg;
 	strTotal.Format("%d", nCount);
 	strReal.Format("%d", nOk + nNg);
 	strGood.Format("%d", nOk);
-	(sFlag == "Y") ? strBad.Format("%d", nNg) : strBad.Format("%d", nBNg);	// ReTest : 사용(AviNG + BladeNG), 미사용(BladeNG)
 	strVNg.Format("%d", nNg - nBNg);	// AVI NG
 	strBNg.Format("%d", nBNg);			// Blade NG
-
-	CString strEndPort = (gData.nAgentType == 1) ? "3" : "2";	// 1:TrayLoader, 2:TrayUnloader, 3:CapAttach, 4:RetestLoader
-	CString strRsnCode = (gData.nAgentType == 1) ? "CAPNG" : "AVING";
+	
+	CString strEndPort = "3";	//1: Loader, 2:Unloader(AVI only), 3:CapAttach-Inline
+	CString strRsnCode = "AVING";
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -661,14 +660,14 @@ void CHost::Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nO
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
 	strSend += "  <ITEM>" + CRLF;
 	strSend += "    <CEID NAME=\"CEID\" VALUE=\"20102\" />" + CRLF;
 	strSend += "    <RPTID NAME=\"RPTID\" VALUE=\"20102\" />" + CRLF;
-	strSend += "    <DVLIST COUNT=\"15\">" + CRLF;
+	strSend += "    <DVLIST COUNT=\"14\">" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"PORTNO\" VALUE=\"" + strEndPort + "\" />" + CRLF;
@@ -683,7 +682,6 @@ void CHost::Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nO
 	strSend += "      <DV NAME=\"REASONCODECOUNT#1\" VALUE=\"" + strVNg + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"REASONCODE#2\" VALUE=\"BLNG\" />" + CRLF;
 	strSend += "      <DV NAME=\"REASONCODECOUNT#2\" VALUE=\"" + strBNg + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"RETESTFLAG\" VALUE=\"" + sFlag + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
 	strSend += "</EIF>";
@@ -701,7 +699,7 @@ void CHost::Set_S6F11_LotAbort(CString sLotId, CString sRecipe)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -722,7 +720,7 @@ void CHost::Set_S6F11_LotAbort(CString sLotId, CString sRecipe)
 
 void CHost::Set_S6F11_IdleSet()
 {
-	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -732,7 +730,7 @@ void CHost::Set_S6F11_IdleSet()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -753,7 +751,7 @@ void CHost::Set_S6F11_IdleSet()
 
 void CHost::Set_S6F11_IdleReset()
 {
-	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -763,7 +761,7 @@ void CHost::Set_S6F11_IdleReset()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -784,7 +782,7 @@ void CHost::Set_S6F11_IdleReset()
 
 void CHost::Set_S6F11_IdleReport()
 {
-	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -794,7 +792,7 @@ void CHost::Set_S6F11_IdleReport()
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -822,7 +820,7 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 	strTray.Format("%d", nTray);
 	strPocket.Format("%d", nPocket);
 
-	CString strUnitNo = (gData.nAgentType == 0) ? "1" : "4";	// 1: AVI, 4:CAP
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -832,7 +830,7 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -860,8 +858,8 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 
 void CHost::Set_S6F11_MaterialReport(int nType, CString sId)
 {
-	CString strCode = (nType == 2) ? "SHIP TRAY" : "MODULE CAP";	// 1:CapTray, 2:ShipTray
-	CString strLocation = (nType == 2) ? "2" : "1";					// 1:CapTray, 2:ShipTray
+	CString strCode = (nType == 1) ? "MODULE CAP" :"SHIP TRAY" ;	// 1:CapTray, 2:ShipTray
+	CString strLocation = (nType == 1) ? "1" : "2";					// 1:CapTray, 2:ShipTray
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -871,7 +869,7 @@ void CHost::Set_S6F11_MaterialReport(int nType, CString sId)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -905,7 +903,7 @@ void CHost::Set_S6F11_MaterialComplete(int nType, CString sId)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -936,7 +934,7 @@ void CHost::Set_S6F11_PPSelected(CString sLotId, CString sRecipeId)
 
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S6F11\" NAME=\"Event Report\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;
@@ -959,7 +957,7 @@ void CHost::Set_S9F13_Timeout()	// Conversation Timeout
 {
 	CString strSend = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" + CRLF;
 
-	strSend += "<EIF VERSION=\"1.4\" ID=\"S9F13\" NAME=\"ConversationTimeout\">" + CRLF;
+	strSend += "<EIF VERSION=\"2.0\" ID=\"S9F13\" NAME=\"ConversationTimeout\">" + CRLF;
 	strSend += "  <ELEMENT>" + CRLF;
 	strSend += "    <EQPID VALUE=\"" + gData.sEquipId + "\" />" + CRLF;
 	strSend += "  </ELEMENT>" + CRLF;

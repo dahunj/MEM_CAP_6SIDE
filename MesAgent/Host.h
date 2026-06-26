@@ -78,7 +78,7 @@ public:
 
 	void Set_S6F11_LotReady(CString sLotId);	// Lot Ready
 	void Set_S6F11_LotStarted(CString sLotId, int nCount);	// Lot Started Report
-	void Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg, CString sFlag);	// Lot Complete Report
+	void Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg);	// Lot Complete Report
 	void Set_S6F11_LotAbort(CString sLotId, CString sRecipe);	// Lot Suspended Report
 	void Set_S6F11_IdleSet();
 	void Set_S6F11_IdleReset();
