@@ -31,6 +31,8 @@ public:
 
 	CComboCS	m_cboMoveDataSelection;
 
+	CCheckCS	m_chkUseMES;
+
 	CCheckCS	m_chkUseInlineMode;
 	CCheckCS	m_chkUseVisionCapDir;
 	CCheckCS	m_chkUseVisionCmAlign;

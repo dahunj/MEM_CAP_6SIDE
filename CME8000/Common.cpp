@@ -2967,21 +2967,21 @@ void CCommon::Get_CPUInfo(CString& strCPU)
 }
 
 
-void CCommon::Save_CapShiipData(int nType)	//1:Cap, 2:Ship
+void CCommon::Save_CapShipData(int nType)	//1:Cap, 2:Ship
 {
 	CIniFileCS INI(gsCurrentDir + "\\System\\CapShipData.ini");
 
 	if (nType == 1) {
 		INI.Set_String("CAP_DATA", "LOTID", gData.sCapLotID);
-		/*INI.Set_Integer("CAP_DATA", "TRAYCOUNT", gData.nCapTrayUseCount);
-		INI.Set_Integer("CAP_DATA", "CMCOUNT", gData.nCapUseCount);*/
-		INI.Set_Integer("CAP_DATA", "USETYCOUNT", gData.nCapTrayCount);
+		INI.Set_Integer("CAP_DATA", "TRAYCOUNT", gData.nCapUseTray);
+		INI.Set_Integer("CAP_DATA", "CMCOUNT", gData.nCapUseCm);
+		INI.Set_Integer("CAP_DATA", "USETYCOUNT", gData.nCapTrayLoad);
 	}
 	if (nType == 2) {
 		INI.Set_String("SHIP_DATA", "LOTID", gData.sShipLotID);
-		/*INI.Set_Integer("SHIP_DATA", "TRAYCOUNT", gData.nShipTrayUseCount);
-		INI.Set_Integer("SHIP_DATA", "CMCOUNT", gData.nShipUseCount);
-		INI.Set_Integer("SHIP_DATA", "USETYCOUNT", gData.nShipTrayCount);*/
+		INI.Set_Integer("SHIP_DATA", "TRAYCOUNT", gData.nShipUseTray);
+		INI.Set_Integer("SHIP_DATA", "CMCOUNT", gData.nShipUseCm);
+		INI.Set_Integer("SHIP_DATA", "USETYCOUNT", gData.nShipTrayLoad);
 	}
 }
 

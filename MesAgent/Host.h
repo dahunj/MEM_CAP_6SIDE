@@ -78,13 +78,15 @@ public:
 
 	void Set_S6F11_LotReady(CString sLotId);	// Lot Ready
 	void Set_S6F11_LotStarted(CString sLotId, int nCount);	// Lot Started Report
-	void Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg);	// Lot Complete Report
+	
 	void Set_S6F11_LotAbort(CString sLotId, CString sRecipe);	// Lot Suspended Report
 	void Set_S6F11_IdleSet();
 	void Set_S6F11_IdleReset();
 	void Set_S6F11_IdleReport();
+
 	void Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sResult, CString sNgCode, CString sCmId);
-	
+	void Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nOk, int nNg, int nBNg);	// Lot Complete Report
+
 	void Set_S6F11_MaterialReport(int nType, CString sId);
 	void Set_S6F11_MaterialComplete(int nType, CString sId);
 	void Set_S6F11_PPSelected(CString sLotId, CString sRecipeId);

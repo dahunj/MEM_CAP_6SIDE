@@ -83,7 +83,7 @@ public:
 	void Get_CPUInfo(CString &strCPU);
 	void Get_HardInfo(CString &strHardDisk);
 
-	void Save_CapShiipData(int nType);	//1:Cap, 2:Ship
+	void Save_CapShipData(int nType);	//1:Cap, 2:Ship
 	///////////////////////////////////////////////////////////////////////////
 	void Read_CapShipPartNo();
 	BOOL Check_CapShipPartNo(int nType, CString sPartNo);	//1:Cap, 2:Ship

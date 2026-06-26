@@ -499,7 +499,7 @@ void CHost::Set_S6F11_ControlState(int nState)
 	CString strState;
 	strState.Format("%d", nState);
 
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);
@@ -540,7 +540,7 @@ void CHost::Set_S6F11_EquipState(int nState, CString sErrNo, CString sCategory, 
 	CString strState;
 	strState.Format("%d", nState);
 
-	CString strUnitNo = (gData.nAgentType == 1) ? "4" : "3";	// 3:2D+Unloader, 4:CapAttach
+	CString strUnitNo = "4";	// 1: AVI, 4:CAP
 
 	SYSTEMTIME time;
 	GetLocalTime(&time);

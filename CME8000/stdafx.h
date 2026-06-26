@@ -71,7 +71,7 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.1.1.0")
+#define MAIN_VERSION	_T("V 2.1.1.0_MEM26") //MEM26 
 //
 //#define AJIN_BOARD_USE
 //#define LOT_BARCODE_USE
@@ -112,16 +112,18 @@ typedef struct {
 	int		nCmUseCount[2];		// 사용자 입력한 CM 갯수
 
 	CString sCapLotID;
+	int		nCapUseTray;
+	int		nCapUseCm;
 	int		nCapTrayLoad;
-	int		nCapTrayMax;
 
-	CString sShipLotID;
+
+	CString sShipLotID;	
+	int		nShipUseTray;
+	int		nShipUseCm;
 	int		nShipTrayLoad;
-	int		nShipTrayMax;
 
 	int		nLPNo;					// Load 쪽 Port No
 	int		nLoadTrayCount[2];
-	int		nCapTrayCount;
 	int		nULPNo;					// Unload Port No
 
 	BOOL	IndexDone[3];				// 0:Load, 1:Assembly 2:Trans

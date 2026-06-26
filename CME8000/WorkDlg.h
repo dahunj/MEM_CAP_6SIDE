@@ -179,10 +179,8 @@ public:
 	void Change_ShipLotId();
 	BOOL Check_CapLotId();
 	BOOL Check_ShipLotId();
-
 	int  Check_CapShipLotID(int nType, CString sBarID);
-
-
+	
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
 

@@ -271,7 +271,6 @@ BOOL CWorkDlg::OnInitDialog()
 
 	gData.bLotEndBeep = FALSE;
 	gData.bFirstLotStart = FALSE;
-	gData.nCapTrayCount = 0;
 
 	m_rdoWorkStop.SetCheck(TRUE);
 	m_rdoWorkStop.Set_Color(RGB(0xFF, 0x00, 0x00), COLOR_DEFAULT);
@@ -280,21 +279,38 @@ BOOL CWorkDlg::OnInitDialog()
 	m_bShipLotIdInput = FALSE;
 
 #ifndef AJIN_BOARD_USE
-	m_stcShipTrayCountR.SetWindowText("99");
+	//m_stcShipTrayCountR.SetWindowText("99");
+	//m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/5555/DDDDGGGGHHHH");
+	//m_stcShipCmCountR.SetWindowText("5555");
+
+	//m_stcCapTrayCountR.SetWindowText("99");
+	//m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/5555/DDDDGGGGHHHH");
+	//m_stcCapCmCountR.SetWindowText("5555");
+
+	//m_stcShipTrayCountS.SetWindowText("99");
+	//m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/5555/DDDDGGGGHHHH");
+	//m_stcShipCmCountS.SetWindowText("5555");
+
+	//m_stcCapTrayCountS.SetWindowText("99");
+	//m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
+	//m_stcCapCmCountS.SetWindowText("5555");
+
+
+	/*m_stcShipTrayCountR.SetWindowText("2");
 	m_stcShipLotIdR.SetWindowText("5PKQFFFGGGGRT/5555/DDDDGGGGHHHH");
-	m_stcShipCmCountR.SetWindowText("5555");
+	m_stcShipCmCountR.SetWindowText("48");
 
-	m_stcCapTrayCountR.SetWindowText("99");
+	m_stcCapTrayCountR.SetWindowText("2");
 	m_stcCapLotIdR.SetWindowText("3CPPGGGGFFFF/5555/DDDDGGGGHHHH");
-	m_stcCapCmCountR.SetWindowText("5555");
+	m_stcCapCmCountR.SetWindowText("56");
 
-	m_stcShipTrayCountS.SetWindowText("99");
+	m_stcShipTrayCountS.SetWindowText("2");
 	m_stcShipLotIdS.SetWindowText("5PKQOOOOKKKK/5555/DDDDGGGGHHHH");
-	m_stcShipCmCountS.SetWindowText("5555");
+	m_stcShipCmCountS.SetWindowText("48");
 
-	m_stcCapTrayCountS.SetWindowText("99");
+	m_stcCapTrayCountS.SetWindowText("2");
 	m_stcCapLotIdS.SetWindowText("3CPPGGGGDDDD/5555/DDDDGGGGHHHH");
-	m_stcCapCmCountS.SetWindowText("5555");
+	m_stcCapCmCountS.SetWindowText("56");*/
 
 #else
 	m_BtnCapSW1.ShowWindow(FALSE);
@@ -309,7 +325,33 @@ BOOL CWorkDlg::OnInitDialog()
 
 #endif
 	
+	CString strText;
+	CIniFileCS INI(gsCurrentDir + "\\System\\CapShipData.ini");
+	if (INI.Check_File()) 
+	{
+		gData.sCapLotID = INI.Get_String("CAP_DATA", "LOTID", "");
+		gData.nCapUseTray = INI.Get_Integer("CAP_DATA", "TRAYCOUNT", 0);
+		gData.nCapUseCm = INI.Get_Integer("CAP_DATA", "CMCOUNT", 0);
+		gData.nCapTrayLoad = INI.Get_Integer("CAP_DATA", "USETYCOUNT", 0);
 
+		m_stcCapLotIdR.SetWindowText(gData.sCapLotID);
+		strText.Format("%d", gData.nCapUseTray); m_stcCapTrayCountR.SetWindowText(strText);
+		strText.Format("%d", gData.nCapUseCm); m_stcCapCmCountR.SetWindowText(strText);
+
+		gData.sShipLotID = INI.Get_String("SHIP_DATA", "LOTID", "");
+		gData.nShipUseTray = INI.Get_Integer("SHIP_DATA", "TRAYCOUNT", 0);
+		gData.nShipUseCm = INI.Get_Integer("SHIP_DATA", "CMCOUNT", 0);
+		gData.nShipTrayLoad = INI.Get_Integer("SHIP_DATA", "USETYCOUNT", 0);
+
+		 m_stcShipLotIdR.SetWindowText(gData.sShipLotID);
+		strText.Format("%d", gData.nShipUseTray); m_stcShipTrayCountR.SetWindowText(strText);
+		strText.Format("%d", gData.nShipUseCm); m_stcShipCmCountR.SetWindowText(strText);
+	} else {
+		gData.sCapLotID = gData.sShipLotID = "";
+		gData.nCapUseTray = gData.nShipUseTray = 0;
+		gData.nCapUseCm = gData.nShipUseCm = 0;
+		gData.nCapTrayLoad = gData.nShipTrayLoad = 0;
+	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 예외: OCX 속성 페이지는 FALSE를 반환해야 합니다.
@@ -616,8 +658,8 @@ void CWorkDlg::OnStnClickedCapLotIdS()
 	CString strKey;
 	if (g_objCommon.Show_KeyPad(strKey) != IDOK) return;
 
-	int nCapCnt = Check_CapShipLotID(1, strKey);
-	if (nCapCnt < 1) return;
+	/*int nCapCnt = Check_CapShipLotID(1, strKey);
+	if (nCapCnt < 1) return;*/
 
 	m_stcCapLotIdS.SetWindowText(strKey);
 }
@@ -630,10 +672,10 @@ void CWorkDlg::OnStnClickedCapTrayCountS()
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
 	if (atoi(strNew) > 100) return;
-	gData.nCapTrayMax = atoi(strNew);
+	gData.nCapUseTray = atoi(strNew);
 
 #ifndef AJIN_BOARD_USE
-	if(gData.nCapTrayMax > 0)
+	if(gData.nCapUseTray > 0)
 	{
 		DX_DATA_02 *pDX02 = g_objAJinAXL.Get_pDX02();
 		pDX02->iCapPort1LowCheck = TRUE;
@@ -641,10 +683,10 @@ void CWorkDlg::OnStnClickedCapTrayCountS()
 	}
 #endif
 
-	strValue.Format("%d", gData.nCapTrayMax);
+	strValue.Format("%d", gData.nCapUseTray);
 	m_stcCapTrayCountS.SetWindowText(strValue);
 
-	strValue.Format("%d", gData.nCapTrayMax * gData.nCapMaxCount);
+	strValue.Format("%d", gData.nCapUseTray * gData.nCapMaxCount);
 	m_stcCapCmCountS.SetWindowText(strValue);
 }
 
@@ -661,8 +703,11 @@ void CWorkDlg::OnBnClickedCapClear()
 	m_stcCapTrayCountS.SetWindowText("");
 
 	gData.sCapLotID.Empty();
-	gData.nCapTrayLoad = 0;
-	gData.nCapTrayMax = 0;
+	gData.nCapTrayLoad = 0; // Cap 정보 초기화 할때 같이 초기화 해준다.
+	gData.nCapUseTray = 0;
+	gData.nCapUseCm = 0;
+	g_objCommon.Save_CapShipData(1);
+	g_dlgWork.PostMessage(UM_UPDATE_TRAY_INFO, 0, NULL);
 }
 
 void CWorkDlg::OnStnClickedShipLotIdS()
@@ -670,8 +715,8 @@ void CWorkDlg::OnStnClickedShipLotIdS()
 	CString strKey;
 	if (g_objCommon.Show_KeyPad(strKey) != IDOK) return;
 
-	int nCapCnt = Check_CapShipLotID(2, strKey);
-	if (nCapCnt < 1) return;
+	//int nCapCnt = Check_CapShipLotID(2, strKey);
+	//if (nCapCnt < 1) return;
 
 	m_stcShipLotIdS.SetWindowText(strKey);
 }
@@ -684,20 +729,20 @@ void CWorkDlg::OnStnClickedShipTrayCountS()
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
 	if (atoi(strNew) > 100) return;
-	gData.nShipTrayMax = atoi(strNew);
+	gData.nShipUseTray = atoi(strNew);
 
 #ifndef AJIN_BOARD_USE
-	if(gData.nShipTrayMax > 0)
+	if(gData.nShipUseTray > 0)
 	{
 		DX_DATA_03 *pDX03 = g_objAJinAXL.Get_pDX03();
 		pDX03->iUnlaodPort1LowCheck = TRUE;
 	}
 #endif
 
-	strValue.Format("%d", gData.nShipTrayMax);
+	strValue.Format("%d", gData.nShipUseTray);
 	m_stcShipTrayCountS.SetWindowText(strValue);
 
-	strValue.Format("%d", gData.nShipTrayMax * gData.nShipMaxCount);
+	strValue.Format("%d", gData.nShipUseTray * gData.nShipMaxCount);
 	m_stcShipCmCountS.SetWindowText(strValue);
 }
 
@@ -714,8 +759,11 @@ void CWorkDlg::OnBnClickedShipClear()
 	m_stcShipTrayCountS.SetWindowText("");
 
 	gData.sShipLotID.Empty();
+	gData.nShipUseTray = 0;
+	gData.nShipUseCm = 0;
 	gData.nShipTrayLoad = 0;
-	gData.nShipTrayMax = 0;
+	g_objCommon.Save_CapShipData(2);
+	g_dlgWork.PostMessage(UM_UPDATE_TRAY_INFO, 0, NULL);
 }
 
 
@@ -1411,14 +1459,13 @@ void CWorkDlg::Change_CapLotId()
 	m_stcCapCmCountS.GetWindowText(strTemp);
 	m_stcCapCmCountR.SetWindowText(strTemp);
 	m_stcCapCmCountS.SetWindowText("0");
+	gData.nCapUseCm = atoi(strTemp);
 
 	m_stcCapTrayCountS.GetWindowText(strTemp);
 	m_stcCapTrayCountR.SetWindowText(strTemp);
 	m_stcCapTrayCountS.SetWindowText("0");
-
-	gData.nCapTrayLoad = 0;
-	gData.nCapTrayMax = atoi(strTemp);
-
+	gData.nCapUseTray = atoi(strTemp);
+	
 	g_objMesAgent.Set_CapChangeComplete(gData.sCapLotID);
 }
 
@@ -1434,13 +1481,12 @@ void CWorkDlg::Change_ShipLotId()
 	m_stcShipCmCountS.GetWindowText(strTemp);
 	m_stcShipCmCountR.SetWindowText(strTemp);
 	m_stcShipCmCountS.SetWindowText("0");
+	gData.nShipUseCm = atoi(strTemp);
 
 	m_stcShipTrayCountS.GetWindowText(strTemp);
 	m_stcShipTrayCountR.SetWindowText(strTemp);
 	m_stcShipTrayCountS.SetWindowText("0");
-
-	gData.nShipTrayLoad = 0;
-	gData.nShipTrayMax = atoi(strTemp);
+	gData.nShipUseTray = atoi(strTemp);	
 
 	g_objMesAgent.Set_ShipChangeComplete(gData.sShipLotID);
 }
@@ -1469,14 +1515,6 @@ BOOL CWorkDlg::Check_CapLotId()
 
 BOOL CWorkDlg::Check_ShipLotId()
 {
-	// 자동입력 취소 (2024.01.10)
-// 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-// 	CString strCnt;
-// 
-// 	strCnt.Format("%d", 100 * gData.nShipMaxCount);
-// 	if (!pEquipData->bUseMES || !pEquipData->bUseMesShipReg) m_stcShipLotIdS.SetWindowText("SHIP-LOT-ID");
-// 	if (!pEquipData->bUseMES || !pEquipData->bUseMesShipReg) m_stcShipTrayCountS.SetWindowText("100");
-// 	if (!pEquipData->bUseMES || !pEquipData->bUseMesShipReg) m_stcShipCmCountS.SetWindowText(strCnt);
 
 	CString strRead;
 
@@ -1530,7 +1568,7 @@ LRESULT CWorkDlg::OnUpdateTrayInfo(WPARAM nTray, LPARAM lParam)
 		g_dlgOperator.Update_TrayInfo(nTray);
 	}
 	if (nTray == 0 || nTray == 2) {		// Cap Tray
-		strText.Format("%d", gData.nCapTrayCount);
+		strText.Format("%d", gData.nCapTrayLoad);
 		m_stcCapTrayCount.SetWindowText(strText);
 
 		for (int i = 0; i < CT_Y; i++) {
@@ -1544,7 +1582,7 @@ LRESULT CWorkDlg::OnUpdateTrayInfo(WPARAM nTray, LPARAM lParam)
 	}
 
 	if (nTray == 0 || nTray == 3) {		// Unload Tray
-		strText.Format("%d", gData.nTNoUnloadTray);
+		strText.Format("%d", gData.nShipTrayLoad);
 		m_stcShipTrayCount.SetWindowText(strText);
 		
 		for (int i = 0; i < gData.STY; i++) {
@@ -1590,12 +1628,14 @@ LRESULT CWorkDlg::OnUpdateBarcode(WPARAM wParam, LPARAM lParam)
 		gData.sCapLotID = sBarcode;
 		m_stcCapLotIdS.SetWindowText(sBarcode);
 
-		int nCmCnt = atoi(strCount);
-		strTemp.Format("%d", nCmCnt); m_stcCapCmCountS.SetWindowText(strTemp);
+		
+		gData.nCapUseCm = atoi(strCount);
+		strTemp.Format("%d", gData.nCapUseCm ); 
+		m_stcCapCmCountS.SetWindowText(strTemp);
 
-		gData.nCapTrayMax = nCmCnt / gData.nCapMaxCount;
-		if (nCmCnt % gData.nCapMaxCount) gData.nCapTrayMax++;
-		strTemp.Format("%d", gData.nCapTrayMax); m_stcCapTrayCountS.SetWindowText(strTemp);
+		gData.nCapUseTray = gData.nCapUseCm / gData.nCapMaxCount;
+		if (gData.nCapUseCm % gData.nCapMaxCount) gData.nCapUseTray++;
+		strTemp.Format("%d", gData.nCapUseTray); m_stcCapTrayCountS.SetWindowText(strTemp);
 
 	} else if (m_bShipLotIdInput) {
 		m_stcShipLotIdS.GetWindowText(strTemp);
@@ -1610,11 +1650,11 @@ LRESULT CWorkDlg::OnUpdateBarcode(WPARAM wParam, LPARAM lParam)
 		gData.sShipLotID = sBarcode;
 		m_stcShipLotIdS.SetWindowText(sBarcode);
 
-		gData.nShipTrayMax = atoi(strCount);
-		strTemp.Format("%d", gData.nShipTrayMax); m_stcShipTrayCountS.SetWindowText(strTemp);
+		gData.nShipUseTray = atoi(strCount);
+		strTemp.Format("%d", gData.nShipUseTray); m_stcShipTrayCountS.SetWindowText(strTemp);
 
-		int nCmCnt = gData.nShipTrayMax * gData.nShipMaxCount;
-		strTemp.Format("%d", nCmCnt); m_stcShipCmCountS.SetWindowText(strTemp);
+		gData.nShipUseCm = gData.nShipUseTray * gData.nShipMaxCount;
+		strTemp.Format("%d", gData.nShipUseCm); m_stcShipCmCountS.SetWindowText(strTemp);
 	}
 
 	return 0;

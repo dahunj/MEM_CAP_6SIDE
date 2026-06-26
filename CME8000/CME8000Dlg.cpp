@@ -820,12 +820,14 @@ void CCME8000Dlg::Set_LampFlicker_Cap1(BOOL bEnable)
 {
 	DY_DATA_12 *pDY12 = g_objAJinAXL.Get_pDY12();
 
-	if (m_bLampOnCap1 || !bEnable) {
+	if (m_bLampOnCap1 || !bEnable) 
+	{
 		m_bLampOnCap1 = FALSE;
 		pDY12->oCap1Lamp = FALSE;
 //		if (!bEnable) KillTimer(TIMER_NG_LAMP_FLKR);
-
-	} else {
+	} 
+	else
+	{
 		m_bLampOnCap1 = TRUE;
 		pDY12->oCap1Lamp = TRUE;
 	}

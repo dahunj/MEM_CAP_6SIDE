@@ -45,6 +45,9 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	for (int i = 0; i < 2; i++) DDX_Control(pDX, IDC_RDO_DOOR_LOCK_0 + i, m_rdoDoorLock[i]);
 	DDX_Control(pDX, IDC_CBO_MOVE_DATA_SEL, m_cboMoveDataSelection);
 
+	DDX_Control(pDX, IDC_CHK_USE_MES, m_chkUseMES);
+
+
 	DDX_Control(pDX, IDC_CHK_USE_INLINE_MODE, m_chkUseInlineMode);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_CAP_DIR, m_chkUseVisionCapDir);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_CM_ALIGN, m_chkUseVisionCmAlign);
@@ -161,6 +164,7 @@ void CSetupEquipDlg::Initial_Controls()
 	m_lblDoorLock2.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0x60, 0x60, 0x60));
 	m_stcDoorLockTime.Init_Ctrl("¹ÙÅÁ", 11, TRUE, RGB(0x00, 0x00, 0x80), RGB(0xF0, 0xE0, 0x00));
 
+	m_chkUseMES.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
 	m_chkUseInlineMode.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
 
 	m_chkUseVisionCapDir.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x00, 0xF0, 0xF0), CCheckCS::emRed, 0);
@@ -439,6 +443,8 @@ void CSetupEquipDlg::Display_EquipData()
 
 	strData.Format("%d", pEquipData->nNoWorkTime); m_stcNoWorkTime.SetWindowText(strData);
 	
+	m_chkUseMES.SetCheck(pEquipData->bUseMES);
+
 	m_chkUseInlineMode.SetCheck(pEquipData->bUseInlineMode);
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
 	m_chkUseVisionCmAlign.SetCheck(pEquipData->bUseVisionCmAlign);
@@ -518,6 +524,8 @@ void CSetupEquipDlg::Save_EquipData()
 
 	nData = m_cboMoveDataSelection.GetCurSel(); INI.Set_Integer("EQUIPMENT", "VENDOR_SELECTION", nData);
 
+
+	INI.Set_Bool("OPTION", "MES_USE", m_chkUseMES.GetCheck());
 	INI.Set_Bool("OPTION", "INLINE_MODE", m_chkUseInlineMode.GetCheck());
 #ifndef DRY_RUN_TEST
 	INI.Set_Bool("OPTION", "VISION_CAP_DIR", m_chkUseVisionCapDir.GetCheck());
