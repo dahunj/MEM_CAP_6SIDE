@@ -2989,7 +2989,7 @@ BOOL CSequenceMain::CapStage1_Run()
 
 		if (g_objMesAgent.Is_HostOnline() && m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg)// MES Cap 자재등록 사용
 		{				
-			g_dlgWork.Get_CapLotId();				
+						
 		}
 		m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(10000);
 		break;
@@ -3096,6 +3096,7 @@ BOOL CSequenceMain::CapStage1_Run()
 			
 			gData.sCIDCapStage[0] = gData.sCapLotID;
 			Init_CapTray();
+			g_dlgWork.Get_CapLotId();	
 			g_objCommon.Move_Position(AX_CAP_STAGE1_Z, 1);
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(10000);
 		}
@@ -3267,7 +3268,7 @@ BOOL CSequenceMain::CapStage2_Run()
 
 		if (g_objMesAgent.Is_HostOnline() && m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg)// MES Cap 자재등록 사용
 		{				
-			g_dlgWork.Get_CapLotId();				
+							
 		}
 		m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(10000);
 		break;
@@ -3372,6 +3373,7 @@ BOOL CSequenceMain::CapStage2_Run()
 		if (m_pDX04->iCapStage2Exist && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 0)) {
 			m_tCapStage2Loop.Takt_Start();			
 			gData.sCIDCapStage[1] = gData.sCapLotID;
+			g_dlgWork.Get_CapLotId();
 			Init_CapTray();
 			g_objCommon.Move_Position(AX_CAP_STAGE2_Z, 1);
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(10000);

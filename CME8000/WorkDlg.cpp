@@ -1488,7 +1488,8 @@ void CWorkDlg::Get_CapLotId()
 	m_stcCapLotIdS.GetWindowText(strTemp);
 	gData.sCapLotID = strTemp;
 
-	g_objMesAgent.Set_CapChangeRequest(gData.sCapLotID);	// 자재 등록 요청
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeRequest(gData.sCapLotID);	// 자재 등록 요청
 }
 
 void CWorkDlg::Get_ShipLotId()
@@ -1497,7 +1498,9 @@ void CWorkDlg::Get_ShipLotId()
 	m_stcShipLotIdS.GetWindowText(strTemp);
 	gData.sShipLotID = strTemp;
 
-	g_objMesAgent.Set_ShipChangeRequest(gData.sShipLotID);	// 자재 등록 요청
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeRequest(gData.sShipLotID);	// 자재 등록 요청
+	
 }
 
 void CWorkDlg::Change_CapLotId()
@@ -1519,7 +1522,9 @@ void CWorkDlg::Change_CapLotId()
 	m_stcCapTrayCountS.SetWindowText("0");
 	gData.nCapUseTray = atoi(strTemp);
 	
-	g_objMesAgent.Set_CapChangeComplete(gData.sCapLotID);
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeComplete(gData.sCapLotID);
+	
 }
 
 void CWorkDlg::Change_ShipLotId()
@@ -1541,7 +1546,9 @@ void CWorkDlg::Change_ShipLotId()
 	m_stcShipTrayCountS.SetWindowText("0");
 	gData.nShipUseTray = atoi(strTemp);	
 
-	g_objMesAgent.Set_ShipChangeComplete(gData.sShipLotID);
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeComplete(gData.sShipLotID);
+	
 }
 
 BOOL CWorkDlg::Check_CapLotId()

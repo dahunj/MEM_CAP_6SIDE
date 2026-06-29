@@ -82,8 +82,6 @@
 //#define LOT_BARCODE_USE
 //#define LOAD_CELL_USE
 
-// 테스트 런 옵션
-//#define DRY_RUN_TEST		// Dry Run Test 시 사용
 
 // #define BARCODE_CHECK   	// Cap/Ship Barcode Check
 
