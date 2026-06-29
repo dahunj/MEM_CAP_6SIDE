@@ -178,7 +178,10 @@ public:
 	BOOL Check_CapLotId();
 	BOOL Check_ShipLotId();
 	int  Check_CapShipLotID(int nType, CString sBarID);
-	
+
+	void Set_DryRun(BOOL bCheck);
+
+
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
 
@@ -191,7 +194,7 @@ public:
 	afx_msg void OnBnClickedBtnMesAbort();
 	afx_msg void OnBnClickedBtnIdleReport();
 
-
+	afx_msg void OnBnClickedBtnLight();
 
 	afx_msg void OnBnClickedBtnLotstart1();
 	afx_msg void OnBnClickedBtnLotstart2();
@@ -212,6 +215,7 @@ public:
 	CButton m_BtnUnloadSW2;
 	CButton m_BtnUnloadSWF1;
 	CButton m_BtnUnloadSWF2;
+
 };
 
 extern CWorkDlg g_dlgWork;

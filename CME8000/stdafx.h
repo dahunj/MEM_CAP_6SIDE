@@ -55,6 +55,11 @@
 
 #include <math.h>
 
+#include <dbghelp.h>
+#include <stdio.h>
+#include <time.h>
+#pragma comment(lib, "Dbghelp.lib")
+
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
@@ -289,6 +294,8 @@ typedef struct {
 	int		nAviBNgCnt[2];	
 	BOOL	bAviLotEnd[2];	// AVI Lot End 수신 여부
 	
+	BOOL		bUseDryRun;
+	int			nLogInLevel;
 } GLOVAL_DATA;
 
 typedef struct {
@@ -298,8 +305,15 @@ typedef struct {
 	DWORD	dwLotStart[2];
 	DWORD	dwLotEnd[2];
 	int		nTrayCount[2];
-	int		nCmCount[2];
-	double  dTackTime;
+	int		nCmCount[2];	
+
+	double  dTactTime_StoE;
+	double  dTactTime_RunTime;
+	double  dTactTime_Unload; //Start to End 
+	int		nAlmCnt[2];
+
+	DWORD	dwFirstUnload[2];
+
 	int		nGoodCount[2];
 	int		nNgCount[2];
 	int		nCapFailCount[2];			// Cap Tilt Error Count
@@ -308,7 +322,7 @@ typedef struct {
 
 	int		nErrorCount;
 	DWORD	dwRunTime;
-	DWORD	dwStopTime;
+	DWORD	dwStopTime[2]; // port 1, 2
 	DWORD	dwErrorTime;
 
 	BOOL	bLotEndComplete[2];

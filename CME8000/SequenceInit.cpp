@@ -271,12 +271,12 @@ BOOL CSequenceInit::Initial_MainInit()
 		}
 		break;
 	case 33:	// Unload Stage1 Exist Check
-		if (!m_pDX05->iUnloadStage1Exist ) {
+		if (!m_pDX05->iUnloadStage1Exist && !m_pDX05->iUnloadStage1Exist2 && !m_pDX05->iUnloadStage1Exist3 ) {
 			m_niMainInitCase++; m_tiMainInitLoop.Set_LoopTime(5000);
 		}
 		break;
 	case 34:	// Unload Stage2 Exist Check
-		if (!m_pDX05->iUnloadStage2Exist) {
+		if (!m_pDX05->iUnloadStage2Exist && !m_pDX05->iUnloadStage2Exist2 && !m_pDX05->iUnloadStage2Exist3) {
 			m_niMainInitCase = 50; m_tiMainInitLoop.Set_LoopTime(5000);
 		}
 		break;
@@ -966,7 +966,7 @@ BOOL CSequenceInit::Initial_TransStage()
 			if (!m_tiTransStageLoop.Waiting_Time(500)) break;
 			g_objCommon.Set_TransStageAirOff(0);
 			g_objCommon.Set_TransStageClampOff();
-			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(10000);
+			m_niTransStageCase++; m_tiTransStageLoop.Set_LoopTime(30000);
 		}
 		break;
 	case 4:		// Stage Z Home Search

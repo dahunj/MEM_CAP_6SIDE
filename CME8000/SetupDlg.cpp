@@ -8,6 +8,7 @@
 #include "LogFile.h"
 #include "AJinAXL.h"
 #include "Common.h"
+#include "DataManager.h"
 
 // CSetupDlg 대화 상자입니다.
 
@@ -122,6 +123,9 @@ void CSetupDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialogEx::OnShowWindow(bShow, nStatus);
 
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	int nTempOp = atoi(pEquipData->sPasswordOP); 
+
 	if (bShow) {
 		if (theApp.bParamMode) {
 			m_rdoSetupMove.SetCheck(TRUE);
@@ -133,6 +137,18 @@ void CSetupDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 			if (m_rdoSetupMotion.GetCheck()) m_pSetupMotionDlg->ShowWindow(SW_SHOW);
 			if (m_rdoSetupInOut.GetCheck()) m_pSetupInOutDlg->ShowWindow(SW_SHOW);
 		}
+
+		m_rdoSetupMove.EnableWindow(TRUE);
+		m_rdoSetupMotion.EnableWindow(TRUE);
+		m_rdoSetupInOut.EnableWindow(TRUE);
+
+		if(gData.nLogInLevel == nTempOp)
+		{
+			m_rdoSetupMove.EnableWindow(FALSE);
+			m_rdoSetupMotion.EnableWindow(FALSE);
+			m_rdoSetupInOut.EnableWindow(FALSE);
+		}
+
 
 		g_objAJinAXL.Set_ReadVelocity(TRUE);
 

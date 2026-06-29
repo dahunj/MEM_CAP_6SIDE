@@ -225,6 +225,8 @@ public:
 	void Init_NgTray(int nNo);
 
 	BOOL CheckInspectCmGoOrNot(int nPortNo);
+
+	void Set_ThreadBeep();
 };
 
 extern CSequenceMain g_objSequenceMain;

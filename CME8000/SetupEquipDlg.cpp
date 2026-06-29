@@ -12,6 +12,8 @@
 
 #include "AviHandler.h"
 
+#include "CME8000Dlg.h"
+
 // CSetupEquipDlg ´ëÈ­ »óÀÚÀÔ´Ï´Ù.
 
 IMPLEMENT_DYNAMIC(CSetupEquipDlg, CDialogEx)
@@ -53,6 +55,7 @@ void CSetupEquipDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHK_USE_VISION_CM_ALIGN, m_chkUseVisionCmAlign);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_ALIGN_ALARM, m_chkUseVisionAlignAlarm);
 	DDX_Control(pDX, IDC_CHK_USE_VISION_ALIGN_OFFSET, m_chkUseVisionAlignOffset);
+	DDX_Control(pDX, IDC_CHK_USE_DRY_RUN, m_chkUseDryRun);
 
 	DDX_Control(pDX, IDC_CHK_USE_TRAY_PICKER_TURN, m_chkUseTrayPickerTurn);
 	DDX_Control(pDX, IDC_CHK_USE_CAP_PICKER_TURN, m_chkUseCapPickerTurn);
@@ -127,6 +130,7 @@ BEGIN_MESSAGE_MAP(CSetupEquipDlg, CDialogEx)
 	ON_STN_CLICKED(IDC_STC_CM_VISION_2, &CSetupEquipDlg::OnStnClickedStcCmVision2)
 	ON_STN_CLICKED(IDC_STC_DOORLOCK_TIME, &CSetupEquipDlg::OnStnClickedStcDoorlockTime)
 	ON_STN_CLICKED(IDC_STC_NO_WORK_TIME, &CSetupEquipDlg::OnStnClickedStcNoWorkTime)
+	ON_BN_CLICKED(IDC_CHK_USE_DRY_RUN, &CSetupEquipDlg::OnBnClickedChkUseDryRun)
 END_MESSAGE_MAP()
 
 // CSetupEquipDlg ¸Þ½ÃÁö Ã³¸®±âÀÔ´Ï´Ù.
@@ -172,6 +176,7 @@ void CSetupEquipDlg::Initial_Controls()
 	m_chkUseVisionCmAlign.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
 	m_chkUseVisionAlignAlarm.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
 	m_chkUseVisionAlignOffset.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0x60, 0xF0, 0x80), CCheckCS::emRed, 0);
+	m_chkUseDryRun.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0x80, 0x20), CCheckCS::emRed, 0);
 
 	m_chkUseTrayPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
 	m_chkUseCapPickerTurn.Init_Ctrl("¹ÙÅÁ", 11, TRUE, COLOR_DEFAULT, RGB(0xD0, 0xA0, 0xF0), CCheckCS::emRed, 0);
@@ -252,13 +257,46 @@ void CSetupEquipDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 
 	if (!bShow) return;
 
-	Display_EquipData();
+
+	EQUIP_DATA *m_pEquipData = g_objDataManager.Get_pEquipData();
+
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+
+	int nTempSy = atoi(m_pEquipData->sPasswordSy);
+
+	Set_Enable(TRUE);
+	if(gData.nLogInLevel == 9300)
+	{
+		m_lblDoorLock.ShowWindow(SW_SHOW);
+		m_rdoDoorLock[0].ShowWindow(SW_SHOW);
+		m_rdoDoorLock[1].ShowWindow(SW_SHOW);
+	}
+	else if(gData.nLogInLevel == nTempSy)
+	{
+		m_lblDoorLock.ShowWindow(SW_SHOW);
+		m_rdoDoorLock[0].ShowWindow(SW_SHOW);
+		m_rdoDoorLock[1].ShowWindow(SW_SHOW);
+	}
+	else
+	{        
+		m_pEquipData->bUseDoorLock = TRUE;
+		INI.Set_Bool("EQUIPMENT", "DOOR_LOCK", TRUE);
+		m_lblDoorLock.ShowWindow(SW_HIDE);
+		m_rdoDoorLock[0].ShowWindow(SW_HIDE);
+		m_rdoDoorLock[1].ShowWindow(SW_HIDE);
+
+		Set_Enable(FALSE);
+	}
+
+	Display_EquipData();	
 
 	m_grpHidden.ShowWindow(SW_HIDE);
 	m_lblPasswordMt.ShowWindow(SW_HIDE);
 	m_stcPasswordMt.ShowWindow(SW_HIDE);
 	m_lblPasswordSi.ShowWindow(SW_HIDE);
 	m_edtPasswordSi.ShowWindow(SW_HIDE);
+	m_chkUseDryRun.ShowWindow(SW_HIDE);
 }
 
 void CSetupEquipDlg::OnStnClickedStcEquipName()
@@ -399,18 +437,22 @@ void CSetupEquipDlg::OnStnClickedStcPasswordMt()
 
 void CSetupEquipDlg::OnStnClickedStcShowHidden()
 {
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	int nOpPassword = atoi(pEquipData->sPasswordOP);
 	if (m_grpHidden.IsWindowVisible()) {
+		m_chkUseDryRun.ShowWindow(SW_HIDE);
 		m_grpHidden.ShowWindow(SW_HIDE);
 		m_lblPasswordMt.ShowWindow(SW_HIDE);
 		m_stcPasswordMt.ShowWindow(SW_HIDE);
-		if (g_dlgSetup.Get_LoginUser() != 2) return;
+		if (gData.nLogInLevel == nOpPassword) return;
 		m_lblPasswordSi.ShowWindow(SW_HIDE);
 		m_edtPasswordSi.ShowWindow(SW_HIDE);
 	} else {
+		m_chkUseDryRun.ShowWindow(SW_SHOW);
 		m_grpHidden.ShowWindow(SW_SHOW);
 		m_lblPasswordMt.ShowWindow(SW_SHOW);
 		m_stcPasswordMt.ShowWindow(SW_SHOW);
-		if (g_dlgSetup.Get_LoginUser() != 2) return;
+		if (gData.nLogInLevel == nOpPassword) return;
 		m_lblPasswordSi.ShowWindow(SW_SHOW);
 		m_edtPasswordSi.ShowWindow(SW_SHOW);
 	}
@@ -442,6 +484,7 @@ void CSetupEquipDlg::Display_EquipData()
 	strData.Format("%d", gData.nDoorLockTime);	m_stcDoorLockTime.SetWindowText(strData);
 
 	strData.Format("%d", pEquipData->nNoWorkTime); m_stcNoWorkTime.SetWindowText(strData);
+	m_chkUseDryRun.SetCheck(pEquipData->bUseDryRun);
 	
 	m_chkUseMES.SetCheck(pEquipData->bUseMES);
 
@@ -491,8 +534,20 @@ void CSetupEquipDlg::Display_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) m_chkTower[i][j].SetCheck(pEquipData->bTower[i][j]);
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) m_chkBuzzer[i][j].SetCheck(pEquipData->bBuzzer[i][j]);
 
-	m_stcPasswordMt.SetWindowText(pEquipData->sPasswordMt);
-	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSi);
+	m_stcPasswordMt.SetWindowText(pEquipData->sPasswordOP);
+	m_edtPasswordSi.SetWindowText(pEquipData->sPasswordSy);
+	m_chkUseDryRun.SetCheck(pEquipData->bUseDryRun);
+	CCME8000Dlg *pMainDlg = (CCME8000Dlg *)AfxGetApp()->GetMainWnd();
+	if(gData.bUseDryRun)
+	{
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0xFF, 0xFF, 0xFF), RGB(0xFF, 0x00, 0x00));		
+	}
+	else
+	{
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
+		pMainDlg->m_stcMainEquip.Init_Ctrl("Segoe UI", 14, TRUE, RGB(0x00, 0x00, 0x00), RGB(0xE6, 0xE6, 0xE6));
+	}
 }
 
 void CSetupEquipDlg::Save_EquipData()
@@ -514,6 +569,8 @@ void CSetupEquipDlg::Save_EquipData()
 	nData = m_cboAssyLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "ASSY_LOAD_CELL", nData + 8);
 	nData = m_cboUnloadLoadCellPort.GetCurSel(); INI.Set_Integer("EQUIPMENT", "UNLOAD_LOAD_CELL", nData + 8);
 
+	INI.Set_Bool("OPTION", "DRY_RUN_MODE", m_chkUseDryRun.GetCheck()); 
+
 	m_stcMotionCheck.GetWindowText(strData); dData = atof(strData); INI.Set_Double("EQUIPMENT", "MOTION_CHECK", dData, "%0.3lf");
 	INI.Set_Bool("EQUIPMENT", "DOOR_LOCK", m_rdoDoorLock[1].GetCheck());
 	m_stcDoorLockTime.GetWindowText(strData);
@@ -527,10 +584,15 @@ void CSetupEquipDlg::Save_EquipData()
 
 	INI.Set_Bool("OPTION", "MES_USE", m_chkUseMES.GetCheck());
 	INI.Set_Bool("OPTION", "INLINE_MODE", m_chkUseInlineMode.GetCheck());
-#ifndef DRY_RUN_TEST
+
+	INI.Set_Bool("OPTION", "DRY_RUN", m_chkUseDryRun.GetCheck());
+
+	if(!gData.bUseDryRun)
+	{
 	INI.Set_Bool("OPTION", "VISION_CAP_DIR", m_chkUseVisionCapDir.GetCheck());
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", m_chkUseVisionCmAlign.GetCheck());
-#endif
+	}
+
 	INI.Set_Bool("OPTION", "VISION_ALIGN_ALARM", m_chkUseVisionAlignAlarm.GetCheck());
 	INI.Set_Bool("OPTION", "VISION_ALIGN_OFFSET", m_chkUseVisionAlignOffset.GetCheck());
 
@@ -570,11 +632,10 @@ void CSetupEquipDlg::Save_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) { strKey.Format("%d%d", i, j); INI.Set_Bool("TOWER", strKey, m_chkTower[i][j].GetCheck()); }
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) { strKey.Format("%d%d", i, j); INI.Set_Bool("BUZZER", strKey, m_chkBuzzer[i][j].GetCheck()); }
 
-	m_stcPasswordMt.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_MT", strData);
-	m_edtPasswordSi.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_SI", strData);
+	m_stcPasswordMt.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_OP", strData);
+	m_edtPasswordSi.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_ENGR", strData);
 
 	m_stcVacOffDelay[0].GetWindowText(strData);
-
 
 	g_objLogFile.Save_HandlerLog("[Setup Equip] Save Click");
 
@@ -648,11 +709,100 @@ void CSetupEquipDlg::OnStnClickedStcDoorlockTime()
 	m_stcDoorLockTime.SetWindowText(strNew);
 }
 
-
-void CSetupEquipDlg::OnStnClickedStcNoWorkTime()
+void CSetupEquipDlg::OnStnClickedStcNoWorkTime()	
 {
 	CString strOld, strNew;
 	m_stcNoWorkTime.GetWindowText(strOld);
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 	m_stcNoWorkTime.SetWindowText(strNew);
+}
+
+void CSetupEquipDlg::OnBnClickedChkUseDryRun()
+{
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	
+	CIniFileCS INI(gsCurrentDir + "\\System\\EquipData.ini");
+	if (!INI.Check_File()) { AfxMessageBox("EquipData.ini File Not Found!!!"); return; }
+	
+	//g_dlgWork.Set_DryRun(m_chkUseDryRun.GetCheck());
+	if(m_chkUseDryRun.GetCheck())
+	{
+		pEquipData->bUseDryRun = TRUE;
+		INI.Set_Bool("OPTION", "DRY_RUN", TRUE);
+		
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+
+		pEquipData->bUseInlineMode = FALSE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", FALSE);
+
+		pEquipData->bUseVisionCmAlign = FALSE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
+
+	}
+	else
+	{
+		pEquipData->bUseDryRun = FALSE;
+		INI.Set_Bool("OPTION", "DRY_RUN", FALSE);
+
+		pEquipData->bUseMES = FALSE;
+		INI.Set_Bool("OPTION", "MES_USE", FALSE);
+
+		pEquipData->bUseInlineMode = TRUE;
+		INI.Set_Bool("OPTION", "INLINE_MODE", TRUE);
+
+		pEquipData->bUseVisionCmAlign = TRUE;
+		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", TRUE);
+		
+	}
+
+	Cancel_EquipData();
+}
+
+
+void CSetupEquipDlg::Set_Enable(BOOL bEnable)
+{
+	m_stcEquipName.EnableWindow(bEnable);
+	m_rdoModel[0].EnableWindow(bEnable);
+	m_rdoModel[1].EnableWindow(bEnable);
+	m_cboLotBarcodePort.EnableWindow(bEnable);
+	m_cboAssyLoadCellPort.EnableWindow(bEnable);
+	m_cboUnloadLoadCellPort.EnableWindow(bEnable);
+
+	m_stcMotionCheck.EnableWindow(bEnable);
+	m_stcDoorLockTime.EnableWindow(bEnable);
+	m_rdoDoorLock[0].EnableWindow(bEnable);
+	m_rdoDoorLock[1].EnableWindow(bEnable);
+
+	m_cboMoveDataSelection.EnableWindow(bEnable);
+	
+
+	for(int i =0; i < 4; i++) m_stcLoadTrayData[i].EnableWindow(bEnable);
+	for(int i =0; i < 4; i++) m_stcCapTrayData[i].EnableWindow(bEnable);
+	for(int i =0; i < 4; i++) m_stcShipTrayData[i].EnableWindow(bEnable);
+	for(int i =0; i < 1; i++) m_stcIndexData[i].EnableWindow(bEnable);
+
+	for(int i =0; i < 3; i++) m_stcVacOffDelay[i].EnableWindow(bEnable);
+	for(int i =0; i < 3; i++) m_lblPickerVacOff[i].EnableWindow(bEnable);
+	for(int i =0; i < 6; i++) m_stcDelayAdd[i].EnableWindow(bEnable);
+
+	m_ipaAviIp.EnableWindow(bEnable);
+	m_stcAlignOffset.EnableWindow(bEnable);
+
+	for(int i =0; i < 2; i++) m_stcLoadCellRange[i].EnableWindow(bEnable);
+		
+	for(int i =0; i < 6; i++) 
+	{
+		for(int j =0; j < 4; j++) 
+		{
+			m_chkTower[i][j].EnableWindow(bEnable);
+		}        
+	}
+	for(int i =0; i < 5; i++) 
+	{
+		for(int j =0; j < 6; j++) 
+		{
+			m_chkBuzzer[i][j].EnableWindow(bEnable);
+		}        
+	}
 }

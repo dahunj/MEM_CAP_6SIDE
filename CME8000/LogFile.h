@@ -35,6 +35,7 @@ public:
 	void Save_PCLog(int nPNo, CString sLog);
 	void Save_MCC(CString sLog);
 	void Save_TerminalLog(CString sLog);
+	void Save_SeqLog(CString sLog);
 
 	void Save_JobListExcel(CString sLog);
 	void Save_AverageCycle(int nPNo);
