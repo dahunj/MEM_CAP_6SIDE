@@ -1931,8 +1931,10 @@ void CWorkDlg::OnBnClickedBtnCapf2()
 
 void CWorkDlg::OnBnClickedBtnUnload1()
 {
-	gData.bUnloadPort1Wait = TRUE;
-	m_bUnloadSw1On = TRUE;
+	gData.nPNoUnloadPort = 0;
+	gData.bUnloadPort1Wait = FALSE;
+	gData.bUnloadTrayLotEnd[0] = FALSE;
+	gData.bUnloadTrayLotEnd[1] = FALSE;
 }
 
 
