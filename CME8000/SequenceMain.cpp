@@ -2931,7 +2931,7 @@ BOOL CSequenceMain::CapStage1_Run()
 		if (g_objCommon.Check_Position(AX_CAP_STAGE1_X, 0) && g_objCommon.Check_Position(AX_CAP_STAGE1_Z, 1) && g_objCommon.Get_CapStageMasterSlaveOut(1)) {
 			if (!m_pDX02->iCapPort1SlideClose || !m_pDX02->iCapPort1LowCheck || m_pDX04->iCapStage1Exist) break;	// 인터락
 
-			if (gData.nCapTrayLoad ==0 || gData.nCapTrayLoad > gData.nCapUseTray) 
+			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
 			{				
 				m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(5000);
 			} 
@@ -2959,9 +2959,7 @@ BOOL CSequenceMain::CapStage1_Run()
 		break;
 	case 4:		// MES 결과 확인.
 		if (g_objMesAgent.m_nMesCapStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesCapReg) {
-			g_dlgWork.Change_CapLotId();	// 정보 이동.
-			gData.nCapTrayLoad = 1;
-			g_objCommon.Save_CapShipData(1);
+			
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(5000);
 		}		
 		break;
@@ -3067,7 +3065,15 @@ BOOL CSequenceMain::CapStage1_Run()
 		}
 		break;
 	case 17:	// Position Check
-		if (m_pDX04->iCapStage1Exist && g_objCommon.Check_Position(AX_CAP_STAGE1_Z, 1)) {
+		if (m_pDX04->iCapStage1Exist && g_objCommon.Check_Position(AX_CAP_STAGE1_Z, 1)) 
+		{
+			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
+			{
+				g_dlgWork.Change_CapLotId();	// 정보 이동.
+				gData.nCapTrayLoad = 1;
+				g_objCommon.Save_CapShipData(1);
+			}
+			
 			m_tCapStage1Loop.Takt_Save(7, 8);
 			m_nCapStage1Case = 20; m_tCapStage1Loop.Set_LoopTime(10000);
 		}
@@ -3201,7 +3207,7 @@ BOOL CSequenceMain::CapStage2_Run()
 		if (g_objCommon.Check_Position(AX_CAP_STAGE2_X, 0) && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 1) && g_objCommon.Get_CapStageMasterSlaveOut(2)) {
 			if (!m_pDX02->iCapPort1SlideClose || !m_pDX02->iCapPort1LowCheck || m_pDX04->iCapStage2Exist) break;	// 인터락
 
-			if (gData.nCapTrayLoad ==0 || gData.nCapTrayLoad > gData.nCapUseTray) 
+			if (gData.nCapTrayLoad ==0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
 			{				
 				m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
 			}
@@ -3231,9 +3237,7 @@ BOOL CSequenceMain::CapStage2_Run()
 		break;
 	case 4:		// MES 결과 확인.
 		if (g_objMesAgent.m_nMesCapStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesCapReg) {
-			g_dlgWork.Change_CapLotId();	// 정보 이동.
-			gData.nCapTrayLoad = 1;
-			//g_objCommon.Save_CapShipData(1);
+		
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
 		}	
 		break;
@@ -3338,7 +3342,16 @@ BOOL CSequenceMain::CapStage2_Run()
 		}
 		break;
 	case 17:	// Position Check
-		if (m_pDX04->iCapStage2Exist && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 1)) {
+		if (m_pDX04->iCapStage2Exist && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 1)) 
+		{
+			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
+			{
+				g_dlgWork.Change_CapLotId();	// 정보 이동.
+				gData.nCapTrayLoad = 1;
+				g_objCommon.Save_CapShipData(1);
+			}
+			
+
 			m_tCapStage2Loop.Takt_Save(8, 8);
 			m_nCapStage2Case = 20; m_tCapStage2Loop.Set_LoopTime(10000);
 		}
@@ -4875,10 +4888,20 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			g_objCommon.Get_UnloadStageMasterSlaveOut(1) && !m_pDX05->iUnloadStage1Exist 
 			&& m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
+			if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray) // Ship Count 확인
+			{	
+				//if (gData.sShipLotID.GetLength() > 10) g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
+				m_nUnloadStage1Case = 15; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			} 
+			else 
+			{
+				gData.nShipTrayLoad++; g_objCommon.Save_CapShipData(2);
+				m_tUnloadStage1Loop.Takt_Start();
+				g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 2);
+				m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			}
 
-			m_tUnloadStage1Loop.Takt_Start();
-			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 2);
-			m_nUnloadStage1Case++; m_tUnloadStage1Loop.Set_LoopTime(5000);
+			
 
 		} else {
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
@@ -5003,17 +5026,15 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		{
 			threshold++;
 			if(threshold > 10) 
-			{
-				if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray) // Ship Count 확인
-				{	
-					//if (gData.sShipLotID.GetLength() > 10) g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
-					m_nUnloadStage1Case = 15; m_tUnloadStage1Loop.Set_LoopTime(5000);
-				} 
-				else 
+			{				
+				if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
 				{
-					gData.nShipTrayLoad++; g_objCommon.Save_CapShipData(2);
-					m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);	
+					g_dlgWork.Change_ShipLotId();	// 정보 이동.
+					gData.nShipTrayLoad = 1;
+					g_objCommon.Save_CapShipData(2);
 				}
+			
+				m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);				
 			}
 		}
 		else
@@ -5028,10 +5049,9 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		break;	
 	case 16: // MES 결과 확인.
 		if (g_objMesAgent.m_nMesShipStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesShipReg) {
-			g_dlgWork.Change_ShipLotId();	// 정보 이동.
-			gData.nShipTrayLoad = 1;
-			g_objCommon.Save_CapShipData(2);
-			m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);
+		
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 2);
+			m_nUnloadStage1Case = 3; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
 		break;		
 	//case 17:
@@ -5050,8 +5070,10 @@ BOOL CSequenceMain::UnloadStage1_Run()
 		return TRUE;
 
 	case 21:	// 안전 확인
-		if (m_nUnloadStage2Case <= 10 || m_nUnloadStage2Case > 52) {
-			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE1_Y)) {
+		if (m_nUnloadStage2Case <= 10 || m_nUnloadStage2Case > 52)
+		{
+			if (g_objAJinAXL.Is_Done(AX_UNLOAD_STAGE1_Y)) 
+			{
 				m_tUnloadStage1Loop.Takt_Start();
 				// Port와 Tray가 아슬아슬하여 부딪힐때가 있어 MoveDown에서 이동하도록 한다.
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 0);	// Move Down
@@ -5235,11 +5257,19 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			g_objCommon.Get_UnloadStageMasterSlaveOut(2) && !m_pDX05->iUnloadStage2Exist  &&
 			m_pDX03->iUnloadPort1SlideClose && m_pDX03->iUnlaodPort1LowCheck)
 		{
-			
+			if (gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)  // Ship 은 여기까지 오지 않고 대기 부등호 추가 
+			{	
+				//if (gData.sShipLotID.GetLength() > 10) g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
+				m_nUnloadStage2Case = 15; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			}
+			else 
+			{
+				gData.nShipTrayLoad++; g_objCommon.Save_CapShipData(2);
 				m_tUnloadStage2Loop.Takt_Start();
-				
 				g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);
 				m_nUnloadStage2Case++; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			}
+				
 			
 		} else {
 			if (!m_pDX03->iUnlaodPort1LowCheck) { g_dlgWork.PostMessage(UM_SHOW_MSG, 5, NULL); return FALSE;}
@@ -5364,16 +5394,13 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			threshold++;
 			if(threshold > 10) 
 			{
-				if (gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)  // Ship 은 여기까지 오지 않고 대기 부등호 추가 
-				{	
-					//if (gData.sShipLotID.GetLength() > 10) g_objLogFile.Save_BarcodeChkLog(gData.sShipLotID);
-					m_nUnloadStage2Case = 15; m_tUnloadStage2Loop.Set_LoopTime(5000);
-				}
-				else 
+				if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
 				{
-					gData.nShipTrayLoad++; g_objCommon.Save_CapShipData(2);
-					m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);	
-				}
+					g_dlgWork.Change_ShipLotId();	// 정보 이동.
+					gData.nShipTrayLoad = 1;
+					g_objCommon.Save_CapShipData(2);
+				}				
+				m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);			
 			}
 		}
 		else
@@ -5388,10 +5415,9 @@ BOOL CSequenceMain::UnloadStage2_Run()
 		break;	
 	case 16: // MES 결과 확인.
 		if (g_objMesAgent.m_nMesShipStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesShipReg) {
-			g_dlgWork.Change_ShipLotId();	// 정보 이동.
-			gData.nShipTrayLoad = 1;
-			//g_objCommon.Save_CapShipData(2);
-			m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);
+			
+			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);
+			m_nUnloadStage2Case = 3; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}
 		break;	
 	//case 17:

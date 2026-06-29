@@ -63,7 +63,6 @@ void CWorkDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STC_SHIP_CM_COUNT_S, m_stcShipCmCountS);
 	DDX_Control(pDX, IDC_BTN_SHIP_CLEAR, m_btnShipClear);
 
-	DDX_Control(pDX, IDC_BTN_MES_CANCEL, m_btnMesCancel);
 	DDX_Control(pDX, IDC_IMG_EQUIPMENT, m_imgEquipment);
 	DDX_Control(pDX, IDC_PIC_UPH_BACK, m_picUphBack);
 
@@ -152,7 +151,6 @@ BEGIN_MESSAGE_MAP(CWorkDlg, CDialogEx)
 	ON_MESSAGE(UM_SHOW_MSG, &CWorkDlg::OnShowMsg)
 	ON_BN_CLICKED(IDC_BUTTON1, &CWorkDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CWorkDlg::OnBnClickedButton2)
-	ON_BN_CLICKED(IDC_BTN_MES_CANCEL, &CWorkDlg::OnBnClickedMesCancel)
 	ON_STN_CLICKED(IDC_STC_LOAD_CELL_COUNT, &CWorkDlg::OnStnClickedLoadCellCnt)
 	ON_BN_CLICKED(IDC_BTN_LOAD_CELL_EDIT, &CWorkDlg::OnBnClickedLoadCellEdit)
 	ON_STN_CLICKED(IDC_LBL_CAP_LOT_0, &CWorkDlg::OnStnClickedLblCapLot0)
@@ -818,16 +816,7 @@ int CWorkDlg::Check_CapShipLotID(int nType, CString sBarID)
 	return nCount;
 }
 
-void CWorkDlg::OnBnClickedMesCancel()
-{
-	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 
-	if (m_rdoWorkStart.GetCheck()) {
-		g_objCommon.Show_MsgBox(1, "Auto Run 중엔 취소할 수 없습니다........");
-		return;
-	}
-	
-}
 
 void CWorkDlg::OnBnClickedRdoWorkStart()
 {
@@ -879,9 +868,7 @@ void CWorkDlg::OnBnClickedChkMesUse()
 		return;
 	}
 	INI.Set_Bool("OPTION", "MES_USE", m_chkMesUse.GetCheck());
-	g_objDataManager.Read_EquipData();
-
-	
+	g_objDataManager.Read_EquipData();	
 }
 
 void CWorkDlg::OnStnClickedLoadCellCnt()
@@ -927,6 +914,19 @@ BOOL CWorkDlg::Work_Start()
 	if (!g_objCommon.Check_MainDoor()) return FALSE;
 
 	if (gData.sOperID == "") { g_objCommon.Show_MsgBox(1, "작업자 ID가 입력되지 않았습니다. 확인후 진행하여 주십시오."); return FALSE; }
+
+	if(pEquipData->bUseMES)
+	{
+		if(!g_objMesAgent.Is_Connected() || !g_objMesAgent.Is_HostOnline())
+		{
+			g_objCommon.Show_MsgBox(1, "MES가 연결되지 않았습니다."); return FALSE; 
+		}		
+	}
+
+	if (!pEquipData->bUseMES  )
+	{
+		if (g_objCommon.Show_MsgBox(2, "MES Option을 끄고 진행하시겠습니까?") != IDOK) return FALSE;
+	}
 
 	DX_DATA_00 *pDX00 = g_objAJinAXL.Get_pDX00();
 	DX_DATA_01 *pDX01 = g_objAJinAXL.Get_pDX01();

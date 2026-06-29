@@ -86,7 +86,6 @@ public:
 	CStaticCS		m_stcDay[2];
 	CLedCS			m_ledVisionStatus[2];
 	CStaticCS		m_stcVisionResult[4];
-	CButtonCS		m_btnMesCancel;
 	CStaticCS		m_stcLoadCellCnt;
 	CButtonCS		m_btnLoadCellChkEdit;
 
@@ -132,7 +131,6 @@ protected:
 	afx_msg LRESULT OnShowMsg(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();
-	afx_msg void OnBnClickedMesCancel();
 	afx_msg void OnStnClickedLoadCellCnt();
 	afx_msg void OnBnClickedLoadCellEdit();
 
