@@ -517,10 +517,10 @@ void CHost::Set_S6F11_ControlState(int nState)
 	strSend += "    <CEID NAME=\"CEID\" VALUE=\"10101\" />" + CRLF;
 	strSend += "    <RPTID NAME=\"RPTID\" VALUE=\"10101\" />" + CRLF;
 	strSend += "    <DVLIST COUNT=\"5\">" + CRLF;
+	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"CONTROLSTATE\" VALUE=\"" + strState + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"REASONTEXT\" VALUE=\"\"/>" + CRLF;
-	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"REASONTEXT\" VALUE=\"\"/>" + CRLF;	
 	strSend += "      <DV NAME=\"UNITNO\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
@@ -558,8 +558,8 @@ void CHost::Set_S6F11_EquipState(int nState, CString sErrNo, CString sCategory, 
 	strSend += "    <CEID NAME=\"CEID\" VALUE=\"10108\" />" + CRLF;
 	strSend += "    <RPTID NAME=\"RPTID\" VALUE=\"10108\" />" + CRLF;
 	strSend += "    <DVLIST COUNT=\"11\">" + CRLF;
-	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"OPERATORID\" VALUE=\"" + gData.sOperId + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"TIME\" VALUE=\"" + strTime + "\" />" + CRLF;	
 	strSend += "      <DV NAME=\"PROCESSSTATE\" VALUE=\"" + strState + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"ALMLISTQTY\" VALUE=\"3\" />" + CRLF;
 	strSend += "      <DV NAME=\"DATANAME1\" VALUE=\"Alarm ID\" />" + CRLF;
@@ -568,7 +568,7 @@ void CHost::Set_S6F11_EquipState(int nState, CString sErrNo, CString sCategory, 
 	strSend += "      <DV NAME=\"DATAVALUE2\" VALUE=\"" + sCategory + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"DATANAME3\" VALUE=\"Alarm Text\" />" + CRLF;
 	strSend += "      <DV NAME=\"DATAVALUE3\" VALUE=\"" + sErrMsg + "\" />" + CRLF;
-	strSend += "      <DV NAME=\"UNITNO\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"UNITN\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
 	strSend += "</EIF>";
