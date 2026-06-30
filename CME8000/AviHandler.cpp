@@ -105,9 +105,7 @@ LRESULT CAviHandler::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 
 		CString strRecv = m_strRecvCmd.Mid(nStart + 1, nEnd - nStart - 1);
 		m_strRecvCmd.Delete(0, nEnd + 1);
-
 		
-
 		char chSep = ',';
 		CString strCmd, strOp;
 
@@ -122,27 +120,32 @@ LRESULT CAviHandler::OnUdpReceive(WPARAM wLocalPort, LPARAM lParam)
 		g_objLogFile.Save_AviHandlerLog(strLog);
 		///////////////////////////////////////////////////////////////////////
 
-		CString strArg[5];
-		for (int i = 0; i < 5; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
+		CString strArg[6];
+		for (int i = 0; i < 6; i++) AfxExtractSubString(strArg[i], strRecv, i + 2, chSep);
 
-		if (strCmd == "CONNECT") {
+		if (strCmd == "CONNECT")
+		{
 			if (strOp == "REQUEST")	Get_ConnectRequest();
 			if (strOp == "REPLY")	Get_ConnectReply();
 			if (strOp == "END")		Get_ConnectEnd();
-
-		} else if (strCmd == "STATUS") {
+		}
+		else if (strCmd == "STATUS") 
+		{
 			if (strOp == "REQUEST")	Get_StatusRequest();
 			if (strOp == "REPLY")	Get_StatusReply(strArg[0]);
 			if (strOp == "UPDATE")	Get_StatusUpdate(strArg[0]);
-
-		} else if (strCmd == "TIME") {
+		}
+		else if (strCmd == "TIME") 
+		{
 			if (strOp == "UPDATE")	Get_TimeUpdate(strArg[0]);
-
-		} else if (strCmd == "LOT") {
+		}
+		else if (strCmd == "LOT") 
+		{
 			if (strOp == "START")	Get_LotStart(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4]);
 			if (strOp == "END")		Get_LotEnd(strArg[0], strArg[1], strArg[2], strArg[3], strArg[4], strArg[5]);
 
-		} else if (strCmd == "TRAY") {
+		}
+		else if (strCmd == "TRAY") {
 			if (strOp == "LOAD")	Get_TrayLoad(strArg[0], strArg[1], strArg[2], strArg[3]);
 			if (strOp == "END")		Get_TrayEnd(strArg[0], strArg[1]);
 
