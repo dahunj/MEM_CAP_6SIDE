@@ -646,7 +646,7 @@ void CHost::Set_S6F11_LotEnd(CString sLotId, CString sRecipe, int nCount, int nO
 	strTotal.Format("%d", nCount);
 	strReal.Format("%d", nOk + nNg);
 	strGood.Format("%d", nOk);
-	strVNg.Format("%d", nNg - nBNg);	// AVI NG
+	strVNg.Format("%d", nNg );	// AVI NG
 	strBNg.Format("%d", nBNg);			// Blade NG
 	
 	CString strEndPort = "3";	//1: Loader, 2:Unloader(AVI only), 3:CapAttach-Inline
