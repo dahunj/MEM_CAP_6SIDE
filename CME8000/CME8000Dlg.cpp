@@ -1175,7 +1175,7 @@ void CCME8000Dlg::Set_NoWork()
 	if (g_dlgNoWork.IsWindowVisible()) { dwNoWorkBegin = GetTickCount(); return; }
 
 	int nTerm = (int)(GetTickCount() - dwNoWorkBegin);
-	if (nTerm < pEquipData->nNoWorkTime * 1000) return;	// 초 -> 밀리초
+	if (nTerm < pEquipData->nNoWorkTime * 60 * 1000) return;	// 초 -> 밀리초
 
 	g_dlgNoWork.Set_NoWorkAuto(TRUE);
 	g_dlgNoWork.ShowWindow(SW_SHOW);
