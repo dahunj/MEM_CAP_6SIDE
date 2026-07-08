@@ -148,15 +148,6 @@ LRESULT CHandler::OnServerReceive(WPARAM wLocalPort, LPARAM lClientIdx)
 		} else if (strCmd == "CM") {
 			if (strOp == "END") Get_CmEnd(strA[0], strA[1], strA[2], strA[3], strA[4], strA[5]);
 
-		} else if (strCmd == "LOTID") {	// Retest Lot-ID
-			if (strOp == "REQUEST") {
-				int nTotal = atoi(strA[4]);
-				int nCount = atoi(strA[5]);
-				if (nTotal < 1 || nTotal > 100 || nCount < 1 || nCount > 100) return 0;	// Error
-				for (int i = 0; i < nCount; i++) AfxExtractSubString(gData.sReCmId[i], strRecv, i + 8, chSep);
-				Get_LotIdRequest(strA[0], strA[1], strA[2], strA[3], nTotal, nCount);
-			}
-
 		} else if (strCmd == "CAPID") {		// Cap-ID
 			if (strOp == "REQUEST")  Get_CapIdRequest(strA[0]);
 			if (strOp == "COMPLETE") Get_CapIdComplete(strA[0]);
