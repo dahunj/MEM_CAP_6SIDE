@@ -848,6 +848,7 @@ void CHost::Set_S6F11_CmEnd(CString sLotId, int nTray, int nPocket, CString sRes
 	strSend += "      <DV NAME=\"REASONCODE\" VALUE=\"" + sNgCode + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"MODULEID\" VALUE=\"" + sCmId + "\" />" + CRLF;
 	strSend += "      <DV NAME=\"UNITNO\" VALUE=\"" + strUnitNo + "\" />" + CRLF;
+	strSend += "      <DV NAME=\"HEADID\" VALUE=\"\" />" + CRLF;
 	strSend += "      <DV NAME=\"DATAQTY\" VALUE=\"0\" />" + CRLF;
 	strSend += "    </DVLIST>" + CRLF;
 	strSend += "  </ITEM>" + CRLF;
