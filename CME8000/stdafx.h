@@ -78,9 +78,9 @@
 
 #define MAIN_VERSION	_T("V 2.2.0.0 MEM26") //MEM26 
 //
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 
 // #define BARCODE_CHECK   	// Cap/Ship Barcode Check
