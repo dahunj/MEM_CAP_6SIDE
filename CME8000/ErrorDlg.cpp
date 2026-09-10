@@ -253,6 +253,17 @@ void CErrorDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 			g_objSequenceMain.Set_MainRunCase(AUTO_ASSY_PICKER, 75);
 		}
 
+		if(m_nErrNo == 9011)
+		{
+			strMes.Format("==> Reason[%s] Text[%s]..", gMes.sHostFailCode, gMes.sHostFailText);
+		}
+
+		if(m_nErrNo == 9012)
+		{
+			strMes.Format("==> Reason[%s] Text[%s]..", gMes.sHostFailCode, gMes.sHostFailText);
+		}
+
+		
 // 		if (m_nErrNo == 3606 || m_nErrNo == 3706 || m_nErrNo == 6220) m_btnErrToManual.SetWindowText("Skip");
 // 		else m_btnErrToManual.SetWindowText("To Manual");
 
@@ -387,13 +398,32 @@ void CErrorDlg::OnBnClickedBtnErrSkip()
 
 void CErrorDlg::OnBnClickedBtnErrRetry()
 {
-// 	g_objLogFile.Save_HandlerLog("[Error Mode] RETRY button push");
-// 
-// 	switch (m_nErrNo) {
-// 	}
-// 
-// 	ShowWindow(SW_HIDE);
-// 	g_dlgWork.Set_AutoRun(TRUE);
+	g_objLogFile.Save_HandlerLog("[Error Mode] RETRY button push");
+
+	switch (m_nErrNo)
+	{
+	case 9011:
+		{
+			m_btnErrRetry.ShowWindow(SW_SHOW);
+			int nCase1 = g_objSequenceMain.Get_MainRunCase(AUTO_CAP_STAGE1);
+			int nCase2 = g_objSequenceMain.Get_MainRunCase(AUTO_CAP_STAGE2);
+
+			if(nCase1 >2 && nCase1 < 5) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE1, 3);
+			if(nCase2 >2 && nCase2 < 5) g_objSequenceMain.Set_MainRunCase(AUTO_CAP_STAGE1, 3);			
+		}
+	case 9012:
+		{
+			m_btnErrRetry.ShowWindow(SW_SHOW);
+			int nCase1 = g_objSequenceMain.Get_MainRunCase(AUTO_UNLOAD_STAGE1);
+			int nCase2 = g_objSequenceMain.Get_MainRunCase(AUTO_UNLOAD_STAGE2);
+
+			if(nCase1 > 15 && nCase1 < 17) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE1, 15);
+			if(nCase2 > 15 && nCase2 < 17) g_objSequenceMain.Set_MainRunCase(AUTO_UNLOAD_STAGE2, 15);	
+		}
+	}
+
+	ShowWindow(SW_HIDE);
+	g_dlgWork.Set_AutoRun(TRUE);
 }
 
 void CErrorDlg::OnBnClickedBtnErrOk()

@@ -2969,6 +2969,7 @@ BOOL CSequenceMain::CapStage1_Run()
 
 			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
 			{				
+				
 				m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(5000);
 			} 
 			else
@@ -2989,13 +2990,20 @@ BOOL CSequenceMain::CapStage1_Run()
 
 		if (g_objMesAgent.Is_HostOnline() && m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg)// MES Cap 자재등록 사용
 		{				
-						
+				g_dlgWork.Get_CapLotId();	
 		}
 		m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(10000);
 		break;
 	case 4:		// MES 결과 확인.
 		if (g_objMesAgent.m_nMesCapStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesCapReg) {
 			
+			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
+			{
+				g_dlgWork.Change_CapLotId();	// 정보 이동.
+				gData.nCapTrayLoad = 1;
+				g_objCommon.Save_CapShipData(1);
+			}		
+
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(5000);
 		}		
 		break;
@@ -3096,7 +3104,7 @@ BOOL CSequenceMain::CapStage1_Run()
 			
 			gData.sCIDCapStage[0] = gData.sCapLotID;
 			Init_CapTray();
-			g_dlgWork.Get_CapLotId();	
+		
 			g_objCommon.Move_Position(AX_CAP_STAGE1_Z, 1);
 			m_nCapStage1Case++; m_tCapStage1Loop.Set_LoopTime(10000);
 		}
@@ -3104,12 +3112,7 @@ BOOL CSequenceMain::CapStage1_Run()
 	case 17:	// Position Check
 		if (m_pDX04->iCapStage1Exist && g_objCommon.Check_Position(AX_CAP_STAGE1_Z, 1)) 
 		{
-			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
-			{
-				g_dlgWork.Change_CapLotId();	// 정보 이동.
-				gData.nCapTrayLoad = 1;
-				g_objCommon.Save_CapShipData(1);
-			}
+			
 			
 			m_tCapStage1Loop.Takt_Save(7, 8);
 			m_nCapStage1Case = 20; m_tCapStage1Loop.Set_LoopTime(10000);
@@ -3246,6 +3249,7 @@ BOOL CSequenceMain::CapStage2_Run()
 
 			if (gData.nCapTrayLoad ==0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
 			{				
+				
 				m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
 			}
 			else
@@ -3268,13 +3272,20 @@ BOOL CSequenceMain::CapStage2_Run()
 
 		if (g_objMesAgent.Is_HostOnline() && m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg)// MES Cap 자재등록 사용
 		{				
-							
+			g_dlgWork.Get_CapLotId();
+
 		}
 		m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(10000);
 		break;
 	case 4:		// MES 결과 확인.
 		if (g_objMesAgent.m_nMesCapStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesCapReg) {
 		
+			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
+			{
+				g_dlgWork.Change_CapLotId();	// 정보 이동.
+				gData.nCapTrayLoad = 1;
+				g_objCommon.Save_CapShipData(1);
+			}
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
 		}	
 		break;
@@ -3373,7 +3384,6 @@ BOOL CSequenceMain::CapStage2_Run()
 		if (m_pDX04->iCapStage2Exist && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 0)) {
 			m_tCapStage2Loop.Takt_Start();			
 			gData.sCIDCapStage[1] = gData.sCapLotID;
-			g_dlgWork.Get_CapLotId();
 			Init_CapTray();
 			g_objCommon.Move_Position(AX_CAP_STAGE2_Z, 1);
 			m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(10000);
@@ -3382,14 +3392,6 @@ BOOL CSequenceMain::CapStage2_Run()
 	case 17:	// Position Check
 		if (m_pDX04->iCapStage2Exist && g_objCommon.Check_Position(AX_CAP_STAGE2_Z, 1)) 
 		{
-			if (gData.nCapTrayLoad == 0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
-			{
-				g_dlgWork.Change_CapLotId();	// 정보 이동.
-				gData.nCapTrayLoad = 1;
-				g_objCommon.Save_CapShipData(1);
-			}
-			
-
 			m_tCapStage2Loop.Takt_Save(8, 8);
 			m_nCapStage2Case = 20; m_tCapStage2Loop.Set_LoopTime(10000);
 		}
@@ -5065,12 +5067,7 @@ BOOL CSequenceMain::UnloadStage1_Run()
 			threshold++;
 			if(threshold > 10) 
 			{				
-				if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
-				{
-					g_dlgWork.Change_ShipLotId();	// 정보 이동.
-					gData.nShipTrayLoad = 1;
-					g_objCommon.Save_CapShipData(2);
-				}
+				
 			
 				m_nUnloadStage1Case = 20; m_tUnloadStage1Loop.Set_LoopTime(5000);				
 			}
@@ -5088,6 +5085,13 @@ BOOL CSequenceMain::UnloadStage1_Run()
 	case 16: // MES 결과 확인.
 		if (g_objMesAgent.m_nMesShipStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesShipReg) {
 		
+			if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
+			{
+				g_dlgWork.Change_ShipLotId();	// 정보 이동.
+				gData.nShipTrayLoad = 1;
+				g_objCommon.Save_CapShipData(2);
+			}
+
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE1_Z, 2);
 			m_nUnloadStage1Case = 3; m_tUnloadStage1Loop.Set_LoopTime(5000);
 		}
@@ -5432,12 +5436,7 @@ BOOL CSequenceMain::UnloadStage2_Run()
 			threshold++;
 			if(threshold > 10) 
 			{
-				if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
-				{
-					g_dlgWork.Change_ShipLotId();	// 정보 이동.
-					gData.nShipTrayLoad = 1;
-					g_objCommon.Save_CapShipData(2);
-				}				
+							
 				m_nUnloadStage2Case = 20; m_tUnloadStage2Loop.Set_LoopTime(5000);			
 			}
 		}
@@ -5454,6 +5453,12 @@ BOOL CSequenceMain::UnloadStage2_Run()
 	case 16: // MES 결과 확인.
 		if (g_objMesAgent.m_nMesShipStatus == 2 || !g_objMesAgent.Is_HostOnline() || !m_pEquipData->bUseMesShipReg) {
 			
+			if ( gData.nShipTrayLoad == 0 || gData.nShipTrayLoad >= gData.nShipUseTray)
+			{
+				g_dlgWork.Change_ShipLotId();	// 정보 이동.
+				gData.nShipTrayLoad = 1;
+				g_objCommon.Save_CapShipData(2);
+			}	
 			g_objCommon.Move_Position(AX_UNLOAD_STAGE2_Z, 2);
 			m_nUnloadStage2Case = 3; m_tUnloadStage2Loop.Set_LoopTime(5000);
 		}

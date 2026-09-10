@@ -245,7 +245,7 @@ void CMesAgent::Get_CapIdFail(CString sCapId, CString sCode, CString sText)
 	m_nMesCapStatus = 0;
 	gMes.sHostFailCode = sCode;
 	gMes.sHostFailText = sText;
-	// 	g_objCommon.Show_Error(9011);
+	g_objCommon.Show_Error(9011);
 }
 
 void CMesAgent::Get_ShipIdSucess(CString sShipId)
@@ -258,7 +258,7 @@ void CMesAgent::Get_ShipIdFail(CString sShipId, CString sCode, CString sText)
 	m_nMesShipStatus = 0;
 	gMes.sHostFailCode = sCode;
 	gMes.sHostFailText = sText;
-	// 	g_objCommon.Show_Error(9012);
+	g_objCommon.Show_Error(9012);
 }
 
 //---------------------------------------------------------

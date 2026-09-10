@@ -673,10 +673,15 @@ void CWorkDlg::OnStnClickedCapLotIdS()
 	CString strKey;
 	if (g_objCommon.Show_KeyPad(strKey) != IDOK) return;
 
+
+
 	/*int nCapCnt = Check_CapShipLotID(1, strKey);
 	if (nCapCnt < 1) return;*/
 
 	m_stcCapLotIdS.SetWindowText(strKey);
+	gData.sCapLotID = strKey;
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeRequest(gData.sCapLotID);	// 자재 등록 요청
 }
 
 void CWorkDlg::OnStnClickedCapTrayCountS()
@@ -734,6 +739,9 @@ void CWorkDlg::OnStnClickedShipLotIdS()
 	//if (nCapCnt < 1) return;
 
 	m_stcShipLotIdS.SetWindowText(strKey);
+	gData.sShipLotID = strKey;
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeRequest(gData.sShipLotID);	// 자재 등록 요청
 }
 
 void CWorkDlg::OnStnClickedShipTrayCountS()
@@ -1489,7 +1497,7 @@ void CWorkDlg::Get_CapLotId()
 	gData.sCapLotID = strTemp;
 
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeRequest(gData.sCapLotID);	// 자재 등록 요청
+	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeComplete(gData.sCapLotID);
 }
 
 void CWorkDlg::Get_ShipLotId()
@@ -1498,8 +1506,7 @@ void CWorkDlg::Get_ShipLotId()
 	m_stcShipLotIdS.GetWindowText(strTemp);
 	gData.sShipLotID = strTemp;
 
-	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeRequest(gData.sShipLotID);	// 자재 등록 요청
+	
 	
 }
 
@@ -1523,7 +1530,7 @@ void CWorkDlg::Change_CapLotId()
 	gData.nCapUseTray = atoi(strTemp);
 	
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-	if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeComplete(gData.sCapLotID);
+	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeComplete(gData.sShipLotID);
 	
 }
 
@@ -1546,8 +1553,7 @@ void CWorkDlg::Change_ShipLotId()
 	m_stcShipTrayCountS.SetWindowText("0");
 	gData.nShipUseTray = atoi(strTemp);	
 
-	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
-	if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeComplete(gData.sShipLotID);
+	
 	
 }
 
@@ -1697,6 +1703,9 @@ LRESULT CWorkDlg::OnUpdateBarcode(WPARAM wParam, LPARAM lParam)
 		if (gData.nCapUseCm % gData.nCapMaxCount) gData.nCapUseTray++;
 		strTemp.Format("%d", gData.nCapUseTray); m_stcCapTrayCountS.SetWindowText(strTemp);
 
+		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+		if(pEquipData->bUseMES) g_objMesAgent.Set_CapChangeRequest(gData.sCapLotID);	// 자재 등록 요청
+
 	} else if (m_bShipLotIdInput) {
 		m_stcShipLotIdS.GetWindowText(strTemp);
 		if (strTemp == sBarcode) return 0;
@@ -1715,6 +1724,9 @@ LRESULT CWorkDlg::OnUpdateBarcode(WPARAM wParam, LPARAM lParam)
 
 		gData.nShipUseCm = gData.nShipUseTray * gData.nShipMaxCount;
 		strTemp.Format("%d", gData.nShipUseCm); m_stcShipCmCountS.SetWindowText(strTemp);
+
+		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+		if(pEquipData->bUseMES) g_objMesAgent.Set_ShipChangeRequest(gData.sShipLotID);	// 자재 등록 요청
 	}
 
 	return 0;
