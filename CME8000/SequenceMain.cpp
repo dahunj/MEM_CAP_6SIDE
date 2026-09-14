@@ -3249,7 +3249,6 @@ BOOL CSequenceMain::CapStage2_Run()
 
 			if (gData.nCapTrayLoad ==0 || gData.nCapTrayLoad >= gData.nCapUseTray) 
 			{				
-				
 				m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(5000);
 			}
 			else
@@ -3273,7 +3272,6 @@ BOOL CSequenceMain::CapStage2_Run()
 		if (g_objMesAgent.Is_HostOnline() && m_pEquipData->bUseMES && m_pEquipData->bUseMesCapReg)// MES Cap 자재등록 사용
 		{				
 			g_dlgWork.Get_CapLotId();
-
 		}
 		m_nCapStage2Case++; m_tCapStage2Loop.Set_LoopTime(10000);
 		break;

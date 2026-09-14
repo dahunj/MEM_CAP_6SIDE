@@ -212,7 +212,7 @@ void COperatorDlg::OnStnClickedStcOperOperId()
 	{
 		gData.nLogInLevel = 9300;
 	}
-
+	g_objMesAgent.Set_OperUpdate(gData.sOperID);
 	CString sLog;
 	sLog.Format("[Operator] Operator ID Input....  OperID[%s]", gData.sOperID);
 	g_objLogFile.Save_HandlerLog(sLog);
