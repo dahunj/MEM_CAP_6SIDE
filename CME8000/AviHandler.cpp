@@ -285,9 +285,11 @@ void CAviHandler::Get_VisionAlarmOn()
 	pEquipData->bUseVisionCmAlign = TRUE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
-	pEquipData->bUseVisionAlignAlarm = TRUE;
+	pEquipData->bUseVisionAlignAlarm = FALSE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
 
+	g_objDataManager.Read_EquipData();
+	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_VIsionAlarmOff()
@@ -300,11 +302,14 @@ void CAviHandler::Get_VIsionAlarmOff()
 	pEquipData->bUseInlineMode = TRUE;
 	INI.Set_Bool("OPTION", "INLINE_MODE", pEquipData->bUseInlineMode);
 
-	pEquipData->bUseVisionCmAlign = TRUE;
+	pEquipData->bUseVisionCmAlign = FALSE;
 	INI.Set_Bool("OPTION", "VISION_CM_ALIGN", pEquipData->bUseVisionCmAlign);
 
 	pEquipData->bUseVisionAlignAlarm = FALSE;
 	INI.Set_Bool("OPTION","VISION_ALIGN_ALARM", pEquipData->bUseVisionAlignAlarm);
+
+	g_objDataManager.Read_EquipData();
+	g_objDataManager.Read_MoveData();
 }
 
 void CAviHandler::Get_TimeUpdate(CString sTime)
@@ -394,6 +399,16 @@ void CAviHandler::Set_TrayUnload()
 
 	gData.bAviTrayLoad = FALSE;
 }
+
+void CAviHandler::Set_PullForceEnd()
+{
+	CString	strSendCmd;
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+
+	strSendCmd.Format("PULLFORCE,END,%s,%d", pEquipData->sAviIp, UDP_AVI_LPORT);
+	Send_Command(strSendCmd);	
+}
+
 
 void CAviHandler::Set_ApdReply()
 {
