@@ -728,6 +728,7 @@ void CSetupEquipDlg::OnBnClickedChkUseDryRun()
 	if(m_chkUseDryRun.GetCheck())
 	{
 		pEquipData->bUseDryRun = TRUE;
+		gData.bUseDryRun = pEquipData->bUseDryRun;
 		INI.Set_Bool("OPTION", "DRY_RUN", TRUE);
 		
 		pEquipData->bUseMES = FALSE;
@@ -743,6 +744,7 @@ void CSetupEquipDlg::OnBnClickedChkUseDryRun()
 	else
 	{
 		pEquipData->bUseDryRun = FALSE;
+		gData.bUseDryRun = pEquipData->bUseDryRun;
 		INI.Set_Bool("OPTION", "DRY_RUN", FALSE);
 
 		pEquipData->bUseMES = FALSE;
