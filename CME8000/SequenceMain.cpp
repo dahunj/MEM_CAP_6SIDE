@@ -729,8 +729,10 @@ BOOL CSequenceMain::Check_IndexModule()
 BOOL CSequenceMain::Check_CapInspAllGood()
 {
 	// CM Vision, Align Offset 중 하나라도 꺼져있으면 Offset 기능 사용하면 안된다.
-	if (!m_pEquipData->bUseVisionAlignOffset || !m_pEquipData->bUseVisionCmAlign) {
-		for (int i = 0; i < PICK; i++) { 
+	if (!m_pEquipData->bUseVisionAlignOffset || !m_pEquipData->bUseVisionCmAlign)
+	{
+		for (int i = 0; i < PICK; i++) 
+		{ 
 			gData.dAlignDiffX[i] = gData.dAlignDiffY[i] = 0.0;
 			gData.dAssyPickOffsetX[i] = gData.dAssyPickOffsetY[i] = 0.0;
 			gData.bCapAlignNg[i] = FALSE;
@@ -1156,7 +1158,7 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 	if (!m_pEquipData->bUseInlineMode)	g_dlgWork.Enable_UserInput(nPortNo, TRUE);
 
 	g_dlgWork.PostMessage(UM_UPDATE_UPH, NULL, NULL);
-	g_objAviHandler.Set_PullForceEnd();
+
 //	Beep_Post(1000);
 }
 

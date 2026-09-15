@@ -202,7 +202,6 @@ typedef struct
 	int		nCmInspPickNo2;
 	int		nCapInspPickNo1;
 	int		nCapInspPickNo2;
-
 	
 
 	BOOL	bAviTrayLoad;

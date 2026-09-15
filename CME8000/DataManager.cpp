@@ -206,8 +206,8 @@ BOOL CDataManager::Read_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) { strKey.Format("%d%d", i, j); m_EquipData.bTower[i][j] = INI.Get_Bool("TOWER", strKey, FALSE); }
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) { strKey.Format("%d%d", i, j); m_EquipData.bBuzzer[i][j] = INI.Get_Bool("BUZZER", strKey, FALSE); }
 
-	m_EquipData.sPasswordOP = INI.Get_String("HIDDEN", "PASSWORD_MT", "");
-	m_EquipData.sPasswordSy = INI.Get_String("HIDDEN", "PASSWORD_SI", "");
+	m_EquipData.sPasswordOP = INI.Get_String("HIDDEN", "PASSWORD_OP", "");
+	m_EquipData.sPasswordSy = INI.Get_String("HIDDEN", "PASSWORD_ENGR", "");
 
 	m_EquipData.nLoadCellChkCnt = INI.Get_Integer("LOAD_CELL", "CHECK_COUNT", 0);
 	for (int i = 0; i < PICK; i++) { strKey.Format("%d", i); gData.dAssyLoadCell[i] = INI.Get_Double("ASSY_LOAD_CELL", strKey, 0.0); }
@@ -217,8 +217,6 @@ BOOL CDataManager::Read_EquipData()
 	gData.nCapMaxCount = CT_Y * CT_X;	// Tray 배열 (4x7)
 	gData.STY =  ST_Y;
 	gData.nShipMaxCount = gData.STY * ST_X;	// Tray 배열 (3x7 or 3x6)
-	
-
 
 	//doorinterlock log
 
@@ -227,8 +225,7 @@ BOOL CDataManager::Read_EquipData()
 	if (gDoorLock.nOpenStart == 1 && m_EquipData.bUseDoorLock == TRUE) 
 		g_objLogFile.Save_Interlock(3);
 
-		
-	pMainDlg->Display_EquipName();
+
 
 	return TRUE;
 }

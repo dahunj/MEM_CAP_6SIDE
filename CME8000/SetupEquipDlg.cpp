@@ -433,23 +433,17 @@ void CSetupEquipDlg::OnStnClickedStcShowHidden()
 {
 	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
 	int nOpPassword = atoi(pEquipData->sPasswordOP);
-	if (m_grpHidden.IsWindowVisible()) 
-	{
+	if (m_grpHidden.IsWindowVisible()) {
 		m_chkUseDryRun.ShowWindow(SW_HIDE);
-
 		m_grpHidden.ShowWindow(SW_HIDE);
 		m_lblPasswordMt.ShowWindow(SW_HIDE);
 		m_stcPasswordMt.ShowWindow(SW_HIDE);
 		if (gData.nLogInLevel == nOpPassword) return;
 		m_lblPasswordSi.ShowWindow(SW_HIDE);
 		m_edtPasswordSi.ShowWindow(SW_HIDE);
-	} 
-	else 
-	{
+	} else {
 		m_chkUseDryRun.ShowWindow(SW_SHOW);
-
 		m_grpHidden.ShowWindow(SW_SHOW);
-
 		m_lblPasswordMt.ShowWindow(SW_SHOW);
 		m_stcPasswordMt.ShowWindow(SW_SHOW);
 		if (gData.nLogInLevel == nOpPassword) return;
@@ -491,14 +485,11 @@ void CSetupEquipDlg::Display_EquipData()
 	m_chkUseVisionCapDir.SetCheck(pEquipData->bUseVisionCapDir);
 	m_chkUseVisionCmAlign.SetCheck(pEquipData->bUseVisionCmAlign);
 	m_chkUseVisionAlignAlarm.SetCheck(pEquipData->bUseVisionAlignAlarm);
-	m_chkUseVisionAlignOffset.SetCheck(pEquipData->bUseVisionAlignOffset);
+	
 
 	strData.Format("%d", pEquipData->nInspectCmScanTimes); m_stcCMVision[0].SetWindowTextA(strData); // scan count 
 	strData.Format("%d", pEquipData->nInspectCmLotTimes); m_stcCMVision[1].SetWindowTextA(strData);
 	strData.Format("%d", pEquipData->nInspectCmMinutes); m_stcCMVision[2].SetWindowTextA(strData); 
-	m_stcCMVision[0].EnableWindow(FALSE);
-	m_stcCMVision[1].EnableWindow(FALSE);
-	m_stcCMVision[2].EnableWindow(FALSE);
 
 	m_chkUseTrayPickerTurn.SetCheck(pEquipData->bUseTrayPickerTurn);
 	m_chkUseCapPickerTurn.SetCheck(pEquipData->bUseCapPickerTurn);
@@ -629,11 +620,10 @@ void CSetupEquipDlg::Save_EquipData()
 	for (int i = 0; i < 6; i++) for (int j = 0; j < 4; j++) { strKey.Format("%d%d", i, j); INI.Set_Bool("TOWER", strKey, m_chkTower[i][j].GetCheck()); }
 	for (int i = 0; i < 5; i++) for (int j = 0; j < 6; j++) { strKey.Format("%d%d", i, j); INI.Set_Bool("BUZZER", strKey, m_chkBuzzer[i][j].GetCheck()); }
 
-	m_stcPasswordMt.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_MT", strData);
-	m_edtPasswordSi.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_SI", strData);
+	m_stcPasswordMt.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_OP", strData);
+	m_edtPasswordSi.GetWindowText(strData); INI.Set_String("HIDDEN", "PASSWORD_ENGR", strData);
 
 	m_stcVacOffDelay[0].GetWindowText(strData);
-	g_objMES.Save_AviRmsData("Cap Clean Blowing Time", strData);
 
 	g_objLogFile.Save_HandlerLog("[Setup Equip] Save Click");
 
@@ -719,6 +709,7 @@ void CSetupEquipDlg::OnBnClickedChkUseDryRun()
 	if(m_chkUseDryRun.GetCheck())
 	{
 		pEquipData->bUseDryRun = TRUE;
+		gData.bUseDryRun = pEquipData->bUseDryRun;
 		INI.Set_Bool("OPTION", "DRY_RUN", TRUE);
 		
 		pEquipData->bUseMES = FALSE;
@@ -730,11 +721,11 @@ void CSetupEquipDlg::OnBnClickedChkUseDryRun()
 		pEquipData->bUseVisionCmAlign = FALSE;
 		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", FALSE);
 
-		
 	}
 	else
 	{
 		pEquipData->bUseDryRun = FALSE;
+		gData.bUseDryRun = pEquipData->bUseDryRun;
 		INI.Set_Bool("OPTION", "DRY_RUN", FALSE);
 
 		pEquipData->bUseMES = FALSE;
@@ -745,7 +736,7 @@ void CSetupEquipDlg::OnBnClickedChkUseDryRun()
 
 		pEquipData->bUseVisionCmAlign = TRUE;
 		INI.Set_Bool("OPTION", "VISION_CM_ALIGN", TRUE);
-
+		
 	}
 
 	Cancel_EquipData();

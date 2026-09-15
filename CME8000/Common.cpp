@@ -260,8 +260,6 @@ int CCommon::Show_NumPad(CString sOld, CString &sNew, int nAxis)
 
 int CCommon::Show_KeyPad(CString &sKey)
 {
-	
-
 	CKeyPadDlg dlgKeyPad;
 	if (dlgKeyPad.DoModal() != IDOK) return IDCANCEL;
 
@@ -271,8 +269,8 @@ int CCommon::Show_KeyPad(CString &sKey)
 
 int CCommon::Show_Password(int &nUser)
 {
-	if(gData.sOperID == "SY")
-	{
+	if(gData.sOperID == "SY/Synapse")
+	{        
 		return IDOK;
 	}    
 
@@ -298,7 +296,7 @@ BOOL CCommon::Check_MainEmgAir()
 
 BOOL CCommon::Check_MainDoor(BOOL bAuto)
 {
-	if(gData.sOperID == "SY")
+	if(gData.sOperID == "SY/Synapse")
 	{
 		return TRUE;
 	}    
