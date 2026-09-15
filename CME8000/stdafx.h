@@ -55,6 +55,11 @@
 
 #include <math.h>
 
+#include <dbghelp.h>
+#include <stdio.h>
+#include <time.h>
+#pragma comment(lib, "Dbghelp.lib")
+
 #ifdef _DEBUG
 	#pragma comment(lib, "CSControlsD.lib")
 	#pragma comment(lib, "CSIniFileD.lib")
@@ -71,11 +76,11 @@
 	#pragma comment(lib, "CSGridR.lib")
 #endif
 
-#define MAIN_VERSION	_T("V 2.1.0.5 MEM26")
+#define MAIN_VERSION	_T("V 2.1.0.7 MEM26")
 //
-#define AJIN_BOARD_USE
-#define LOT_BARCODE_USE
-#define LOAD_CELL_USE
+//#define AJIN_BOARD_USE
+//#define LOT_BARCODE_USE
+//#define LOAD_CELL_USE
 
 // 테스트 런 옵션
 //#define DRY_RUN_TEST		// Dry Run Test 시 사용
@@ -94,7 +99,8 @@ const int LT_X = 4, LT_Y = 3, CT_X = 4, CT_Y = 7,  ST_X = 4, ST_Y = 6, PICK = 4;
 
 extern CString gsCurrentDir;	// 현재 프로젝트 폴더
 
-typedef struct {
+typedef struct
+{
 	CString	sLotID[2];
 	CString	sOperID;		// Operator
 	CString	sRecipe;		// Recipe Item
@@ -275,7 +281,9 @@ typedef struct {
 	CString		sInspectCmLotIDPrevious;
 	CString		sInspectCmLotIDLater;
 	BOOL		bReload[1]; // Vision 재시작시 Reload (load complete 재시도)
-	
+
+	BOOL		bUseDryRun;
+	int			nLogInLevel;
 } GLOVAL_DATA;
 
 typedef struct {
@@ -285,8 +293,15 @@ typedef struct {
 	DWORD	dwLotStart[2];
 	DWORD	dwLotEnd[2];
 	int		nTrayCount[2];
-	int		nCmCount[2];
-	double  dTackTime;
+	int		nCmCount[2];	
+
+	double  dTactTime_StoE;
+	double  dTactTime_RunTime;
+	double  dTactTime_Unload; //Start to End 
+	int		nAlmCnt[2];
+
+	DWORD	dwFirstUnload[2];
+
 	int		nGoodCount[2];
 	int		nNgCount[2];
 	int		nCapFailCount[2];			// Cap Tilt Error Count
@@ -295,7 +310,7 @@ typedef struct {
 
 	int		nErrorCount;
 	DWORD	dwRunTime;
-	DWORD	dwStopTime;
+	DWORD	dwStopTime[2]; // port 1, 2
 	DWORD	dwErrorTime;
 
 	BOOL	bLotEndComplete[2];
@@ -304,6 +319,7 @@ typedef struct {
 
 	DWORD	dwTaktData[4];	// 0:Load, 1:Assembly, 2:Unload, 3:Index
 	BOOL	bTaktDone[3];	// 0:Load, 1:Assembly, 2:Unload
+
 } GLOVAL_LOT;
 
 typedef struct {
@@ -319,6 +335,8 @@ typedef struct {
 
 	double  dMotionChkPos;
 	double  dMotionPos[35];
+
+
 } GLOVAL_ALM;
 
 typedef struct {

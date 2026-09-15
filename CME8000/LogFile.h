@@ -33,7 +33,7 @@ public:
 	void Save_ECMTracking(CString sLog, int nTrayCount, int nPosX, int nPosY, int nPortNo, int nTrayNo, int nCmNo);
 	void Save_Interlock(int nType);	
 	void Save_PCLog(int nPNo, CString sLog);
-	void Save_MCC(CString sLog);
+	void Save_SeqLog(CString sLog);
 
 	void Save_JobListExcel(CString sLog);
 	void Save_AverageCycle(int nPNo);

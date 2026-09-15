@@ -10,6 +10,7 @@
 #include "Common.h"
 
 #include "SetupDlg.h"
+#include "DataManager.h"
 
 // CSetupMotionTabDlg 대화 상자입니다.
 
@@ -208,16 +209,24 @@ void CSetupMotionTabDlg::OnShowWindow(BOOL bShow, UINT nStatus)
 		strText.Format("%0.1lf", pParam->dAccel);
 		m_stcAccel[i].SetWindowText(strText);
 
-		if (g_dlgSetup.Get_LoginUser() == 2) {	// SI User
-			m_stcAbsDist[i].EnableWindow(TRUE);
-			m_btnAbsMove[i].EnableWindow(TRUE);
-			m_btnJogP[i].EnableWindow(TRUE);
-			m_btnJogN[i].EnableWindow(TRUE);
-		} else {
+		EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+		int nOpPassword = atoi(pEquipData->sPasswordOP);
+
+		if (gData.nLogInLevel == nOpPassword) // SI User 
+		{	
 			m_stcAbsDist[i].EnableWindow(FALSE);
 			m_btnAbsMove[i].EnableWindow(FALSE);
 			m_btnJogP[i].EnableWindow(FALSE);
 			m_btnJogN[i].EnableWindow(FALSE);
+		}
+		else
+		{
+			m_stcAbsDist[i].EnableWindow(TRUE);
+			m_btnAbsMove[i].EnableWindow(TRUE);
+			m_btnJogP[i].EnableWindow(TRUE);
+			m_btnJogN[i].EnableWindow(TRUE);
+
+			
 		}
 	}
 
@@ -356,7 +365,11 @@ void CSetupMotionTabDlg::OnStcRelDistClick(UINT nID)
 	m_stcRelDist[ID].GetWindowText(strOld);
 	if (g_objCommon.Show_NumPad(strOld, strNew) != IDOK) return;
 
-	if (g_dlgSetup.Get_LoginUser() != 2) {
+	EQUIP_DATA *pEquipData = g_objDataManager.Get_pEquipData();
+	int nOpPassword = atoi(pEquipData->sPasswordOP);
+
+	if (gData.nLogInLevel == nOpPassword)
+	{
 		double dNew = atof(strNew);
 		if (dNew > 5.0) strNew = strOld;
 	}

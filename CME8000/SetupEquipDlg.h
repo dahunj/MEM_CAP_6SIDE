@@ -81,6 +81,7 @@ public:
 	CLabelCS	m_lblCMVision[3];
 	CStaticCS	m_stcCMVision[3];
 
+	CCheckCS	m_chkUseDryRun;
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 지원입니다.
 
@@ -113,6 +114,8 @@ private:
 	void Display_EquipData();
 
 public:
+	 void Set_Enable(BOOL bEnable);
+
 	void Save_EquipData();
 	void Cancel_EquipData();
 	afx_msg void OnBnClickedBtnAviConnect();
@@ -121,6 +124,7 @@ public:
 	afx_msg void OnStnClickedStcCmVision1();
 	afx_msg void OnStnClickedStcCmVision2();
 	afx_msg void OnStnClickedStcDoorlockTime();
+	afx_msg void OnBnClickedChkUseDryRun();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

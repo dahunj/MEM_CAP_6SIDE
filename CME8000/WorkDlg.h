@@ -177,6 +177,8 @@ public:
 
 	int  Check_CapShipLotID(int nType, CString sBarID);
 
+	void Set_DryRun(BOOL bCheck);
+
 
 	void MachineStopLog(CString sType, CString sMsg="");
 	void Change_Model();
@@ -199,6 +201,7 @@ public:
 	CButton m_BtnUnloadSW2;
 	CButton m_BtnUnloadSWF1;
 	CButton m_BtnUnloadSWF2;
+	afx_msg void OnBnClickedBtnLight();
 };
 
 extern CWorkDlg g_dlgWork;
