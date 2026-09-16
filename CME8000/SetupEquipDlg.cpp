@@ -582,7 +582,6 @@ void CSetupEquipDlg::Save_EquipData()
 	
 
 	INI.Set_Bool("OPTION", "VISION_ALIGN_ALARM", m_chkUseVisionAlignAlarm.GetCheck());
-	INI.Set_Bool("OPTION", "VISION_ALIGN_OFFSET", m_chkUseVisionAlignOffset.GetCheck());
 
 	INI.Set_Bool("OPTION", "TRAY_PICKER_TURN", m_chkUseTrayPickerTurn.GetCheck());
 	INI.Set_Bool("OPTION", "CAP_PICKER_TURN", m_chkUseCapPickerTurn.GetCheck());
