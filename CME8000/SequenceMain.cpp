@@ -1074,9 +1074,11 @@ void CSequenceMain::Job_LotEnd(int nPortNo)
 		gLot.sLotID[nLPNo], gLot.sStartTime[nLPNo], gLot.sEndTime[nLPNo], dwTime_RunTime, dwTime_Unload, gLot.dTactTime_StoE, gLot.dTactTime_RunTime, gLot.dTactTime_Unload,3600.0/gLot.dTactTime_StoE, 3600.0/gLot.dTactTime_RunTime, 3600.0/gLot.dTactTime_Unload,gLot.nAlmCnt[nLPNo], gLot.dwStopTime[nLPNo], dEff_RunTime, dEff_UnloadTime, nTrayCnt/*gLot.nTrayCount[nLPNo]*/, nCmCnt/*gLot.nCmCount[nLPNo]*/, gLot.nNgCount[nLPNo]);
 	g_objLogFile.Save_JobListLog(m_strLog, TRUE);
 
-	g_objMesAgent.Set_LotEnd(gData.sLotID[nLPNo], gData.sRecipe, gData.nAviTotal[nLPNo], gData.nAviOkCnt[nLPNo], gData.nAviNgCnt[nLPNo], gData.nAviBNgCnt[nLPNo]);
 
-
+	if(m_pEquipData->bUseInlineMode && gData.nAviTotal[nLPNo] > 0)
+	{
+		g_objMesAgent.Set_LotEnd(gData.sLotID[nLPNo], gData.sRecipe, gData.nAviTotal[nLPNo], gData.nAviOkCnt[nLPNo], gData.nAviNgCnt[nLPNo], gData.nAviBNgCnt[nLPNo]);
+	}
 	g_dlgWork.PostMessage(UM_LOT_START_END, (WPARAM)2, nPortNo);	// LotEnd
 
 	// UPH & »ý»ê·®
